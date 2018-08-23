@@ -37,17 +37,17 @@ def solucao_exata(t):
 
 #metodos de aproximação
 def metodo_euler_explicito(ini, dt, a):
-    return ((1.0 - a * dt) * ini) + (a * thetaM)
+    return (-1 * a * ini + a * thetaM) * dt + ini
 
 def metodo_euler_implicito(ini, dt, a):
-    return ((1.0 / (1.0 + a * dt)) * ini) + (a * thetaM)
+    return ((a * dt * thetaM) + ini) / (1 + a * dt)
     
 def metodo_diferenca_central(ini, ini_ant, dt, a):
     return a * ini * -2 * dt + 2 * dt * a * thetaM + ini_ant
 
 #main loop
 va = vb = vc = vd = valorInicial
-ua = 0
+ua = valorInicial
 
 for c in range(nParticoes):
 
@@ -69,12 +69,13 @@ for c in range(nParticoes):
     #metodo diferenca central
     arr_dif_central.append(vc)
     if c > 0:
-        vc = metodo_diferenca_central(ua, vc, deltaT, K)
         #valor inicial = valor anterior
         ua = vc
+        #calcula proximo valor
+        vc = metodo_diferenca_central(vc, ua, deltaT, K)
     else:
-        ua = vb
         arr_dif_central.append(ua)
+        vc = vb
         
         
 #mantem os arrays com mesmo tamanho reduzindo esse em 1
@@ -91,5 +92,5 @@ plt.plot(
     )
 plt.ylabel(u"Temperatura (ºC)") #esse 'u' antes da string é pra converter o texto pra unicode
 plt.xlabel(u"Tempo (seg), " + str(nParticoes) + u" partições")
-plt.axis([0, 50, 0, 100])
+#plt.axis([0, 50, 0, 100])
 plt.show()
