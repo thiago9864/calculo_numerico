@@ -42,8 +42,8 @@ def metodo_euler_explicito(ini, dt, a):
 def metodo_euler_implicito(ini, dt, a):
     return ((a * dt * thetaM) + ini) / (1 + a * dt)
     
-def metodo_diferenca_central(ini, ini_ant, dt, a):
-    return a * ini * -2 * dt + 2 * dt * a * thetaM + ini_ant
+def metodo_diferenca_central(un, un_ant, dt, a):
+    return 2 * a * dt * (thetaM - un) + un_ant
 
 #main loop
 va = vb = vc = vd = valorInicial
@@ -69,12 +69,13 @@ for c in range(nParticoes):
     #metodo diferenca central
     arr_dif_central.append(vc)
     if c > 0:
-        #valor inicial = valor anterior
-        ua = vc
         #calcula proximo valor
+        a = vc
         vc = metodo_diferenca_central(vc, ua, deltaT, K)
+        #valor inicial = valor anterior
+        ua = a
     else:
-        arr_dif_central.append(ua)
+        arr_dif_central.append(vb)
         vc = vb
         
         
