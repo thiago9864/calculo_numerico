@@ -10,6 +10,7 @@ arr_problema_valor_contorno = []
 c1 
 c2 
 E  #Constante e deve ser diferente de zero
+Nel #numeros de elementos da malha
 
 c1 = - 1 - c2
 
@@ -23,6 +24,9 @@ def solucao_exata(): #solução exata dada
 
 def solucao_original(u): #derivada segunda original
     return (1 - u) / ((-1) * E)
+
+def h(a,b): #Partição do Domínio em partes iguais
+    h = (b - a)/ Nel
 
 #Solicitar o valor de E
 #testes com E = 0.1, 0.01, 0.001, 0.0001
