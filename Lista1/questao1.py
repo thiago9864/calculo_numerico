@@ -45,7 +45,7 @@ def metodo_euler_implicito(ini, dt, a):
 def metodo_diferenca_central(un, un_ant, dt, a):
     return 2 * a * dt * (thetaM - un) + un_ant
 
-def metodo_cranck_nicolson(dt ,a ,un_ant):
+def metodo_crank_nicolson(dt ,a ,un_ant):
     return (2 / (2 + dt * a)) * ((2 * theta0 - dt * a * (un_ant - 2 * thetaM)) / 2)
 
 #main loop
@@ -81,6 +81,9 @@ for c in range(nParticoes):
         arr_dif_central.append(vb)
         vc = vb
         
+    #metodo cranck-nicolson
+    arr_crank_nicolson(vd)
+    vd = metodo_crank_nicolson(deltaT, K, vd)
         
 #mantem os arrays com mesmo tamanho reduzindo esse em 1
 arr_dif_central.pop()
