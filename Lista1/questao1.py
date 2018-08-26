@@ -45,6 +45,9 @@ def metodo_euler_implicito(ini, dt, a):
 def metodo_diferenca_central(un, un_ant, dt, a):
     return 2 * a * dt * (thetaM - un) + un_ant
 
+def metodo_cranck_nicolson(dt ,a ,un_ant):
+    return (2 / (2 + dt * a)) * ((2 * theta0 - dt * a * (un_ant - 2 * thetam)) / 2)
+
 #main loop
 va = vb = vc = vd = valorInicial
 ua = valorInicial
