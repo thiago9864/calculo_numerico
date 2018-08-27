@@ -82,11 +82,20 @@ for c in range(nParticoes):
         vc = vb
         
     #metodo cranck-nicolson
-    arr_crank_nicolson(vd)
-    vd = metodo_crank_nicolson(deltaT, K, vd)
+    arr_crank_nicolson.append(vd)
+    if c > 0:
+        #calcular o proximo valor
+        b = vd
+        vd = metodo_crank_nicolson(deltaT, K, ua)
+        #valor inicial = valor anterior
+        ua = b
+    else:
+        arr_crank_nicolson.append(vd)
+        vd = vb
         
 #mantem os arrays com mesmo tamanho reduzindo esse em 1
 arr_dif_central.pop()
+arr_crank_nicolson.pop()
     
 #print (arr_euler_explicito)
 
@@ -95,7 +104,8 @@ plt.plot(
     arr_tempo, arr_solucao_exata, 'b--',
     arr_tempo, arr_euler_explicito, 'r-',
     arr_tempo, arr_euler_implicito, 'g-',
-    arr_tempo, arr_dif_central, 'k-'
+    arr_tempo, arr_dif_central, 'k-',
+    arr_tempo, arr_crank_nicolson, 'p-'
     )
 plt.ylabel(u"Temperatura (ºC)") #esse 'u' antes da string é pra converter o texto pra unicode
 plt.xlabel(u"Tempo (seg), " + str(nParticoes) + u" partições")
