@@ -13,7 +13,7 @@ arr_tempo = []
 
 #intervalo de tempo
 
-nParticoes = 4**2
+nParticoes = 4**6
 rangeT = range(0, 50)
 
 #coeficientes
@@ -93,5 +93,5 @@ plt.plot(
     )
 plt.ylabel(u"Temperatura (ºC)") #esse 'u' antes da string é pra converter o texto pra unicode
 plt.xlabel(u"Tempo (seg), " + str(nParticoes) + u" partições")
-#plt.axis([0, 50, 0, 100])
+#plt.axis([0, 50, 0, 100])#isso aqui trava o gráfico em um retangulo com as proporções dadas em [l, t, r, b]
 plt.show()
