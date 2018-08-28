@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import matplotlib.lines as mlines
 import matplotlib.pyplot as plt
 from math import *
 
@@ -45,6 +46,10 @@ def metodo_euler_implicito(ini, dt, a):
 def metodo_diferenca_central(un, un_ant, dt, a):
     return 2 * a * dt * (thetaM - un) + un_ant
 
+def metodo_crank_nicolson(un, dt ,a):
+    #return (2.0 / (2.0 + dt * a)) * ((2.0 * theta0 - dt * a * (un_ant - 2.0 * thetaM)) / 2.0)
+    return (un * (2.0 - a * dt) + 2 * a * dt * thetaM) / (2.0 + a * dt)
+
 #main loop
 va = vb = vc = vd = valorInicial
 ua = valorInicial
@@ -78,9 +83,24 @@ for c in range(nParticoes):
         arr_dif_central.append(vb)
         vc = vb
         
+    #metodo cranck-nicolson
+    arr_crank_nicolson.append(vd)
+    vd = metodo_crank_nicolson(vd, deltaT, K)     
+        
+    #arr_crank_nicolson.append(vd)
+    #if c > 0:
+        #calcular o proximo valor
+    #    b = vd
+    #    vd = metodo_crank_nicolson(deltaT, K, ub)
+    #    #valor inicial = valor anterior
+    #    ub = b
+    #else:
+    #    arr_crank_nicolson.append(vd)
+    #    vd = vb
         
 #mantem os arrays com mesmo tamanho reduzindo esse em 1
-arr_dif_central.pop()
+arr_dif_central.pop(1)
+#arr_crank_nicolson.pop()
     
 #print (arr_euler_explicito)
 
@@ -89,9 +109,27 @@ plt.plot(
     arr_tempo, arr_solucao_exata, 'b--',
     arr_tempo, arr_euler_explicito, 'r-',
     arr_tempo, arr_euler_implicito, 'g-',
-    arr_tempo, arr_dif_central, 'k-'
+    arr_tempo, arr_dif_central, 'k-',
+    arr_tempo, arr_crank_nicolson, 'c-'
     )
 plt.ylabel(u"Temperatura (ºC)") #esse 'u' antes da string é pra converter o texto pra unicode
 plt.xlabel(u"Tempo (seg), " + str(nParticoes) + u" partições")
+<<<<<<< HEAD
 #plt.axis([0, 50, 0, 100])#isso aqui trava o gráfico em um retangulo com as proporções dadas em [l, t, r, b]
 plt.show()
+=======
+
+#legendas do grafico
+se_line = mlines.Line2D([], [], color='blue', marker='', markersize=0, label=u'Solução Exata')
+ee_line = mlines.Line2D([], [], color='red', marker='', markersize=0, label=u'Euler Explícito')
+ei_line = mlines.Line2D([], [], color='green', marker='', markersize=0, label=u'Euler Implícito')
+dc_line = mlines.Line2D([], [], color='black', marker='', markersize=0, label=u'Diferença Central')
+cn_line = mlines.Line2D([], [], color='cyan', marker='', markersize=0, label='Crank Nicolson')
+
+plt.legend(handles=[se_line, ee_line, ei_line, dc_line, cn_line])
+
+plt.title("Metodos de Resolucao")
+
+#plt.axis([0, 50, 0, 100])
+plt.show()
+>>>>>>> ad923b590f317c359db631825996040cde4047a6
