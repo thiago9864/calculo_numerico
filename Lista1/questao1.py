@@ -116,15 +116,15 @@ plt.ylabel(u"Temperatura (ºC)") #esse 'u' antes da string é pra converter o te
 plt.xlabel(u"Tempo (seg), " + str(nParticoes) + u" partições")
 
 #legendas do grafico
-se_line = mlines.Line2D([], [], color='blue', marker='', markersize=0, label='Solução Exata')
-ee_line = mlines.Line2D([], [], color='red', marker='', markersize=0, label='Euler Explícito')
-ei_line = mlines.Line2D([], [], color='green', marker='', markersize=0, label='Euler Implicito')
-dc_line = mlines.Line2D([], [], color='black', marker='', markersize=0, label='Diferença Central')
+se_line = mlines.Line2D([], [], color='blue', marker='', markersize=0, label=u'Solução Exata')
+ee_line = mlines.Line2D([], [], color='red', marker='', markersize=0, label=u'Euler Explícito')
+ei_line = mlines.Line2D([], [], color='green', marker='', markersize=0, label=u'Euler Implícito')
+dc_line = mlines.Line2D([], [], color='black', marker='', markersize=0, label=u'Diferença Central')
 cn_line = mlines.Line2D([], [], color='cyan', marker='', markersize=0, label='Crank Nicolson')
 
 plt.legend(handles=[se_line, ee_line, ei_line, dc_line, cn_line])
 
-plt.title("Métodos de Resolução")
+plt.title("Metodos de Resolucao")
 
 #plt.axis([0, 50, 0, 100])
 plt.show()
