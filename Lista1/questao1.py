@@ -114,10 +114,6 @@ plt.plot(
     )
 plt.ylabel(u"Temperatura (ºC)") #esse 'u' antes da string é pra converter o texto pra unicode
 plt.xlabel(u"Tempo (seg), " + str(nParticoes) + u" partições")
-<<<<<<< HEAD
-#plt.axis([0, 50, 0, 100])#isso aqui trava o gráfico em um retangulo com as proporções dadas em [l, t, r, b]
-plt.show()
-=======
 
 #legendas do grafico
 se_line = mlines.Line2D([], [], color='blue', marker='', markersize=0, label=u'Solução Exata')
@@ -132,4 +128,3 @@ plt.title("Metodos de Resolucao")
 
 #plt.axis([0, 50, 0, 100])
 plt.show()
->>>>>>> ad923b590f317c359db631825996040cde4047a6
