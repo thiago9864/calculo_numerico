@@ -6,55 +6,9 @@ import numpy as np
 import math as m
 from array import array
 
-
-nParticoes = 4**2
-
-#Solicitar o valor de E
-#testes com E = 0.1, 0.01, 0.001, 0.0001
-E = 0.001
-
-
-#Coeficientes
-a = 0
-b = 1
-Nel = nParticoes - 1
-h = (b-a)/float(Nel)
-c2 = (m.exp((-1)/m.sqrt(E)) - 1) / (m.exp(1/m.sqrt(E)) - m.exp((-1)/m.sqrt(E))) 
-c1 = - 1 - c2
-
 #Definicao da funcao
-def F(x): 
-    return c1 * m.exp(- x / m.sqrt (E)) +  c2 * m.exp(x / m.sqrt (E)) + 1
-
-def discretizacao(a, b, c):
-    return (a * u_ant + b * u + u_prox * c == h**2)
-
-
-
-#monta matriz
-ordem = nParticoes - 2
-ordem_is = ordem - 1
-ds = []
-dp = []
-di = []
-d = []
-arr_que_sei_la = []  
-arr_tempo = []
-arr_solucao_exata = []
-
-#preenche diagonal superior e inferior
-for i in range(ordem_is):
-    ds.append(E * -1)
-    di.append(E * -1)
-    
-#preenche diagonal principal
-for i in range(ordem):
-    dp.append(2 * E * + h**2)
-    d.append(-h**2)
-    dh = h * i
-    arr_tempo.append(dh)
-    arr_solucao_exata.append(F(dh))
-    
+def F(x, c1, c2, E): 
+    return c1 * m.exp(- x / m.sqrt (E)) +  c2 * m.exp(x / m.sqrt (E)) + 1.0
 
 #Algoritmo de Thomas
 def Thomas(a, b, c, d):
@@ -82,24 +36,101 @@ def Thomas(a, b, c, d):
     
     return x
     
-  
-arr_que_sei_la = Thomas(di, dp, ds, d)
 
-#plota grafico
+def geraGraficoFuncao(epsilon, indice, plotar):
+    
+    nParticoes = 4**indice
+
+    #Solicitar o valor de E
+    #testes com E = 0.1, 0.01, 0.001, 0.0001
+    E = epsilon
+    
+    #Coeficientes
+    a = 0
+    b = 1.0
+    Nel = nParticoes
+    h = (b-a)/float(Nel)
+    c2 = (m.exp((-1)/m.sqrt(E)) - 1) / (m.exp(1/m.sqrt(E)) - m.exp((-1)/m.sqrt(E))) 
+    c1 = - 1 - c2
+    
+    h2 = h**2.0
+    cdp = 2 * E + h2
+
+    #monta matriz
+    ordem = nParticoes - 1
+    ordem_is = ordem - 1
+    ds = []
+    dp = []
+    di = []
+    d = []
+    arr_solucao_aproximada = []  
+    arr_tempo = []
+    arr_solucao_exata = []
+    arr_erro = []
+    
+    #preenche diagonal superior e inferior
+    for i in range(ordem_is):
+        ds.append(E * -1.0)
+        di.append(E * -1.0)
+        
+    #preenche diagonal principal
+    for i in range(ordem):
+        dp.append(cdp)
+        d.append(h2)
+        
+    #calcula tempo e solucao exata
+    for i in range(nParticoes+1):
+        dh = h * i
+        arr_tempo.append(dh)
+        arr_solucao_exata.append(F(dh, c1, c2, E))  
+        
+    #resolve sistema para solucao aproximada
+    arr_solucao_aproximada = Thomas(di, dp, ds, d)
+    
+    #insere intervalos de contorno
+    arr_solucao_aproximada.insert(0, 0)
+    arr_solucao_aproximada.append(0)
+    
+    #calcula erro
+    for i in range(nParticoes+1):
+        err = m.fabs(arr_solucao_exata[i] - arr_solucao_aproximada[i]);
+        arr_erro.append(err)
+    
+    if(plotar):
+        #plota grafico da função
+        plt.plot(
+            arr_tempo, arr_solucao_exata, 'b--',
+            arr_tempo, arr_solucao_aproximada, 'r-'    
+            )
+        plt.ylabel(u"Valor de u(h)") #esse 'u' antes da string é pra converter o texto pra unicode
+        plt.xlabel(u"Valor de h, " + str(nParticoes) + u" partições")
+        
+        #legendas do grafico
+        se_line = mlines.Line2D([], [], color='blue', marker='', markersize=0, label=u'Solução Exata')
+        ac_line = mlines.Line2D([], [], color='red', marker='', markersize=0, label=u'Solução Aprox.')
+        
+        plt.legend(handles=[se_line, ac_line])
+        
+        plt.title("Metodos de Resolucao")
+        
+        #plt.axis([0, 50, 0, 100])
+        plt.show()    
+    
+    return [arr_tempo, arr_erro]
+    
+#executa o codigo
+lst_epsilon = [0.1, 0.01, 0.001, 0.0001]
+lst_indices = [1, 2, 3, 4, 5]
+
+lst_erro = geraGraficoFuncao(0.001, 5, 0)
+
 plt.plot(
-    arr_tempo, arr_solucao_exata, 'b--',
-    arr_tempo, arr_que_sei_la, 'r-'
-    )
-plt.ylabel(u"Temperatura (ºC)") #esse 'u' antes da string é pra converter o texto pra unicode
-plt.xlabel(u"Tempo (seg), " + str(nParticoes) + u" partições")
+        lst_erro[0], lst_erro[1], 'g-'  
+        )
+        
+er_line = mlines.Line2D([], [], color='green', marker='', markersize=0, label=u'Erro.')
 
-#legendas do grafico
-se_line = mlines.Line2D([], [], color='blue', marker='', markersize=0, label=u'Solução Exata')
-ac_line = mlines.Line2D([], [], color='red', marker='', markersize=0, label=u'Alguma coisa')
+plt.legend(handles=[er_line])
+plt.title("Erro")
 
-plt.legend(handles=[se_line, ac_line])
-
-plt.title("Metodos de Resolucao")
-
-#plt.axis([0, 50, 0, 100])
 plt.show()
