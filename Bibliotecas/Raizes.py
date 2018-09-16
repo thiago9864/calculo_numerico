@@ -79,6 +79,24 @@ def bissecao(_a, _b):
     #atingiu condicao de parada
     return _x
 
+def FalsaPosicao(_a,_b):
+    
+    e = E #epsilon - precisão fornecida
+    
+    #Checa a condição de existencia
+    if (F(_a) * F(_b) < 0):
+        
+        while (abs(F(_x)) > e and abs(_b - _a) > e):
+            
+            if(F(_a) * F(_b) < 0):
+                _a = _x
+            else:
+                _b = _x
+                
+            _x = (_a * F(_b) + _b * F(_a)) / (F(_b) - F(_a))
+        
+        return _x
+
 #print(arr_intervalos)
 
 if(len(arr_intervalos) == 0):
