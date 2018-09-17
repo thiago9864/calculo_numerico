@@ -20,9 +20,9 @@ a = np.dtype('f8')
 b = np.dtype('f8')
 E = np.dtype('f8')
     
-a = 0.8
-b = 1.2
-ordem = 14
+a = 0.0
+b = 2.0
+ordem = 13
 E = 10**-ordem
 
 def insert_dash(string, index):
@@ -115,8 +115,8 @@ def FalsaPosicao(_a,_b):
 raiz_bissecao = bissecao(a, b)
 raiz_falsa_pos = FalsaPosicao(a, b)
 
-string_bis = str(raiz_bissecao)
-string_fp = str(raiz_falsa_pos)
+string_bis = repr(raiz_bissecao)
+string_fp = repr(raiz_falsa_pos)
 
 print("\nBissecao:\n")
 print("Raiz:"+insert_dash(string_bis, ordem + string_bis.find('.') + 1)+"")
