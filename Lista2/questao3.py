@@ -4,6 +4,8 @@ Created on Mon Sep 17 16:00:20 2018
 
 @author: Thiago, Renan
 """
+import matplotlib.lines as mlines
+import matplotlib.pyplot as plt
 import numpy as np
 import math as m
 
@@ -128,6 +130,9 @@ def newton(xi):
     
 ### Executa metodo da secante com primeiro chute
     
+lista0 = []
+lista1 = []
+lista2 = []
 
 #obtem primeiro chute
 xi_b = bissecao(a, b, 0.1)
@@ -148,13 +153,32 @@ print("Precisao:"+str(E)+"")
 print("Iteracoes")
 print("#".ljust(5) + "|" + "valor de x".ljust(25) + "|" + "erro".ljust(25) )
 for item in lista_iteracoes_sec:
+    lista0.append(item[0])
+    lista1.append(item[1])
+    lista2.append(item[2])
     print(repr(item[0]).ljust(5) + "|" + repr(item[1]).ljust(25) + "|" + repr(item[2]).ljust(25) )
     
 print("Num de Iteracoes:"+str(num_passos_sec)+"")
 
+#plota grafico
+plt.plot(
+    lista0, lista1, 'b--', 
+    lista0, lista2, 'r--'
+)
 
+#legendas do grafico
+se_line = mlines.Line2D([], [], color='blue', marker='', markersize=0, label=u'Solução')
+ee_line = mlines.Line2D([], [], color='red', marker='', markersize=0, label=u'Erro')
+
+plt.legend(handles=[se_line, ee_line])
+plt.title("Metodo da Secante")
+plt.show()
 
 ### Executa metodo de Newton com o segundo chute
+
+lista0 = []
+lista1 = []
+lista2 = []
 
 resultado_newton = newton(xi_n)
 
@@ -172,6 +196,23 @@ print("Precisao:"+str(E)+"")
 print("Iteracoes")
 print("#".ljust(5) + "|" + "valor de x".ljust(25) + "|" + "erro".ljust(25) )
 for item in lista_iteracoes_new:
+    lista0.append(item[0])
+    lista1.append(item[1])
+    lista2.append(item[2])
     print(repr(item[0]).ljust(5) + "|" + repr(item[1]).ljust(25) + "|" + repr(item[2]).ljust(25) )
     
 print("Num de Iteracoes:"+str(num_passos_new)+"")
+
+#plota grafico
+plt.plot(
+    lista0, lista1, 'b--', 
+    lista0, lista2, 'r--'
+)
+
+#legendas do grafico
+se_line = mlines.Line2D([], [], color='blue', marker='', markersize=0, label=u'Solução')
+ee_line = mlines.Line2D([], [], color='red', marker='', markersize=0, label=u'Erro')
+
+plt.legend(handles=[se_line, ee_line])
+plt.title("Metodo de Newton")
+plt.show()
