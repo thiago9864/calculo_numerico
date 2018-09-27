@@ -204,6 +204,7 @@ for item in lista_iteracoes_new:
 print("Num de Iteracoes:"+str(num_passos_new)+"")
 
 #plota grafico
+'''
 plt.plot(
     lista0, lista1, 'b--', 
     lista0, lista2, 'r--'
@@ -216,3 +217,4 @@ ee_line = mlines.Line2D([], [], color='red', marker='', markersize=0, label=u'Er
 plt.legend(handles=[se_line, ee_line])
 plt.title("Metodo de Newton")
 plt.show()
+'''
