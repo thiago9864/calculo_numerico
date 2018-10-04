@@ -97,6 +97,7 @@ def geraGraficoFuncao(epsilon, indice, plotar):
         arr_erro.append(err)
     
     if(plotar):
+        print("plotar")
         #plota grafico da função
         plt.plot(
             arr_tempo, arr_solucao_exata, 'b--',
@@ -119,10 +120,14 @@ def geraGraficoFuncao(epsilon, indice, plotar):
     return [arr_tempo, arr_erro]
     
 #executa o codigo
+    
+geraGraficoFuncao(0.001, 2, 1)
+    
+'''
 lst_epsilon = [0.1, 0.01, 0.001, 0.0001]
 lst_indices = [1, 2, 3, 4, 5]
 
-lst_erro = geraGraficoFuncao(0.001, 5, 0)
+lst_erro = geraGraficoFuncao(0.001, 2, 0)
 
 plt.plot(
         lst_erro[0], lst_erro[1], 'g-'  
@@ -134,3 +139,4 @@ plt.legend(handles=[er_line])
 plt.title("Erro")
 
 plt.show()
+'''
