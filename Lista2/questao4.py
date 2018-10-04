@@ -77,7 +77,7 @@ def bisseccao(_a, _b, Er):
         lista_iteracoes.append([iteracoes, _x, e])
         
         if(abs((_x - _xa) / _x) < Er):
-            break;
+            break
             
         _xa = _x
         iteracoes += 1
@@ -100,7 +100,7 @@ def falsaPosicao(_a,_b, Er):
         
         while(iteracoes < 10000):
             
-            x = (_a * F(_b) - _b * F(_a)) / (iteracoesF(_b) - F(_a))
+            x = (_a * F(_b) - _b * F(_a)) / (F(_b) - F(_a))
             
             if(F(_a) * F(x) < 0):
                 _b = x
@@ -111,7 +111,7 @@ def falsaPosicao(_a,_b, Er):
             lista_iteracoes.append([iteracoes, x, abs((x - xa) / x)])
             
             if(abs((x - xa) / x) < Er):
-                break;
+                break
                 
             xa = x            
             iteracoes += 1
