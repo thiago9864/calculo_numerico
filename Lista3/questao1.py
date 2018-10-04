@@ -6,6 +6,10 @@ import math as m
 import sys
 from datetime import datetime
 
+#talvez usar
+#https://stackoverflow.com/questions/20548628/how-to-do-parallel-programming-in-python
+#https://sebastianraschka.com/Articles/2014_multiprocessing.html
+
 #metodos uteis
 def imprimeMatriz(matriz):
     ordem = len(matriz[0])
@@ -31,7 +35,38 @@ def imprimeDiferencaTempo(inicio, fim):
 def F(x, c1, c2, E): 
     return c1 * m.exp(- x / m.sqrt (E)) +  c2 * m.exp(x / m.sqrt (E)) + 1.0
     
-
+#Metodos necessarios para os algoritmos de resolucao de sistemas
+def normaInfinito(x):
+    size = len(x)
+    maximo = abs(x[0])   
+    
+    for i in range(size):
+        temp = abs(x[i])        
+        if(temp > maximo):
+                maximo = temp
+            
+    return maximo
+    
+def distanciaInfinito(x1, x2):
+    if(len(x1) != len(x2)):
+        print("O tamanho dos vetores x1 e x2 precisa ser o mesmo")
+        return 0
+        
+    size = len(x1)
+    dist = abs(x1[0] - x2[0])  
+    
+    
+    for i in range(size):
+        temp = abs(x1[0] - x2[0])
+        if(dist > temp):
+            temp = dist
+            
+    return dist
+        
+        
+def calculaErro(x_prox, x_atual):
+    return distanciaInfinito(x_prox, x_atual) / normaInfinito(x_prox)
+    
 #metodos para calculo das condicoes dos metodos
 
 def det(M):
@@ -138,7 +173,6 @@ def gerarMatriz(num_particoes, E):
     
 
 ##### Metodos de resolucao de sistemas #####
-
 
 
 def retroSubstituicao(M, B):
@@ -264,6 +298,49 @@ def thomas(M, d):
         x = [ d_[i] - c_[i]*x[0] ] + x
     
     return [x, passos]
+    
+    
+##### Metodos Iterativos #####
+
+def jacobi(M, B, chute_inicial, E, max_iteracoes):
+    ordem = len(M)
+    x = chute_inicial
+    xp = [0] * len(x)
+    passos = 0
+    
+    for k in range(max_iteracoes):
+        
+        #percorre a matriz
+        for i in range(ordem):
+            #comeca a soma pelo termo do vetor fonte
+            soma = B[i]
+            div = 0
+            for j in range(ordem):
+                passos += 1
+                #separa o divisor
+                if(i==j):
+                    div = M[i][j]
+                else:
+                    soma += M[i][j] * x[j]
+            #cria vetor de solucoes para proxima iteracao com resultados da linha
+            xp[i] = soma / div
+        
+        #se atingir o criterio de parada, interrompe e retorna os resultados
+        erro = calculaErro(xp, x) 
+        print("Erro: ", erro)
+        #print(x)
+        #print(xp)
+        if(erro < E):
+            print("Terminou Jacobi com erro de: ", erro)
+            return [xp, passos]
+        
+        #prepara proxima iteracao com aproximacao da anterior
+        x = xp
+            
+    print("Jacobi nao convergiu ou precisa de mais iteracoes para convergir")
+    return [xp, passos]
+            
+    
 
 ##### Gerador de grafico #####
 
@@ -299,7 +376,7 @@ def gerarGrafico(tempo, solucao_aproximada, solucao_exata, metodo):
 
 ##### Execucao dos codigos #####
 
-numero_de_particoes = 100
+numero_de_particoes = 50
 erro_do_metodo = 0.01
 
 res = gerarMatriz(numero_de_particoes, erro_do_metodo)
@@ -309,24 +386,35 @@ B = res[1]
 #imprimeMatriz(M)
 
 '''
-print("Metodo de Gauss")
+print("Metodo de Gauss (direto)")
 inicio = getTime()
 resGauss = gauss(M, B)
 fim  = getTime()
-#print("Resultado do sistema por Gauss: ", resGauss[0])
-print("Tamanho da matriz: " + repr(ordem_da_matriz) + "x" + repr(ordem_da_matriz))
+print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
 print("Passos ate a resolucao: " + repr(resGauss[1]))
 imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resGauss[0], res[3], "Gauss")
 '''
 
-print("Metodo de Thomas")
+'''
+print("Metodo de Thomas (direto)")
 inicio = getTime()
 resThomas = thomas(M, B)
 fim  = getTime()
-#print("Resultado do sistema por Gauss: ", resGauss[0])
-print("Tamanho da matriz: " + repr(ordem_da_matriz) + "x" + repr(ordem_da_matriz))
+print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
 print("Passos ate a resolucao: " + repr(resThomas[1]))
 imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resThomas[0], res[3], "Thomas")
+'''
 
+
+print("Metodo de Jacobi (iterativo)")
+chute_inicial = [0] * (numero_de_particoes - 1)
+precisao = 0.01
+inicio = getTime()
+resJacobi = jacobi(M, B, chute_inicial, precisao, 1000)
+fim  = getTime()
+print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
+print("Passos ate a resolucao: " + repr(resJacobi[1]))
+imprimeDiferencaTempo(inicio, fim)
+gerarGrafico(res[2], resJacobi[0], res[3], "Jacobi")
