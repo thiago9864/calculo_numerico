@@ -6,6 +6,7 @@ Created on Thu Sep 27 14:17:33 2018
 """
 import numpy as np
 import math as m
+import sys
 from datetime import datetime
 
 #det(m22) tem q dar -2
@@ -61,6 +62,14 @@ m44Ri = [
 ]
 b44Ri = [4.0, 1.0, 48.0, 0.0]
 
+#Matriz para pivoteamento
+m33Pv = [
+    [ 2.0,  4.0, -2.0],
+    [ 4.0,  9.0, -3.0],
+    [-2.0, -3.0,  7.0]
+]
+b33Pv = [2.0, 8.0, 10.0]
+
 #metodos para contagem de tempo
 def getTime():
     return datetime.now()
@@ -68,6 +77,17 @@ def getTime():
 def imprimeDiferencaTempo(inicio, fim):
     dif = fim - inicio
     print("Tempo ate solucao: ", dif)
+
+def imprimeMatriz(matriz, vetor_solucao):
+    ordem = len(matriz[0])
+    just_space = 6
+    for i in range(ordem):
+        for j in range(ordem):
+            sys.stdout.write(repr(matriz[i][j]).ljust(just_space))
+        sys.stdout.write("| " + repr(vetor_solucao[i]).ljust(just_space))
+        sys.stdout.flush()
+        print("")
+    print("--------------------------")
 
 def det(M):
     if(len(M)==0):
@@ -152,7 +172,7 @@ def retroSubstituicao(M, B):
                 
        
         #interrompe se der divisao por zero
-        div =  M[i][i];
+        div =  M[i][i]
         if(div == 0):
             return
             
@@ -187,7 +207,70 @@ def gauss(M, B):
     #agora que tem uma matriz diagonal superior, usa retroSubstituicao
     retrosub = retroSubstituicao(M, B)
     return [retrosub[0], retrosub[1] + passos]
+
+def trocarLinhas(M, B, linha_a, linha_b):
+    ordem = len(M[0])
+    #print("troca as linhas "+str(linha_a)+" e "+str(linha_b))
+    for j in range(0, ordem):
+        #troca a linha da matriz
+        elemento = M[linha_a][j]
+        M[linha_a][j] = M[linha_b][j]
+        M[linha_b][j] = elemento
+
+    #troca a linha do vetor fonte
+    elemento = B[linha_a]
+    B[linha_a] = B[linha_b]
+    B[linha_b] = elemento
+
+def gaussPivoteamento(M, B):    
+    ordem = len(M[0])
+    passos = 0
+
+    #imprimeMatriz(M, B)
+
+    #loop do pivoteamento
+    for a in range(0, ordem):
+
+        #armazena pivo em modulo
+        maior_elemento = abs(M[a][a])
+        linha_a = a
+        linha_b = a
+
+        #percorre as colunas a procura do maior valor
+        for b in range(a, ordem):
+            passos += 1
+            elemento = abs(M[b][a])
+            if(elemento > maior_elemento):
+                maior_elemento = elemento
+                linha_b = b
         
+        #se os indices das linhas a e b forem diferentes, faz a troca de linha
+        if(linha_a != linha_b):
+            trocarLinhas(M, B, linha_a, linha_b)
+            #imprimeMatriz(M, B)
+
+        #percorre os elementos abaixo do pivo para extrair o multiplicador
+        for i in range(a+1, ordem):  
+            mult = M[i][a] / M[a][a]
+            
+            #usa o multiplicador pra zerar o elemento da linha
+            for j in range(a, ordem):  
+                passos += 1
+                M[i][j] = M[i][j] - mult * M[a][j]
+            
+            #usa o multiplicador pra mudar o elemento no vetor fonte
+            B[i] = B[i] - mult * B[a]
+        
+        #print("calcula multiplicadores")
+        #imprimeMatriz(M, B)
+
+    #print("matriz triangular")
+    #imprimeMatriz(M, B)
+
+    #agora que tem uma matriz diagonal superior, usa retroSubstituicao
+    retrosub = retroSubstituicao(M, B)
+    return [retrosub[0], retrosub[1] + passos]
+
 
 #vdet = det(m22)
 #print("Determinante 2x2: " + str(vdet));
@@ -207,8 +290,16 @@ def gauss(M, B):
 #print("Passos ate a resolucao: ", res[1])
 
 inicio = getTime()
-res = gauss(m66, b66)
+res = gauss(m33Pv, b33Pv)
 fim  = getTime()
 print("Resultado do sistema por Gauss: ", res[0]);
 print("Passos ate a resolucao: ", res[1])
 imprimeDiferencaTempo(inicio, fim)
+'''
+inicio = getTime()
+res = gaussPivoteamento(m33Pv, b33Pv)
+fim  = getTime()
+print("Resultado do sistema por Gauss (pivoteado): ", res[0]);
+print("Passos ate a resolucao: ", res[1])
+imprimeDiferencaTempo(inicio, fim)
+'''
