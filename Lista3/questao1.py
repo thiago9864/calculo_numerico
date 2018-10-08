@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-
+from __future__ import division 
 import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 import math as m
+import numpy as np
+from numpy import linalg  
 import sys
 from datetime import datetime
 
@@ -373,7 +375,7 @@ def verificaDiagonalDominante(M):
         if(soma >= diag):
             return False
     return True
-
+'''
 def jacobi(M, B, chute_inicial, E, max_iteracoes):
     ordem = len(M)
     x = chute_inicial
@@ -414,24 +416,49 @@ def jacobi(M, B, chute_inicial, E, max_iteracoes):
             
     print("Jacobi nao convergiu ou precisa de mais iteracoes para convergir")
     return [xp, passos]
-'''    
-def gaussSeidel(M,B):
-    k = len(M)
+'''
+
+def jacobi(M, B, chute_inicial, E, max_iteracoes):
 
     
+    x0 = chute_inicial
+    nLinhas = len(M)
+    x = 0.0 * len(x0)
+    passos = 0
     
-    #Percorre as colunas da matriz
-    for i in range(n):
-        soma1 = sum(M[i][j] * x[j]**(k+1) for j in range(i-1))
-        soma2 = sum(M[i][j] * x[j]**(k) for j = i+1 in range(n))
+    if(verificaDiagonalDominante(M) == False):
+        print("A matriz nao e diagonal dominante, portanto nao ira convergir")
+        return [[0] * ordem, 0]
+    
+    for k in range(max_iteracoes):
         
-        div = M[i][i] #Separa o divisor do termo
+        #interação do jaboci
+        for i in range(nLinhas):
+            x[i] = B[i]
+            for j in range(1,i-1):
+                passos+= 1 
+                x[i] -= M[i][j] * x0[j]
+            x[i] /= M[i][i]
         
-        #percorre as linhas da matriz
-        for j in range(n):
-            x[i] = sqtr ((B[i] - soma1 - soma2)/div,k+1)
-'''  
-
+        #se atingir o criterio de parada, interrompe e retorna os resultados
+        erro = calculaErro(x0,x)
+        
+        if(erro < E):
+            print("Terminou Jacobi com erro de: ", erro)
+            return [x]
+         
+        #prepara proxima iteracao com aproximacao da anterior
+        for i in range(len(x)):
+            x0[i] = x[i]
+            
+    print("Jacobi nao convergiu ou precisa de mais iteracoes para convergir")
+    
+    return [x,passos]
+    
+    
+    
+    
+    
 ##### Gerador de grafico #####
 
 def gerarGrafico(tempo, solucao_aproximada, solucao_exata, metodo):
