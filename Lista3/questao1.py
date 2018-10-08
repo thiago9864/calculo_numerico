@@ -398,7 +398,22 @@ def jacobi(M, B, chute_inicial, E, max_iteracoes):
     print("Jacobi nao convergiu ou precisa de mais iteracoes para convergir")
     return [xp, passos]
             
+ def gaussSeidel(M,B):
+     k = len(M)
+
     
+    
+    #Percorre as colunas da matriz
+    for i in range(n):
+        soma1 = sum(M[i][j] * x[j]**(k+1) for j in range(i-1))
+        soma2 = sum(M[i][j] * x[j]**(k) for j = i+1 in range(n))
+        
+        div = M[i][i] #Separa o divisor do termo
+        
+        #percorre as linhas da matriz
+        for j in range(n):
+            x[i] = sqtr ((B[i] - soma1 - soma2)/div,k+1)
+   
 
 ##### Gerador de grafico #####
 
