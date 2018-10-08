@@ -200,6 +200,7 @@ def gauss(M, B):
             #usa o multiplicador pra zerar o elemento da linha
             for j in range(t, ordem):  
                 M[i][j] = M[i][j] - mult * M[k][j]
+                passos+=1
             
             #usa o multiplicador pra mudar o elemento no vetor fonte
             B[i] = B[i] - mult * B[k]
@@ -271,6 +272,45 @@ def gaussPivoteamento(M, B):
     retrosub = retroSubstituicao(M, B)
     return [retrosub[0], retrosub[1] + passos]
 
+##### Metodos Iterativos #####
+
+def jacobi(M, B, chute_inicial, E, max_iteracoes):
+    ordem = len(M)
+    x = chute_inicial
+    xp = [0] * len(x)
+    passos = 0
+    
+    for k in range(max_iteracoes):
+        
+        #percorre a matriz
+        for i in range(ordem):
+            #comeca a soma pelo termo do vetor fonte
+            soma = B[i]
+            div = 0
+            for j in range(ordem):
+                passos += 1
+                #separa o divisor
+                if(i==j):
+                    div = M[i][j]
+                else:
+                    soma += M[i][j] * x[j]
+            #cria vetor de solucoes para proxima iteracao com resultados da linha
+            xp[i] = soma / div
+        
+        #se atingir o criterio de parada, interrompe e retorna os resultados
+        erro = calculaErro(xp, x) 
+        print("Erro: ", erro)
+        print(x)
+        print(xp)
+        if(erro < E):
+            print("Terminou Jacobi com erro de: ", erro)
+            return [xp, passos]
+        
+        #prepara proxima iteracao com aproximacao da anterior
+        x = xp
+            
+    print("Jacobi nao convergiu ou precisa de mais iteracoes para convergir")
+    return [xp, passos]
 
 #vdet = det(m22)
 #print("Determinante 2x2: " + str(vdet));
@@ -290,7 +330,7 @@ def gaussPivoteamento(M, B):
 #print("Passos ate a resolucao: ", res[1])
 
 inicio = getTime()
-res = gauss(m33Pv, b33Pv)
+res = gauss(m66, b66)
 fim  = getTime()
 print("Resultado do sistema por Gauss: ", res[0]);
 print("Passos ate a resolucao: ", res[1])
@@ -303,3 +343,14 @@ print("Resultado do sistema por Gauss (pivoteado): ", res[0]);
 print("Passos ate a resolucao: ", res[1])
 imprimeDiferencaTempo(inicio, fim)
 '''
+
+print("Metodo de Jacobi (iterativo)")
+chute_inicial = [0] * len(m66)
+precisao = 0.01
+inicio = getTime()
+resJacobi = jacobi(m66, b66, chute_inicial, precisao, 1000)
+fim  = getTime()
+print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
+print("Passos ate a resolucao: " + repr(resJacobi[1]))
+imprimeDiferencaTempo(inicio, fim)
+print("Resultado do sistema: ", res[0]);
