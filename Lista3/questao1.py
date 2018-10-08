@@ -36,6 +36,12 @@ def imprimeDiferencaTempo(inicio, fim):
     sys.stdout.flush()
     print(dif)
     
+def zeraMatriz(A):
+    n = len(A)
+    for i in range(n):
+        for j in range(n):
+            A[i][j] = 0
+    
 #Definicao da funcao solucao exata
 def F(x, c1, c2, E): 
     return c1 * m.exp(- x / m.sqrt (E)) +  c2 * m.exp(x / m.sqrt (E)) + 1.0
@@ -516,6 +522,8 @@ def gerarGrafico(tempo, solucao_aproximada, solucao_exata, metodo):
     #plt.axis([0, 50, 0, 100])
     plt.show()   
     
+
+def LU()
 
 ##### Execucao dos codigos #####
 
