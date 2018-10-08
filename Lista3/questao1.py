@@ -417,7 +417,7 @@ def jacobi(M, B, chute_inicial, E, max_iteracoes):
     print("Jacobi nao convergiu ou precisa de mais iteracoes para convergir")
     return [xp, passos]
 '''
-
+'''
 def jacobi(M, B, chute_inicial, E, max_iteracoes):
 
     
@@ -454,10 +454,36 @@ def jacobi(M, B, chute_inicial, E, max_iteracoes):
     print("Jacobi nao convergiu ou precisa de mais iteracoes para convergir")
     
     return [x,passos]
+''' 
+
+def GaussSeidel(M,N,chute_inicial,E):
+    x0 = chute_inicial
+    passos = 0
+    N = len(M)
     
+    for k in range(len(B)):
+        X[k] = 0
     
-    
-    
+    k = 1
+    while 1 <= N:
+        for i in range(N):
+            passos += 1
+            soma = 0
+            for j in range(i-1):
+                soma = soma + M[i][j] * x[j]
+            for j in range(i+1,N):
+                soma = soma + M[i][j] * X[j]
+        x[i] = (b[i] - soma)/M[i][i]
+        
+        erro = calculaErro(X,x)
+        
+        if(erro < E):
+            print("Terminou Gauss-Seidel com erro de:", erro)
+            return [x]
+        
+        X[i] = x[i]
+        
+        return [x,passos]
     
 ##### Gerador de grafico #####
 
