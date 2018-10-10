@@ -461,24 +461,56 @@ def jacobi(M, B, chute_inicial, E, max_iteracoes):
     
     return [x,passos]
 ''' 
-
-def GaussSeidel(M,N,chute_inicial,E):
+#Thiago (em andamento)
+def gaussSeidel(M, B, chute_inicial, E):
+    
+    x0 = chute_inicial
+    n = len(M)
+    x = 0.0 * len(x0)
+    passos = 0
+    
+    if(verificaDiagonalDominante(M) == False):
+        print("A matriz nao e diagonal dominante, portanto nao ira convergir")
+        return [[0] * ordem, 0]
+    
+    for k in range(max_iteracoes):
+        
+        #percorre a matriz
+        for i in range(n):
+           soma = B[i]
+           
+           for j in range(0, i-2):
+               soma -= M[i][j] * x[j+1]
+               
+           for j in range(i+1, n):
+               soma -= M[i][j] * x[j]
+               
+               
+           x[i] = soma / div
+'''
+#Renan
+def gaussSeidel(M,B,chute_inicial,E):
     x0 = chute_inicial
     passos = 0
     N = len(M)
     
+    #inicia o vetor
     for k in range(len(B)):
         X[k] = 0
     
     k = 1
     while 1 <= N:
+        
         for i in range(N):
             passos += 1
             soma = 0
+            
             for j in range(i-1):
                 soma = soma + M[i][j] * x[j]
+                
             for j in range(i+1,N):
                 soma = soma + M[i][j] * X[j]
+                
         x[i] = (b[i] - soma)/M[i][i]
         
         erro = calculaErro(X,x)
@@ -490,6 +522,7 @@ def GaussSeidel(M,N,chute_inicial,E):
         X[i] = x[i]
         
         return [x,passos]
+'''
     
 ##### Gerador de grafico #####
 
@@ -523,7 +556,7 @@ def gerarGrafico(tempo, solucao_aproximada, solucao_exata, metodo):
     plt.show()   
     
 
-def LU()
+#def LU()
 
 ##### Execucao dos codigos #####
 
@@ -573,7 +606,7 @@ imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resThomas[0], res[3], "Thomas")
 '''
 
-
+'''
 print("Metodo de Jacobi (iterativo)")
 chute_inicial = [0] * (numero_de_particoes - 1)
 precisao = 0.01
@@ -584,4 +617,15 @@ print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_p
 print("Passos ate a resolucao: " + repr(resJacobi[1]))
 imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resJacobi[0], res[3], "Jacobi")
+'''
 
+print("Metodo de Gauss Seidel (iterativo)")
+chute_inicial = [0] * (numero_de_particoes - 1)
+precisao = 0.01
+inicio = getTime()
+resGS = gaussSeidel(M, B, chute_inicial, precisao, 1000)
+fim  = getTime()
+print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
+print("Passos ate a resolucao: " + repr(resGS[1]))
+imprimeDiferencaTempo(inicio, fim)
+gerarGrafico(res[2], resGS[0], res[3], "Gauss Seidel")
