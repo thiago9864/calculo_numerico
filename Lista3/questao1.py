@@ -15,10 +15,10 @@ from datetime import datetime
 #metodos uteis
 def imprimeMatriz(matriz, vetor_solucao):
     ordem = len(matriz[0])
-    just_space = 6
+    just_space = 8
     for i in range(ordem):
         for j in range(ordem):
-            sys.stdout.write(repr(matriz[i][j]).ljust(just_space))
+            sys.stdout.write("{0:.4f}".format(matriz[i][j]).ljust(just_space))
         sys.stdout.write("| " + repr(vetor_solucao[i]).ljust(just_space))
         sys.stdout.flush()
         print("")
@@ -33,6 +33,15 @@ def copiaMatriz(matriz):
     for i in range(ordem):
         Mr[i] = list(matriz[i])
     return Mr
+    
+def transposicao(matriz):
+    ordem = len(matriz[0])
+    Mt = inicializaMatriz(ordem)    
+    for i in range(ordem):
+        for j in range(ordem):
+            Mt[i][j] = matriz[j][i]   
+    return Mt
+            
 
 def getTime():
     return datetime.now()
@@ -412,7 +421,8 @@ def thomas(M, d):
     
     return [x, passos]
     
-
+#esse metodo esta com problema, pesquisar solucao
+#o que esta feito, esta baseado nesse link: https://math.stackexchange.com/questions/2422012/solving-a-linear-system-with-cholesky-factorization
 def cholesky(A, B):
     
     #cria uma copia
@@ -448,11 +458,22 @@ def cholesky(A, B):
     
     #o resultado e uma matriz diagonal superior
     #que eu acho que e a G transposta
+    
+    Gt = copiaMatriz(G)
+    G = transposicao(G)#transposta da transposta resulta na matriz original
+    
+    #imprimeMatriz(Gt, [0] * n)
     #imprimeMatriz(G, [0] * n)
+    
+    # Gy=b 
+    retrosub1 = retroSubstituicao(G, Bc)
+    passos += retrosub1[1]
             
-    #agora que tem uma matriz diagonal superior, usa retroSubstituicao
-    retrosub = retroSubstituicao(G, Bc)
-    return [retrosub[0], retrosub[1] + passos]
+    #o resultado de cima e o vetor b do abaixo
+    #Gtx=y
+    retrosub2 = retroSubstituicao(Gt, retrosub1[0])
+    return [retrosub2[0], retrosub2[1] + passos]
+    
     
 ##### Metodos Iterativos #####
     
@@ -492,49 +513,11 @@ def jacobi(M, B, chute_inicial, E, max_iteracoes):
             return [xp, passos]
         
         #prepara proxima iteracao com aproximacao da anterior
-        x = xp.copy()
+        x = list(xp)
             
     print("Jacobi nao convergiu ou precisa de mais iteracoes para convergir")
     return [xp, passos]
 
-'''
-def jacobi(M, B, chute_inicial, E, max_iteracoes):
-
-    
-    x0 = chute_inicial
-    nLinhas = len(M)
-    x = 0.0 * len(x0)
-    passos = 0
-    
-    if(verificaDiagonalDominante(M) == False):
-        print("A matriz nao e diagonal dominante, portanto nao ira convergir")
-        return [[0] * ordem, 0]
-    
-    for k in range(max_iteracoes):
-        
-        #interação do jaboci
-        for i in range(nLinhas):
-            x[i] = B[i]
-            for j in range(1,i-1):
-                passos+= 1 
-                x[i] -= M[i][j] * x0[j]
-            x[i] /= M[i][i]
-        
-        #se atingir o criterio de parada, interrompe e retorna os resultados
-        erro = calculaErro(x0,x)
-        
-        if(erro < E):
-            print("Terminou Jacobi com erro de: ", erro)
-            return [x]
-         
-        #prepara proxima iteracao com aproximacao da anterior
-        for i in range(len(x)):
-            x0[i] = x[i]
-            
-    print("Jacobi nao convergiu ou precisa de mais iteracoes para convergir")
-    
-    return [x,passos]
-''' 
 
 #Thiago (funcionou, mas esta dando muitos passos)
 def gaussSeidel(M, B, chute_inicial, E, max_iteracoes):
@@ -650,7 +633,7 @@ def gerarGrafico(tempo, solucao_aproximada, solucao_exata, metodo):
 
 ##### Execucao dos codigos #####
 
-numero_de_particoes = 10
+numero_de_particoes = 20
 erro_do_metodo = 0.01
 
 #previsao para O(n^3)
@@ -696,6 +679,7 @@ imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resThomas[0], res[3], "Thomas")
 '''
 
+'''
 print("Metodo de Cholesky (direto)")
 inicio = getTime()
 resCholesky = cholesky(M, B)
@@ -704,7 +688,7 @@ print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_p
 print("Passos ate a resolucao: " + repr(resCholesky[1]))
 imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resCholesky[0], res[3], "Cholesky")
-
+'''
 '''
 print("Metodo de Jacobi (iterativo)")
 chute_inicial = [0.8] * (numero_de_particoes - 1)
@@ -718,7 +702,6 @@ imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resJacobi[0], res[3], "Jacobi")
 '''
 
-'''
 print("Metodo de Gauss Seidel (iterativo)")
 chute_inicial = [0] * (numero_de_particoes - 1)
 precisao = 0.01
@@ -729,4 +712,3 @@ print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_p
 print("Passos ate a resolucao: " + repr(resGS[1]))
 imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resGS[0], res[3], "Gauss Seidel")
-'''

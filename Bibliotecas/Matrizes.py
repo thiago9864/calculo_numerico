@@ -118,7 +118,15 @@ def copiaMatriz(matriz):
     for i in range(ordem):
         Mr[i] = list(matriz[i])
     return Mr
-        
+
+def transposicao(matriz):
+    ordem = len(matriz[0])
+    Mt = inicializaMatriz(ordem)    
+    for i in range(ordem):
+        for j in range(ordem):
+            Mt[i][j] = matriz[j][i]   
+    return Mt
+            
 #Metodos necessarios para os algoritmos de resolucao de sistemas
 def normaInfinito(x):
     size = len(x)
@@ -215,6 +223,7 @@ def retroSubstituicao(M, B):
     
     #checa se e superior
     isSuperior = (M[ordem-1][0] == 0)
+
     
     #percorre as linhas da matriz (ta funcionando)
     for n in range(0, ordem):  
@@ -466,10 +475,22 @@ def cholesky(A, B):
     #o resultado e uma matriz diagonal superior
     #que eu acho que e a G transposta
     #imprimeMatriz(G, [0] * n)
+    
+    #imprimeMatriz(G, [0] * n)
+    
+    Gt = copiaMatriz(G)
+    G = transposicao(G)
+    
+    #imprimeMatriz(Gt, [0] * n)
+    #imprimeMatriz(G, [0] * n)
+    
+    retrosub1 = retroSubstituicao(G, Bc)
+    
+    passos += retrosub1[1]
             
     #agora que tem uma matriz diagonal superior, usa retroSubstituicao
-    retrosub = retroSubstituicao(G, Bc)
-    return [retrosub[0], retrosub[1] + passos]
+    retrosub2 = retroSubstituicao(Gt, retrosub1[0])
+    return [retrosub2[0], retrosub2[1] + passos]
             
             
             
