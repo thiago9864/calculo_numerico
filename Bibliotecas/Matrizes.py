@@ -103,7 +103,7 @@ def imprimeMatriz(matriz, vetor_solucao):
     just_space = 6
     for i in range(ordem):
         for j in range(ordem):
-            sys.stdout.write(repr(matriz[i][j]).ljust(just_space))
+            sys.stdout.write("{0:.2f}".format(matriz[i][j]).ljust(just_space))
         sys.stdout.write("| " + repr(vetor_solucao[i]).ljust(just_space))
         sys.stdout.flush()
         print("")
@@ -431,21 +431,46 @@ def gaussSeidel(M, B, chute_inicial, E, max_iteracoes):
           
 
 def cholesky(A, B):
-    n = len(M)
-    X = [0] * n
+    
+    #cria uma copia
+    Ac = copiaMatriz(A)
+    Bc = list(B)
+    
+    n = len(Ac[0])
     G = inicializaMatriz(n)
     
     passos = 0
     
     for i in range(n):
+        soma = 0
+        #gera a diagonal principal da matriz G
         for j in range(i+1):
-            G[i][j] = A[i][j]
-
+            passos += 1
+            if(j!=i):
+                #soma os quadrados do que nao for da diagonal principal
+                soma += G[i][j] ** 2
+            else:
+                #tira raiz quadrada da diferenca do item da diagonal principal de A
+                #com a soma do que esta na G
+                G[i][j] = m.sqrt(Ac[i][i] - soma) 
+                
+        #gera elementos fora da diagonal principal
+        for i in range(j+1):
+            soma = 0
+            for k in range(j-1):
+                passos += 1
+                soma += G[i][k] * G[j][k]
+            
+            G[i][j] = (Ac[i][j] - soma) / G[j][j]
     
-    imprimeMatriz(G, [0] * n)
+    #o resultado e uma matriz diagonal superior
+    #que eu acho que e a G transposta
+    #imprimeMatriz(G, [0] * n)
             
+    #agora que tem uma matriz diagonal superior, usa retroSubstituicao
+    retrosub = retroSubstituicao(G, Bc)
+    return [retrosub[0], retrosub[1] + passos]
             
-    return [X, passos]
             
             
             
@@ -484,7 +509,6 @@ print("Resultado do sistema por Gauss: ", res[0]);
 print("Passos ate a resolucao: ", res[1])
 imprimeDiferencaTempo(inicio, fim)
 
-imprimeMatriz(M, B)
 
 print("--------------------")
 inicio = getTime()
@@ -494,7 +518,6 @@ print("Resultado do sistema por Gauss (pivoteado): ", res[0]);
 print("Passos ate a resolucao: ", res[1])
 imprimeDiferencaTempo(inicio, fim)
 
-imprimeMatriz(M, B)
 
 print("--------------------")
 inicio = getTime()

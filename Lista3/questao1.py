@@ -26,6 +26,13 @@ def imprimeMatriz(matriz, vetor_solucao):
 
 def inicializaMatriz(ordem):
     return [[0 for x in range(ordem)] for y in range(ordem)] 
+    
+def copiaMatriz(matriz):
+    Mr = list(matriz)
+    ordem = len(matriz[0])
+    for i in range(ordem):
+        Mr[i] = list(matriz[i])
+    return Mr
 
 def getTime():
     return datetime.now()
@@ -405,6 +412,47 @@ def thomas(M, d):
     
     return [x, passos]
     
+
+def cholesky(A, B):
+    
+    #cria uma copia
+    Ac = copiaMatriz(A)
+    Bc = list(B)
+    
+    n = len(Ac[0])
+    G = inicializaMatriz(n)
+    
+    passos = 0
+    
+    for i in range(n):
+        soma = 0
+        #gera a diagonal principal da matriz G
+        for j in range(i+1):
+            passos += 1
+            if(j!=i):
+                #soma os quadrados do que nao for da diagonal principal
+                soma += G[i][j] ** 2
+            else:
+                #tira raiz quadrada da diferenca do item da diagonal principal de A
+                #com a soma do que esta na G
+                G[i][j] = m.sqrt(Ac[i][i] - soma) 
+                
+        #gera elementos fora da diagonal principal
+        for i in range(j+1):
+            soma = 0
+            for k in range(j-1):
+                passos += 1
+                soma += G[i][k] * G[j][k]
+            
+            G[i][j] = (Ac[i][j] - soma) / G[j][j]
+    
+    #o resultado e uma matriz diagonal superior
+    #que eu acho que e a G transposta
+    #imprimeMatriz(G, [0] * n)
+            
+    #agora que tem uma matriz diagonal superior, usa retroSubstituicao
+    retrosub = retroSubstituicao(G, Bc)
+    return [retrosub[0], retrosub[1] + passos]
     
 ##### Metodos Iterativos #####
     
@@ -564,23 +612,7 @@ def gaussSeidel(M,B,chute_inicial,E):
         
         return [x,passos]
 '''
-
-'''
-def cholesky(G, B):
-    n = len(M)
-    
-    for j in range(n):
-        soma = 0
-        for k in range(j-1):
-            soma += G[j][k] ** 2
-        gjj = m.sqrt(ajj - soma)
         
-        for i in range(j+1):
-            soma = 0
-            for k in range(j-1):
-                soma += G[i][k] * G[j][k]
-            gij = (aij - soma) / gjj
-'''            
             
 ##### Gerador de grafico #####
 
@@ -618,7 +650,7 @@ def gerarGrafico(tempo, solucao_aproximada, solucao_exata, metodo):
 
 ##### Execucao dos codigos #####
 
-numero_de_particoes = 100
+numero_de_particoes = 10
 erro_do_metodo = 0.01
 
 #previsao para O(n^3)
@@ -664,6 +696,15 @@ imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resThomas[0], res[3], "Thomas")
 '''
 
+print("Metodo de Cholesky (direto)")
+inicio = getTime()
+resCholesky = cholesky(M, B)
+fim  = getTime()
+print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
+print("Passos ate a resolucao: " + repr(resCholesky[1]))
+imprimeDiferencaTempo(inicio, fim)
+gerarGrafico(res[2], resCholesky[0], res[3], "Cholesky")
+
 '''
 print("Metodo de Jacobi (iterativo)")
 chute_inicial = [0.8] * (numero_de_particoes - 1)
@@ -677,7 +718,7 @@ imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resJacobi[0], res[3], "Jacobi")
 '''
 
-
+'''
 print("Metodo de Gauss Seidel (iterativo)")
 chute_inicial = [0] * (numero_de_particoes - 1)
 precisao = 0.01
@@ -688,4 +729,4 @@ print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_p
 print("Passos ate a resolucao: " + repr(resGS[1]))
 imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resGS[0], res[3], "Gauss Seidel")
-
+'''
