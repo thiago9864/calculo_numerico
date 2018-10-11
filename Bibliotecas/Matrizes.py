@@ -70,6 +70,14 @@ m33Pv = [
 ]
 b33Pv = [2.0, 8.0, 10.0]
 
+#Matriz para jacobi (apostila)
+m33J = [
+    [ 4.00,  0.24, -0.08],
+    [ 0.09,  3.00, -0.15],
+    [ 0.04, -0.08,  4.00]
+]
+b33J = [8.0, 9.0, 20.0]
+
 #metodos para contagem de tempo
 def getTime():
     return datetime.now()
@@ -142,7 +150,7 @@ def retroSubstituicao(M, B):
     if(len(M)==0):
         return 0
     
-    ordem = len(M[0])
+    ordem = len(M)
     temp = 0
     passos = 0
     
@@ -186,7 +194,7 @@ def gauss(M, B):
     if(len(M)==0):
         return 0
     
-    ordem = len(M[0])
+    ordem = len(M)
     passos = 0
     
     #percorre os pivos da matriz zerando as linhas abaixo
@@ -275,10 +283,12 @@ def gaussPivoteamento(M, B):
 ##### Metodos Iterativos #####
 
 def jacobi(M, B, chute_inicial, E, max_iteracoes):
-    ordem = len(M)
+    ordem = len(M[0])
     x = chute_inicial
     xp = [0] * len(x)
     passos = 0
+
+    print("ordem da matriz", ordem)
     
     for k in range(max_iteracoes):
         
@@ -293,25 +303,64 @@ def jacobi(M, B, chute_inicial, E, max_iteracoes):
                 if(i==j):
                     div = M[i][j]
                 else:
-                    soma += M[i][j] * x[j]
+                    soma += M[i][j] * x[j] * -1.0
             #cria vetor de solucoes para proxima iteracao com resultados da linha
             xp[i] = soma / div
         
         #se atingir o criterio de parada, interrompe e retorna os resultados
         erro = calculaErro(xp, x) 
-        print("Erro: ", erro)
-        print(x)
-        print(xp)
+
         if(erro < E):
             print("Terminou Jacobi com erro de: ", erro)
             return [xp, passos]
         
         #prepara proxima iteracao com aproximacao da anterior
-        x = xp
+        x = xp.copy()
             
     print("Jacobi nao convergiu ou precisa de mais iteracoes para convergir")
     return [xp, passos]
 
+def gaussSeidel(M, B, chute_inicial, E, max_iteracoes):
+    
+    x0 = chute_inicial
+    ordem = len(M[0])
+    X = chute_inicial.copy()
+    Xa = chute_inicial.copy()#vetor pra calcular o erro
+    passos = 0
+    
+    print("ordem da matriz", ordem)
+    
+    for k in range(max_iteracoes):
+        
+        #percorre a matriz
+        for i in range(ordem):
+            #comeca a soma pelo termo do vetor fonte
+            soma = B[i]
+            div = 0
+            for j in range(ordem):
+                passos += 1
+                #separa o divisor
+                if(i==j):
+                    div = M[i][j]
+                else:
+                    soma += M[i][j] * X[j] * -1.0
+            #cria vetor de solucoes para proxima iteracao com resultados da linha
+            X[i] = soma / div
+        
+        #se atingir o criterio de parada, interrompe e retorna os resultados
+        erro = calculaErro(X,Xa)
+        
+        if(erro < E):
+            print("Terminou Gauss Seidel com erro de: ", erro)
+            return [X, passos]
+            
+        #recebe vetor anterior
+        Xa = X.copy()
+    
+    print("Gauss Seidel nao convergiu ou precisa de mais iteracoes para convergir")
+    return [X, passos]
+            
+            
 #vdet = det(m22)
 #print("Determinante 2x2: " + str(vdet));
 
@@ -329,8 +378,10 @@ def jacobi(M, B, chute_inicial, E, max_iteracoes):
 #print("Resultado do sistema (diagonal inferior): ", res[0]);
 #print("Passos ate a resolucao: ", res[1])
 
+imprimeMatriz(m33J, b33J)
+
 inicio = getTime()
-res = gauss(m66, b66)
+res = gauss(m33J, b33J)
 fim  = getTime()
 print("Resultado do sistema por Gauss: ", res[0]);
 print("Passos ate a resolucao: ", res[1])
@@ -344,13 +395,26 @@ print("Passos ate a resolucao: ", res[1])
 imprimeDiferencaTempo(inicio, fim)
 '''
 
+print("--------------------")
 print("Metodo de Jacobi (iterativo)")
-chute_inicial = [0] * len(m66)
+chute_inicial = [1.0] * len(m33J[0])
 precisao = 0.01
 inicio = getTime()
-resJacobi = jacobi(m66, b66, chute_inicial, precisao, 1000)
+resJacobi = jacobi(m33J, b33J, chute_inicial, precisao, 100)
 fim  = getTime()
 print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
 print("Passos ate a resolucao: " + repr(resJacobi[1]))
 imprimeDiferencaTempo(inicio, fim)
-print("Resultado do sistema: ", res[0]);
+print("Resultado do sistema: ", resJacobi[0]);
+
+print("--------------------")
+print("Metodo de Gauss Seidel (iterativo)")
+chute_inicial = [0] * len(m33J[0])
+precisao = 0.01
+inicio = getTime()
+resGS = gaussSeidel(m33J, b33J, chute_inicial, precisao, 100)
+fim  = getTime()
+print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
+print("Passos ate a resolucao: " + repr(resGS[1]))
+imprimeDiferencaTempo(inicio, fim)
+print("Resultado do sistema: ", resGS[0])

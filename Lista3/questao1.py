@@ -78,6 +78,8 @@ def distanciaInfinito(x1, x2):
 def calculaErro(x_prox, x_atual):
     return distanciaInfinito(x_prox, x_atual) / normaInfinito(x_prox)
     
+
+    
 #metodos para calculo das condicoes dos metodos
 
 def det(M):
@@ -127,7 +129,44 @@ def det(M):
             vdet = vdet + cft
                 
         return vdet
+    
+    
+def verificaDiagonalDominante(M):
+    ordem = len(M)
+    #percorre a matriz
+    for i in range(ordem):
+        soma = 0
+        diag = M[i][i]
+        for j in range(ordem):
+            if(i != j):
+                soma += abs(M[i][j])
+        if(soma >= diag):
+            return False
+    return True
 
+def verificaPositivaDefinida(M):
+    ordem = len(M)
+    
+    #define as k submatrizes
+    for k in range(1, ordem):
+        
+        #inicializa a  submatriz
+        A = inicializaMatriz(k)
+        
+        #monta a submatriz
+        for i in range(k):
+            for j in range(k):
+                A[i][j] = M[i][j]
+                
+        #verifica se o det(A) <= 0, se for retorna false
+        if(det(M) <= 0):
+            return False
+            
+    #se passar tudo, e positiva definida
+    return True
+        
+    
+    
 ##### codigo da questao 2 da lista 1 que gera a matriz do problema de valor de contorno #####
 
 
@@ -369,19 +408,7 @@ def thomas(M, d):
     
 ##### Metodos Iterativos #####
     
-def verificaDiagonalDominante(M):
-    ordem = len(M)
-    #percorre a matriz
-    for i in range(ordem):
-        soma = 0
-        diag = M[i][i]
-        for j in range(ordem):
-            if(i != j):
-                soma += abs(M[i][j])
-        if(soma >= diag):
-            return False
-    return True
-'''
+
 def jacobi(M, B, chute_inicial, E, max_iteracoes):
     ordem = len(M)
     x = chute_inicial
@@ -417,12 +444,11 @@ def jacobi(M, B, chute_inicial, E, max_iteracoes):
             return [xp, passos]
         
         #prepara proxima iteracao com aproximacao da anterior
-        for i in range(len(xp)):
-            x[i] = xp[i]
+        x = xp.copy()
             
     print("Jacobi nao convergiu ou precisa de mais iteracoes para convergir")
     return [xp, passos]
-'''
+
 '''
 def jacobi(M, B, chute_inicial, E, max_iteracoes):
 
@@ -461,12 +487,14 @@ def jacobi(M, B, chute_inicial, E, max_iteracoes):
     
     return [x,passos]
 ''' 
-#Thiago (em andamento)
-def gaussSeidel(M, B, chute_inicial, E):
+#Thiago (testando implementacao em andamento)
+
+def gaussSeidel(M, B, chute_inicial, E, max_iteracoes):
     
     x0 = chute_inicial
     n = len(M)
-    x = 0.0 * len(x0)
+    X = chute_inicial.copy()
+    Xa = chute_inicial.copy()#vetor pra calcular o erro
     passos = 0
     
     if(verificaDiagonalDominante(M) == False):
@@ -477,16 +505,31 @@ def gaussSeidel(M, B, chute_inicial, E):
         
         #percorre a matriz
         for i in range(n):
-           soma = B[i]
-           
-           for j in range(0, i-2):
-               soma -= M[i][j] * x[j+1]
-               
-           for j in range(i+1, n):
-               soma -= M[i][j] * x[j]
-               
-               
-           x[i] = soma / div
+            #comeca a soma pelo termo do vetor fonte
+            soma = B[i]
+            div = 0
+            for j in range(n):
+                passos += 1
+                #separa o divisor
+                if(i==j):
+                    div = M[i][j]
+                else:
+                    soma += M[i][j] * X[j] * -1.0
+            #cria vetor de solucoes para proxima iteracao com resultados da linha
+            X[i] = soma / div
+        
+        #se atingir o criterio de parada, interrompe e retorna os resultados
+        erro = calculaErro(X,Xa)
+        
+        if(erro < E):
+            print("Terminou Gauss Seidel com erro de: ", erro)
+            return [X, passos]
+            
+        #recebe vetor anterior
+        Xa = X.copy()
+            
+    return [X,passos]
+    
 '''
 #Renan
 def gaussSeidel(M,B,chute_inicial,E):
@@ -523,7 +566,24 @@ def gaussSeidel(M,B,chute_inicial,E):
         
         return [x,passos]
 '''
+
+'''
+def cholesky(G, B):
+    n = len(M)
     
+    for j in range(n):
+        soma = 0
+        for k in range(j-1):
+            soma += G[j][k] ** 2
+        gjj = m.sqrt(ajj - soma)
+        
+        for i in range(j+1):
+            soma = 0
+            for k in range(j-1):
+                soma += G[i][k] * G[j][k]
+            gij = (aij - soma) / gjj
+'''            
+            
 ##### Gerador de grafico #####
 
 def gerarGrafico(tempo, solucao_aproximada, solucao_exata, metodo):
@@ -556,11 +616,11 @@ def gerarGrafico(tempo, solucao_aproximada, solucao_exata, metodo):
     plt.show()   
     
 
-#def LU()
+
 
 ##### Execucao dos codigos #####
 
-numero_de_particoes = 10
+numero_de_particoes = 100
 erro_do_metodo = 0.01
 
 #previsao para O(n^3)
@@ -570,7 +630,7 @@ res = gerarMatriz(numero_de_particoes, erro_do_metodo)
 M = res[0]
 B = res[1]
 
-#imprimeMatriz(M)
+#imprimeMatriz(M, B)
 
 '''
 print("Metodo de Gauss (direto)")
@@ -606,9 +666,9 @@ imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resThomas[0], res[3], "Thomas")
 '''
 
-'''
+
 print("Metodo de Jacobi (iterativo)")
-chute_inicial = [0] * (numero_de_particoes - 1)
+chute_inicial = [0.8] * (numero_de_particoes - 1)
 precisao = 0.01
 inicio = getTime()
 resJacobi = jacobi(M, B, chute_inicial, precisao, 1000)
@@ -617,8 +677,9 @@ print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_p
 print("Passos ate a resolucao: " + repr(resJacobi[1]))
 imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resJacobi[0], res[3], "Jacobi")
-'''
 
+
+'''
 print("Metodo de Gauss Seidel (iterativo)")
 chute_inicial = [0] * (numero_de_particoes - 1)
 precisao = 0.01
@@ -629,3 +690,4 @@ print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_p
 print("Passos ate a resolucao: " + repr(resGS[1]))
 imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resGS[0], res[3], "Gauss Seidel")
+'''
