@@ -487,28 +487,25 @@ def jacobi(M, B, chute_inicial, E, max_iteracoes):
     
     return [x,passos]
 ''' 
-#Thiago (testando implementacao em andamento)
 
+#Thiago (funcionou, mas esta dando muitos passos)
 def gaussSeidel(M, B, chute_inicial, E, max_iteracoes):
     
-    x0 = chute_inicial
-    n = len(M)
-    X = chute_inicial.copy()
-    Xa = chute_inicial.copy()#vetor pra calcular o erro
+    ordem = len(M[0])
+    X = list(chute_inicial)
+    Xa = list(chute_inicial)#vetor pra calcular o erro
     passos = 0
     
-    if(verificaDiagonalDominante(M) == False):
-        print("A matriz nao e diagonal dominante, portanto nao ira convergir")
-        return [[0] * ordem, 0]
+    print("ordem da matriz", ordem)
     
     for k in range(max_iteracoes):
         
         #percorre a matriz
-        for i in range(n):
+        for i in range(ordem):
             #comeca a soma pelo termo do vetor fonte
             soma = B[i]
             div = 0
-            for j in range(n):
+            for j in range(ordem):
                 passos += 1
                 #separa o divisor
                 if(i==j):
@@ -526,9 +523,10 @@ def gaussSeidel(M, B, chute_inicial, E, max_iteracoes):
             return [X, passos]
             
         #recebe vetor anterior
-        Xa = X.copy()
-            
-    return [X,passos]
+        Xa = list(X)#copia lista
+    
+    print("Gauss Seidel nao convergiu ou precisa de mais iteracoes para convergir")
+    return [X, passos]
     
 '''
 #Renan
@@ -666,7 +664,7 @@ imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resThomas[0], res[3], "Thomas")
 '''
 
-
+'''
 print("Metodo de Jacobi (iterativo)")
 chute_inicial = [0.8] * (numero_de_particoes - 1)
 precisao = 0.01
@@ -677,9 +675,9 @@ print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_p
 print("Passos ate a resolucao: " + repr(resJacobi[1]))
 imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resJacobi[0], res[3], "Jacobi")
-
-
 '''
+
+
 print("Metodo de Gauss Seidel (iterativo)")
 chute_inicial = [0] * (numero_de_particoes - 1)
 precisao = 0.01
@@ -690,4 +688,4 @@ print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_p
 print("Passos ate a resolucao: " + repr(resGS[1]))
 imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resGS[0], res[3], "Gauss Seidel")
-'''
+

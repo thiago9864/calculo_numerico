@@ -78,13 +78,25 @@ m33J = [
 ]
 b33J = [8.0, 9.0, 20.0]
 
+#Matriz para cholesky (apostila)
+m33C = [
+    [ 4.0, -2.0,  2.0],
+    [-2.0, 10.0, -7.0],
+    [ 2.0, -7.0, 30.0]
+]
+b33C = [8.0, 11.0, -31.0]
+
+
+
 #metodos para contagem de tempo
 def getTime():
     return datetime.now()
     
 def imprimeDiferencaTempo(inicio, fim):
     dif = fim - inicio
-    print("Tempo ate solucao: ", dif)
+    sys.stdout.write("Tempo de execucao: ")
+    sys.stdout.flush()
+    print(dif)
 
 def imprimeMatriz(matriz, vetor_solucao):
     ordem = len(matriz[0])
@@ -96,6 +108,50 @@ def imprimeMatriz(matriz, vetor_solucao):
         sys.stdout.flush()
         print("")
     print("--------------------------")
+    
+def inicializaMatriz(ordem):
+    return [[0 for x in range(ordem)] for y in range(ordem)] 
+    
+def copiaMatriz(matriz):
+    Mr = list(matriz)
+    ordem = len(matriz[0])
+    for i in range(ordem):
+        Mr[i] = list(matriz[i])
+    return Mr
+        
+#Metodos necessarios para os algoritmos de resolucao de sistemas
+def normaInfinito(x):
+    size = len(x)
+    maximo = abs(x[0])   
+    
+    for i in range(size):
+        temp = abs(x[i])        
+        if(temp > maximo):
+                maximo = temp
+            
+    return maximo
+    
+def distanciaInfinito(x1, x2):
+    if(len(x1) != len(x2)):
+        print("O tamanho dos vetores x1 e x2 precisa ser o mesmo")
+        return 0
+        
+    size = len(x1)
+    dist = abs(x1[0] - x2[0])  
+    
+    
+    for i in range(size):
+        temp = abs(x1[0] - x2[0])
+        if(dist > temp):
+            temp = dist
+            
+    return dist
+        
+        
+def calculaErro(x_prox, x_atual):
+    return distanciaInfinito(x_prox, x_atual) / normaInfinito(x_prox)
+    
+
 
 def det(M):
     if(len(M)==0):
@@ -191,10 +247,15 @@ def retroSubstituicao(M, B):
         
 
 def gauss(M, B):
-    if(len(M)==0):
+    
+    #cria uma copia
+    Ma = copiaMatriz(M)
+    Ba = list(B)
+    
+    if(len(Ma[0])==0):
         return 0
     
-    ordem = len(M)
+    ordem = len(Ma[0])
     passos = 0
     
     #percorre os pivos da matriz zerando as linhas abaixo
@@ -203,36 +264,42 @@ def gauss(M, B):
         
         #percorre os elementos abaixo do pivo para extrair o multiplicador
         for i in range(t, ordem):  
-            mult = M[i][k] / M[k][k]
+            mult = Ma[i][k] / Ma[k][k]
             
             #usa o multiplicador pra zerar o elemento da linha
             for j in range(t, ordem):  
-                M[i][j] = M[i][j] - mult * M[k][j]
+                Ma[i][j] = Ma[i][j] - mult * Ma[k][j]
                 passos+=1
             
             #usa o multiplicador pra mudar o elemento no vetor fonte
-            B[i] = B[i] - mult * B[k]
+            Ba[i] = Ba[i] - mult * Ba[k]
             
     #agora que tem uma matriz diagonal superior, usa retroSubstituicao
-    retrosub = retroSubstituicao(M, B)
+    retrosub = retroSubstituicao(Ma, Ba)
     return [retrosub[0], retrosub[1] + passos]
 
-def trocarLinhas(M, B, linha_a, linha_b):
-    ordem = len(M[0])
+def trocarLinhas(Ma, Ba, linha_a, linha_b):
+    
+    ordem = len(Ma[0])
     #print("troca as linhas "+str(linha_a)+" e "+str(linha_b))
     for j in range(0, ordem):
         #troca a linha da matriz
-        elemento = M[linha_a][j]
-        M[linha_a][j] = M[linha_b][j]
-        M[linha_b][j] = elemento
+        elemento = Ma[linha_a][j]
+        Ma[linha_a][j] = Ma[linha_b][j]
+        Ma[linha_b][j] = elemento
 
     #troca a linha do vetor fonte
-    elemento = B[linha_a]
-    B[linha_a] = B[linha_b]
-    B[linha_b] = elemento
+    elemento = Ba[linha_a]
+    Ba[linha_a] = Ba[linha_b]
+    Ba[linha_b] = elemento
 
 def gaussPivoteamento(M, B):    
-    ordem = len(M[0])
+    
+    #cria uma copia
+    Ma = copiaMatriz(M)
+    Ba = list(B)
+    
+    ordem = len(Ma[0])
     passos = 0
 
     #imprimeMatriz(M, B)
@@ -241,34 +308,34 @@ def gaussPivoteamento(M, B):
     for a in range(0, ordem):
 
         #armazena pivo em modulo
-        maior_elemento = abs(M[a][a])
+        maior_elemento = abs(Ma[a][a])
         linha_a = a
         linha_b = a
 
         #percorre as colunas a procura do maior valor
         for b in range(a, ordem):
             passos += 1
-            elemento = abs(M[b][a])
+            elemento = abs(Ma[b][a])
             if(elemento > maior_elemento):
                 maior_elemento = elemento
                 linha_b = b
         
         #se os indices das linhas a e b forem diferentes, faz a troca de linha
         if(linha_a != linha_b):
-            trocarLinhas(M, B, linha_a, linha_b)
+            trocarLinhas(Ma, Ba, linha_a, linha_b)
             #imprimeMatriz(M, B)
 
         #percorre os elementos abaixo do pivo para extrair o multiplicador
         for i in range(a+1, ordem):  
-            mult = M[i][a] / M[a][a]
+            mult = Ma[i][a] / Ma[a][a]
             
             #usa o multiplicador pra zerar o elemento da linha
             for j in range(a, ordem):  
                 passos += 1
-                M[i][j] = M[i][j] - mult * M[a][j]
+                Ma[i][j] = Ma[i][j] - mult * Ma[a][j]
             
             #usa o multiplicador pra mudar o elemento no vetor fonte
-            B[i] = B[i] - mult * B[a]
+            Ba[i] = Ba[i] - mult * Ba[a]
         
         #print("calcula multiplicadores")
         #imprimeMatriz(M, B)
@@ -277,16 +344,18 @@ def gaussPivoteamento(M, B):
     #imprimeMatriz(M, B)
 
     #agora que tem uma matriz diagonal superior, usa retroSubstituicao
-    retrosub = retroSubstituicao(M, B)
+    retrosub = retroSubstituicao(Ma, Ba)
     return [retrosub[0], retrosub[1] + passos]
 
 ##### Metodos Iterativos #####
 
 def jacobi(M, B, chute_inicial, E, max_iteracoes):
+    
     ordem = len(M[0])
     x = chute_inicial
     xp = [0] * len(x)
     passos = 0
+    
 
     print("ordem da matriz", ordem)
     
@@ -315,17 +384,16 @@ def jacobi(M, B, chute_inicial, E, max_iteracoes):
             return [xp, passos]
         
         #prepara proxima iteracao com aproximacao da anterior
-        x = xp.copy()
+        x = list(xp)#copia a lista
             
     print("Jacobi nao convergiu ou precisa de mais iteracoes para convergir")
     return [xp, passos]
 
 def gaussSeidel(M, B, chute_inicial, E, max_iteracoes):
     
-    x0 = chute_inicial
     ordem = len(M[0])
-    X = chute_inicial.copy()
-    Xa = chute_inicial.copy()#vetor pra calcular o erro
+    X = list(chute_inicial)
+    Xa = list(chute_inicial)#vetor pra calcular o erro
     passos = 0
     
     print("ordem da matriz", ordem)
@@ -355,10 +423,32 @@ def gaussSeidel(M, B, chute_inicial, E, max_iteracoes):
             return [X, passos]
             
         #recebe vetor anterior
-        Xa = X.copy()
+        Xa = list(X)#copia lista
     
     print("Gauss Seidel nao convergiu ou precisa de mais iteracoes para convergir")
     return [X, passos]
+          
+          
+
+def cholesky(A, B):
+    n = len(M)
+    X = [0] * n
+    G = inicializaMatriz(n)
+    
+    passos = 0
+    
+    for i in range(n):
+        for j in range(i+1):
+            G[i][j] = A[i][j]
+
+    
+    imprimeMatriz(G, [0] * n)
+            
+            
+    return [X, passos]
+            
+            
+            
             
             
 #vdet = det(m22)
@@ -378,29 +468,49 @@ def gaussSeidel(M, B, chute_inicial, E, max_iteracoes):
 #print("Resultado do sistema (diagonal inferior): ", res[0]);
 #print("Passos ate a resolucao: ", res[1])
 
-imprimeMatriz(m33J, b33J)
+
+
+numero_de_particoes = len(m33J[0])
+
+M = m33C;
+B = b33C
+
+imprimeMatriz(M, B)
 
 inicio = getTime()
-res = gauss(m33J, b33J)
+res = gauss(M, B)
 fim  = getTime()
 print("Resultado do sistema por Gauss: ", res[0]);
 print("Passos ate a resolucao: ", res[1])
 imprimeDiferencaTempo(inicio, fim)
-'''
+
+imprimeMatriz(M, B)
+
+print("--------------------")
 inicio = getTime()
-res = gaussPivoteamento(m33Pv, b33Pv)
+res = gaussPivoteamento(M, B)
 fim  = getTime()
 print("Resultado do sistema por Gauss (pivoteado): ", res[0]);
 print("Passos ate a resolucao: ", res[1])
 imprimeDiferencaTempo(inicio, fim)
-'''
+
+imprimeMatriz(M, B)
+
+print("--------------------")
+inicio = getTime()
+res = cholesky(M, B)
+fim  = getTime()
+print("Resultado do sistema por Cholesky: ", res[0]);
+print("Passos ate a resolucao: ", res[1])
+imprimeDiferencaTempo(inicio, fim)
+
 
 print("--------------------")
 print("Metodo de Jacobi (iterativo)")
-chute_inicial = [1.0] * len(m33J[0])
+chute_inicial = [1.0] * numero_de_particoes
 precisao = 0.01
 inicio = getTime()
-resJacobi = jacobi(m33J, b33J, chute_inicial, precisao, 100)
+resJacobi = jacobi(M, B, chute_inicial, precisao, 100)
 fim  = getTime()
 print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
 print("Passos ate a resolucao: " + repr(resJacobi[1]))
@@ -409,12 +519,13 @@ print("Resultado do sistema: ", resJacobi[0]);
 
 print("--------------------")
 print("Metodo de Gauss Seidel (iterativo)")
-chute_inicial = [0] * len(m33J[0])
+chute_inicial = [0] * numero_de_particoes
 precisao = 0.01
 inicio = getTime()
-resGS = gaussSeidel(m33J, b33J, chute_inicial, precisao, 100)
+resGS = gaussSeidel(M, B, chute_inicial, precisao, 100)
 fim  = getTime()
 print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
 print("Passos ate a resolucao: " + repr(resGS[1]))
 imprimeDiferencaTempo(inicio, fim)
 print("Resultado do sistema: ", resGS[0])
+
