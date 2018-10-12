@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import sys
 from datetime import datetime
 
@@ -38,7 +40,7 @@ class Utils():
         
     def transposicao(self, matriz):
         ordem = len(matriz[0])
-        Mt = inicializaMatriz(ordem)    
+        Mt = self.inicializaMatriz(ordem)    
         for i in range(ordem):
             for j in range(ordem):
                 Mt[i][j] = matriz[j][i]   
@@ -139,7 +141,7 @@ class Utils():
                         A.append(line)
                         
                 #calcula o cofator
-                cft = (-1.0)**(n+1) * M[p-1][n-1] * det(A)
+                cft = (-1.0)**(n+1) * M[p-1][n-1] * self.det(A)
                 
                 #concatena com o valor anterior
                 vdet = vdet + cft
@@ -166,7 +168,7 @@ class Utils():
         for k in range(1, ordem):
             
             #inicializa a  submatriz
-            A = inicializaMatriz(k)
+            A = self.inicializaMatriz(k)
             
             #monta a submatriz
             for i in range(k):
@@ -174,9 +176,51 @@ class Utils():
                     A[i][j] = M[i][j]
                     
             #verifica se o det(A) <= 0, se for retorna false
-            if(det(M) <= 0):
+            if(self.det(M) <= 0):
                 return False
                 
         #se passar tudo, e positiva definida
         return True
-        
+
+
+    def obtemInfoMatriz(self, M):
+        det = self.det(M)
+        print("----")
+        if(det > 0):
+            print("Determinante da matriz é maior que zero, e igual a: " + repr(det))
+        else:
+            print("Determinante da matriz é menor que zero, e igual a: " + repr(det))
+
+        if(self.verificaDiagonalDominante(M)):
+            print("A matriz é diagonal dominante")
+        else:
+            print("A matriz não é diagonal dominante")
+
+        if(self.verificaPositivaDefinida(M)):
+            print("A matriz é positiva definida")
+        else:
+            print("A matriz não é positiva definida")
+
+    def checarCriterioDasLinhas(self, M):
+
+        ordem = len(M)
+
+        for i in range(ordem):
+            valores = [] 
+            div = M[i][i]
+
+            #se algum elemento da diagonal principal for zero
+            #a matriz nao satisfaz o criterio das linhas
+            if(div == 0):
+                return False
+
+            for j in range(ordem):
+                if(i != j):
+                    valores.append(M[i][j] / div)
+                
+            #um elemento dividido pelo valor da diagonal principal deu maior ou igual que 1
+            #a matriz nao satisfaz o criterio das linhas
+            if(max(valores) >= 1):
+                return False
+
+        return True

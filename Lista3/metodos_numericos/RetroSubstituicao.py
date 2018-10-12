@@ -11,7 +11,6 @@ class RetroSubstituicao():
         #cria array de solucao
         sol = [0] * ordem
         
-        
         #checa se e superior
         isSuperior = (M[ordem-1][0] == 0)
         
