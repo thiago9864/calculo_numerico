@@ -5,186 +5,20 @@ import matplotlib.lines as mlines
 import math as m
 import numpy as np
 from numpy import linalg  
-import sys
-from datetime import datetime
+from metodos_numericos.RetroSubstituicao import RetroSubstituicao
+
+#imports locais
+from Utils import Utils
 
 #talvez usar
 #https://stackoverflow.com/questions/20548628/how-to-do-parallel-programming-in-python
 #https://sebastianraschka.com/Articles/2014_multiprocessing.html
 
-#metodos uteis
-def imprimeMatriz(matriz, vetor_solucao):
-    ordem = len(matriz[0])
-    just_space = 8
-    for i in range(ordem):
-        for j in range(ordem):
-            sys.stdout.write("{0:.4f}".format(matriz[i][j]).ljust(just_space))
-        sys.stdout.write("| " + repr(vetor_solucao[i]).ljust(just_space))
-        sys.stdout.flush()
-        print("")
-    print("--------------------------")
-
-def inicializaMatriz(ordem):
-    return [[0 for x in range(ordem)] for y in range(ordem)] 
-    
-def copiaMatriz(matriz):
-    Mr = list(matriz)
-    ordem = len(matriz[0])
-    for i in range(ordem):
-        Mr[i] = list(matriz[i])
-    return Mr
-    
-def transposicao(matriz):
-    ordem = len(matriz[0])
-    Mt = inicializaMatriz(ordem)    
-    for i in range(ordem):
-        for j in range(ordem):
-            Mt[i][j] = matriz[j][i]   
-    return Mt
-            
-
-def getTime():
-    return datetime.now()
-    
-def imprimeDiferencaTempo(inicio, fim):
-    dif = fim - inicio
-    sys.stdout.write("Tempo de execucao: ")
-    sys.stdout.flush()
-    print(dif)
-    
-def zeraMatriz(A):
-    n = len(A)
-    for i in range(n):
-        for j in range(n):
-            A[i][j] = 0
-    
 #Definicao da funcao solucao exata
 def F(x, c1, c2, E): 
     return c1 * m.exp(- x / m.sqrt (E)) +  c2 * m.exp(x / m.sqrt (E)) + 1.0
-    
-#Metodos necessarios para os algoritmos de resolucao de sistemas
-def normaInfinito(x):
-    size = len(x)
-    maximo = abs(x[0])   
-    
-    for i in range(size):
-        temp = abs(x[i])        
-        if(temp > maximo):
-                maximo = temp
-            
-    return maximo
-    
-def distanciaInfinito(x1, x2):
-    if(len(x1) != len(x2)):
-        print("O tamanho dos vetores x1 e x2 precisa ser o mesmo")
-        return 0
-        
-    size = len(x1)
-    dist = abs(x1[0] - x2[0])  
-    
-    
-    for i in range(size):
-        temp = abs(x1[0] - x2[0])
-        if(dist > temp):
-            temp = dist
-            
-    return dist
-        
-        
-def calculaErro(x_prox, x_atual):
-    return distanciaInfinito(x_prox, x_atual) / normaInfinito(x_prox)
-    
-
-    
-#metodos para calculo das condicoes dos metodos
-
-def det(M):
-    if(len(M)==0):
-        return 0
-        
-    ordem = len(M[0])
-    
-    #Calcula determinante 2x2 simples em o(1)
-    if(ordem == 2):
-        return (M[0][0] * M[1][1]) - (M[0][1] * M[1][0])
-    
-    #Usa Sarry pra calcular o 3x3 em o(1)
-    elif(ordem == 3):
-        d1 = (M[0][0] * M[1][1] * M[2][2])
-        d2 = (M[0][1] * M[1][2] * M[2][0])
-        d3 = (M[0][2] * M[1][0] * M[2][1])
-        
-        d4 = (M[0][2] * M[1][1] * M[2][0])
-        d5 = (M[0][0] * M[1][2] * M[2][1])
-        d6 = (M[0][1] * M[1][0] * M[2][2])
-        
-        return (d1 + d2 + d3) - (d4 + d5 + d6) 
-    
-    #Usa metodo de Laplace matrizes nxn com n > 3 em 0(3)
-    else:
-        vdet = 0
-        p = 1 #usa a linha 1
-        
-        #percorre a linha da matriz
-        for n in range(1, ordem+1):            
-            #separa a matriz auxiliar
-            A = []
-            for i in range(1, ordem+1):
-                line = []
-                for j in range(1, ordem+1):
-                    
-                    if(i != p and j != n):
-                        line.append(M[i-1][j-1])
-                if(len(line) > 0):
-                    A.append(line)
-                    
-            #calcula o cofator
-            cft = (-1.0)**(n+1) * M[p-1][n-1] * det(A)
-            
-            #concatena com o valor anterior
-            vdet = vdet + cft
-                
-        return vdet
-    
-    
-def verificaDiagonalDominante(M):
-    ordem = len(M)
-    #percorre a matriz
-    for i in range(ordem):
-        soma = 0
-        diag = M[i][i]
-        for j in range(ordem):
-            if(i != j):
-                soma += abs(M[i][j])
-        if(soma >= diag):
-            return False
-    return True
-
-def verificaPositivaDefinida(M):
-    ordem = len(M)
-    
-    #define as k submatrizes
-    for k in range(1, ordem):
-        
-        #inicializa a  submatriz
-        A = inicializaMatriz(k)
-        
-        #monta a submatriz
-        for i in range(k):
-            for j in range(k):
-                A[i][j] = M[i][j]
-                
-        #verifica se o det(A) <= 0, se for retorna false
-        if(det(M) <= 0):
-            return False
-            
-    #se passar tudo, e positiva definida
-    return True
-        
-    
-    
+       
 ##### codigo da questao 2 da lista 1 que gera a matriz do problema de valor de contorno #####
-
 
 def gerarMatriz(num_particoes, E):
 
@@ -215,7 +49,7 @@ def gerarMatriz(num_particoes, E):
     B = []
 
     #monta matriz
-    M = inicializaMatriz(ordem)
+    M = Utils().inicializaMatriz(ordem)
 
     for i in range(ordem):
         for j in range(ordem):
@@ -241,51 +75,7 @@ def gerarMatriz(num_particoes, E):
 ##### Metodos de resolucao de sistemas #####
 
 
-def retroSubstituicao(M, B):
-    if(len(M)==0):
-        return 0
-    
-    ordem = len(M[0])
-    temp = 0
-    passos = 0
-    
-    #cria array de solucao
-    sol = [0] * ordem
-    
-    
-    #checa se e superior
-    isSuperior = (M[ordem-1][0] == 0)
-    
-    #percorre as linhas da matriz (ta funcionando)
-    for n in range(0, ordem):  
-        
-        #define o i se for superior ou inferior
-        if(isSuperior):
-            i = ordem - n - 1
-        else:
-            i = n
-        
-        #valor do vetor solucao da linha correspondente
-        temp = B[i]
-        
-        #soma os valores exceto o valor do pivo
-        for j in range(0, ordem):
-            if(j != i):
-                temp += sol[j] * M[i][j] * -1
-                passos += 1
-                
-       
-        #interrompe se der divisao por zero
-        div =  M[i][i]
-        if(div == 0):
-            return
-            
-        #calcula a solucao da linha, usando a soma e o valor do pivo
-        sol[i] = temp / M[i][i]
-        
 
-        
-    return [sol, passos]
         
 
 def gauss(M, B):
@@ -312,24 +102,10 @@ def gauss(M, B):
             B[i] = B[i] - mult * B[k]
             
     #agora que tem uma matriz diagonal superior, usa retroSubstituicao
-    retrosub = retroSubstituicao(M, B)
+    retrosub = RetroSubstituicao().executar(M, B)
         
     return [retrosub[0], retrosub[1] + passos]
 
-
-def trocarLinhas(M, B, linha_a, linha_b):
-    ordem = len(M[0])
-    #print("troca as linhas "+str(linha_a)+" e "+str(linha_b))
-    for j in range(0, ordem):
-        #troca a linha da matriz
-        elemento = M[linha_a][j]
-        M[linha_a][j] = M[linha_b][j]
-        M[linha_b][j] = elemento
-
-    #troca a linha do vetor fonte
-    elemento = B[linha_a]
-    B[linha_a] = B[linha_b]
-    B[linha_b] = elemento
 
 def gaussPivoteamento(M, B):    
     ordem = len(M[0])
@@ -370,7 +146,7 @@ def gaussPivoteamento(M, B):
             B[i] = B[i] - mult * B[a]
 
     #agora que tem uma matriz diagonal superior, usa retroSubstituicao
-    retrosub = retroSubstituicao(M, B)
+    retrosub = RetroSubstituicao().retroSubstituicao(M, B)
     return [retrosub[0], retrosub[1] + passos]
 
 
@@ -426,11 +202,11 @@ def thomas(M, d):
 def cholesky(A, B):
     
     #cria uma copia
-    Ac = copiaMatriz(A)
+    Ac = Utils().copiaMatriz(A)
     Bc = list(B)
     
     n = len(Ac[0])
-    G = inicializaMatriz(n)
+    G = Utils().inicializaMatriz(n)
     
     passos = 0
     
@@ -459,8 +235,8 @@ def cholesky(A, B):
     #o resultado e uma matriz diagonal superior
     #que eu acho que e a G transposta
     
-    Gt = copiaMatriz(G)
-    G = transposicao(G)#transposta da transposta resulta na matriz original
+    Gt = Utils().copiaMatriz(G)
+    G = Utils().transposicao(G)#transposta da transposta resulta na matriz original
     
     #imprimeMatriz(Gt, [0] * n)
     #imprimeMatriz(G, [0] * n)
@@ -484,7 +260,7 @@ def jacobi(M, B, chute_inicial, E, max_iteracoes):
     xp = [0] * len(x)
     passos = 0
     
-    if(verificaDiagonalDominante(M) == False):
+    if(Utils().verificaDiagonalDominante(M) == False):
         print("A matriz nao e diagonal dominante, portanto nao ira convergir")
         return [[0] * ordem, 0]
     
@@ -506,7 +282,7 @@ def jacobi(M, B, chute_inicial, E, max_iteracoes):
             xp[i] = soma / div
         
         #se atingir o criterio de parada, interrompe e retorna os resultados
-        erro = calculaErro(xp, x) 
+        erro = Utils().calculaErro(xp, x) 
 
         if(erro < E):
             print("Terminou Jacobi com erro de: ", erro)
@@ -547,7 +323,7 @@ def gaussSeidel(M, B, chute_inicial, E, max_iteracoes):
             X[i] = soma / div
         
         #se atingir o criterio de parada, interrompe e retorna os resultados
-        erro = calculaErro(X,Xa)
+        erro = Utils().calculaErro(X,Xa)
         
         if(erro < E):
             print("Terminou Gauss Seidel com erro de: ", erro)
@@ -630,7 +406,6 @@ def gerarGrafico(tempo, solucao_aproximada, solucao_exata, metodo):
     
 
 
-
 ##### Execucao dos codigos #####
 
 numero_de_particoes = 20
@@ -645,70 +420,71 @@ B = res[1]
 
 #imprimeMatriz(M, B)
 
-'''
+
 print("Metodo de Gauss (direto)")
-inicio = getTime()
+inicio = Utils().getTime()
 resGauss = gauss(M, B)
-fim  = getTime()
+fim  = Utils().getTime()
 print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
 print("Passos ate a resolucao: " + repr(resGauss[1]))
-imprimeDiferencaTempo(inicio, fim)
+Utils().imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resGauss[0], res[3], "Gauss")
-'''
+
 
 '''
 print("Metodo de Gauss Pivoteado Parcialmente (direto)")
 print("previsao de passos: " + repr(prev_passos))
-inicio = getTime()
+inicio = Utils().getTime()
 resGauss = gaussPivoteamento(M, B)
-fim  = getTime()
+fim  = Utils().getTime()
 print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
 print("Passos ate a resolucao: " + repr(resGauss[1]))
-imprimeDiferencaTempo(inicio, fim)
+Utils().imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resGauss[0], res[3], "Gauss Pivoteado Parcialmente")
 '''
 
 '''
 print("Metodo de Thomas (direto)")
-inicio = getTime()
+inicio = Utils().getTime()
 resThomas = thomas(M, B)
-fim  = getTime()
+fim  = Utils().getTime()
 print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
 print("Passos ate a resolucao: " + repr(resThomas[1]))
-imprimeDiferencaTempo(inicio, fim)
+Utils().imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resThomas[0], res[3], "Thomas")
 '''
 
 '''
 print("Metodo de Cholesky (direto)")
-inicio = getTime()
+inicio = Utils().getTime()
 resCholesky = cholesky(M, B)
-fim  = getTime()
+fim  = Utils().getTime()
 print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
 print("Passos ate a resolucao: " + repr(resCholesky[1]))
-imprimeDiferencaTempo(inicio, fim)
+Utils().imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resCholesky[0], res[3], "Cholesky")
 '''
 '''
 print("Metodo de Jacobi (iterativo)")
 chute_inicial = [0.8] * (numero_de_particoes - 1)
 precisao = 0.01
-inicio = getTime()
+inicio = Utils().getTime()
 resJacobi = jacobi(M, B, chute_inicial, precisao, 1000)
-fim  = getTime()
+fim  = Utils().getTime()
 print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
 print("Passos ate a resolucao: " + repr(resJacobi[1]))
-imprimeDiferencaTempo(inicio, fim)
+Utils().imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resJacobi[0], res[3], "Jacobi")
 '''
-
+'''
 print("Metodo de Gauss Seidel (iterativo)")
 chute_inicial = [0] * (numero_de_particoes - 1)
 precisao = 0.01
-inicio = getTime()
+inicio = Utils().getTime()
 resGS = gaussSeidel(M, B, chute_inicial, precisao, 1000)
-fim  = getTime()
+fim  = Utils().getTime()
 print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
 print("Passos ate a resolucao: " + repr(resGS[1]))
-imprimeDiferencaTempo(inicio, fim)
+Utils().imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resGS[0], res[3], "Gauss Seidel")
+'''

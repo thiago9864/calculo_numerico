@@ -6,210 +6,11 @@ Created on Thu Sep 27 14:17:33 2018
 """
 import numpy as np
 import math as m
-import sys
-from datetime import datetime
 
-#det(m22) tem q dar -2
-m22 = [
-    [1, 2],
-    [3, 4]
-]
-
-#det(m33) tem q dar -10.10205
-m33 = [
-    [1,       0,       0],
-    [-1.5,    0,       4.5],
-    [1.12266, 2.2449, -3.3679]
-]
-
-#det(m55) tem q dar 148
-m55 = [
-    [1, 2, 5, 3, 2],
-    [1, 3, 7, 3, 4],
-    [0, 5, 2, 2, 1],
-    [1, 3, 0, 1, 2],
-    [0, 6, 7, 4, 7]
-]
-
-#Sistema da questão 1 da lista 2 de Mecânica de 2018.3
-#respostas correspondem a [Fax, Fay, Faz, T, Fbx, Fbz]
-#resposta: [-1.6250, -3.9542, -2.02, 3.6833, 0.5417, 5.2722]
-m66 = [
-    [1.0, 0.0, 0.0,  0.29412,  1.0,  0.0],
-    [0.0, 1.0, 0.0,  0.36765,  0.0,  0.0],
-    [0.0, 0.0, 1.0, -0.88235,  0.0,  1.0],
-    [0.0, 0.0, 0.0, -2.20590,  0.0,  4.5],
-    [0.0, 0.0, 0.0, -0.88233,  6.0,  0.0],
-    [0.0, 0.0, 0.0, -1.10295, -4.5,  0.0]
-]
-b66 = [0, 2.6, 0, 15.6, 0, -6.5]
+from Utils import Utils
+from Datasource import Datasource
 
 
-#Matriz diagonal superior para RetroSubstituição
-m33Rs = [
-    [1, 1, 1],
-    [0, 2, 1],
-    [0, 0, 3]
-]
-b33Rs = [3, 3, 3]
-
-#Matriz diagonal inferior para RetroSubstituição
-m44Ri = [
-    [ 2.0,  0.0,  0.0,  0.0],
-    [ 3.0,  5.0,  0.0,  0.0],    
-    [ 1.0, -6.0,  8.0,  0.0],
-    [-1.0,  4.0, -3.0,  9.0]
-]
-b44Ri = [4.0, 1.0, 48.0, 0.0]
-
-#Matriz para pivoteamento
-m33Pv = [
-    [ 2.0,  4.0, -2.0],
-    [ 4.0,  9.0, -3.0],
-    [-2.0, -3.0,  7.0]
-]
-b33Pv = [2.0, 8.0, 10.0]
-
-#Matriz para jacobi (apostila)
-m33J = [
-    [ 4.00,  0.24, -0.08],
-    [ 0.09,  3.00, -0.15],
-    [ 0.04, -0.08,  4.00]
-]
-b33J = [8.0, 9.0, 20.0]
-
-#Matriz para cholesky (apostila)
-m33C = [
-    [ 4.0, -2.0,  2.0],
-    [-2.0, 10.0, -7.0],
-    [ 2.0, -7.0, 30.0]
-]
-b33C = [8.0, 11.0, -31.0]
-
-
-
-#metodos para contagem de tempo
-def getTime():
-    return datetime.now()
-    
-def imprimeDiferencaTempo(inicio, fim):
-    dif = fim - inicio
-    sys.stdout.write("Tempo de execucao: ")
-    sys.stdout.flush()
-    print(dif)
-
-def imprimeMatriz(matriz, vetor_solucao):
-    ordem = len(matriz[0])
-    just_space = 6
-    for i in range(ordem):
-        for j in range(ordem):
-            sys.stdout.write("{0:.2f}".format(matriz[i][j]).ljust(just_space))
-        sys.stdout.write("| " + repr(vetor_solucao[i]).ljust(just_space))
-        sys.stdout.flush()
-        print("")
-    print("--------------------------")
-    
-def inicializaMatriz(ordem):
-    return [[0 for x in range(ordem)] for y in range(ordem)] 
-    
-def copiaMatriz(matriz):
-    Mr = list(matriz)
-    ordem = len(matriz[0])
-    for i in range(ordem):
-        Mr[i] = list(matriz[i])
-    return Mr
-
-def transposicao(matriz):
-    ordem = len(matriz[0])
-    Mt = inicializaMatriz(ordem)    
-    for i in range(ordem):
-        for j in range(ordem):
-            Mt[i][j] = matriz[j][i]   
-    return Mt
-            
-#Metodos necessarios para os algoritmos de resolucao de sistemas
-def normaInfinito(x):
-    size = len(x)
-    maximo = abs(x[0])   
-    
-    for i in range(size):
-        temp = abs(x[i])        
-        if(temp > maximo):
-                maximo = temp
-            
-    return maximo
-    
-def distanciaInfinito(x1, x2):
-    if(len(x1) != len(x2)):
-        print("O tamanho dos vetores x1 e x2 precisa ser o mesmo")
-        return 0
-        
-    size = len(x1)
-    dist = abs(x1[0] - x2[0])  
-    
-    
-    for i in range(size):
-        temp = abs(x1[0] - x2[0])
-        if(dist > temp):
-            temp = dist
-            
-    return dist
-        
-        
-def calculaErro(x_prox, x_atual):
-    return distanciaInfinito(x_prox, x_atual) / normaInfinito(x_prox)
-    
-
-
-def det(M):
-    if(len(M)==0):
-        return 0
-        
-    ordem = len(M[0])
-    
-    #Calcula determinante 2x2 simples em o(1)
-    if(ordem == 2):
-        return (M[0][0] * M[1][1]) - (M[0][1] * M[1][0])
-    
-    #Usa Sarry pra calcular o 3x3 em o(1)
-    elif(ordem == 3):
-        d1 = (M[0][0] * M[1][1] * M[2][2])
-        d2 = (M[0][1] * M[1][2] * M[2][0])
-        d3 = (M[0][2] * M[1][0] * M[2][1])
-        
-        d4 = (M[0][2] * M[1][1] * M[2][0])
-        d5 = (M[0][0] * M[1][2] * M[2][1])
-        d6 = (M[0][1] * M[1][0] * M[2][2])
-        
-        return (d1 + d2 + d3) - (d4 + d5 + d6) 
-    
-    #Usa metodo de Laplace matrizes nxn com n > 3 em 0(3)
-    else:
-        vdet = 0
-        p = 1 #usa a linha 1
-        
-        #percorre a linha da matriz
-        for n in range(1, ordem+1):            
-            #separa a matriz auxiliar
-            A = []
-            for i in range(1, ordem+1):
-                line = []
-                for j in range(1, ordem+1):
-                    
-                    if(i != p and j != n):
-                        line.append(M[i-1][j-1])
-                if(len(line) > 0):
-                    A.append(line)
-                    
-            #calcula o cofator
-            cft = (-1.0)**(n+1) * M[p-1][n-1] * det(A)
-            
-            #concatena com o valor anterior
-            vdet = vdet + cft
-                
-        return vdet
-        
-        
 def retroSubstituicao(M, B):
     if(len(M)==0):
         return 0
@@ -258,7 +59,7 @@ def retroSubstituicao(M, B):
 def gauss(M, B):
     
     #cria uma copia
-    Ma = copiaMatriz(M)
+    Ma = Utils().copiaMatriz(M)
     Ba = list(B)
     
     if(len(Ma[0])==0):
@@ -287,25 +88,12 @@ def gauss(M, B):
     retrosub = retroSubstituicao(Ma, Ba)
     return [retrosub[0], retrosub[1] + passos]
 
-def trocarLinhas(Ma, Ba, linha_a, linha_b):
-    
-    ordem = len(Ma[0])
-    #print("troca as linhas "+str(linha_a)+" e "+str(linha_b))
-    for j in range(0, ordem):
-        #troca a linha da matriz
-        elemento = Ma[linha_a][j]
-        Ma[linha_a][j] = Ma[linha_b][j]
-        Ma[linha_b][j] = elemento
 
-    #troca a linha do vetor fonte
-    elemento = Ba[linha_a]
-    Ba[linha_a] = Ba[linha_b]
-    Ba[linha_b] = elemento
 
 def gaussPivoteamento(M, B):    
     
     #cria uma copia
-    Ma = copiaMatriz(M)
+    Ma = Utils().copiaMatriz(M)
     Ba = list(B)
     
     ordem = len(Ma[0])
@@ -331,7 +119,7 @@ def gaussPivoteamento(M, B):
         
         #se os indices das linhas a e b forem diferentes, faz a troca de linha
         if(linha_a != linha_b):
-            trocarLinhas(Ma, Ba, linha_a, linha_b)
+            Utils.trocarLinhas(Ma, Ba, linha_a, linha_b)
             #imprimeMatriz(M, B)
 
         #percorre os elementos abaixo do pivo para extrair o multiplicador
@@ -386,7 +174,7 @@ def jacobi(M, B, chute_inicial, E, max_iteracoes):
             xp[i] = soma / div
         
         #se atingir o criterio de parada, interrompe e retorna os resultados
-        erro = calculaErro(xp, x) 
+        erro = Utils().calculaErro(xp, x) 
 
         if(erro < E):
             print("Terminou Jacobi com erro de: ", erro)
@@ -425,7 +213,7 @@ def gaussSeidel(M, B, chute_inicial, E, max_iteracoes):
             X[i] = soma / div
         
         #se atingir o criterio de parada, interrompe e retorna os resultados
-        erro = calculaErro(X,Xa)
+        erro = Utils().calculaErro(X,Xa)
         
         if(erro < E):
             print("Terminou Gauss Seidel com erro de: ", erro)
@@ -442,11 +230,11 @@ def gaussSeidel(M, B, chute_inicial, E, max_iteracoes):
 def cholesky(A, B):
     
     #cria uma copia
-    Ac = copiaMatriz(A)
+    Ac = Utils().copiaMatriz(A)
     Bc = list(B)
     
     n = len(Ac[0])
-    G = inicializaMatriz(n)
+    G = Utils().inicializaMatriz(n)
     
     passos = 0
     
@@ -478,8 +266,8 @@ def cholesky(A, B):
     
     #imprimeMatriz(G, [0] * n)
     
-    Gt = copiaMatriz(G)
-    G = transposicao(G)
+    Gt = Utils().copiaMatriz(G)
+    G = Utils().transposicao(G)
     
     #imprimeMatriz(Gt, [0] * n)
     #imprimeMatriz(G, [0] * n)
@@ -516,60 +304,62 @@ def cholesky(A, B):
 
 
 
-numero_de_particoes = len(m33J[0])
 
-M = m33C;
-B = b33C
 
-imprimeMatriz(M, B)
+M = Datasource.m33C
+B = Datasource.b33C
 
-inicio = getTime()
+numero_de_particoes = len(M[0])
+
+Utils().imprimeMatriz(M, B)
+
+inicio = Utils().getTime()
 res = gauss(M, B)
-fim  = getTime()
-print("Resultado do sistema por Gauss: ", res[0]);
+fim  = Utils().getTime()
+print("Resultado do sistema por Gauss: ", res[0])
 print("Passos ate a resolucao: ", res[1])
-imprimeDiferencaTempo(inicio, fim)
+Utils().imprimeDiferencaTempo(inicio, fim)
 
 
 print("--------------------")
-inicio = getTime()
+inicio = Utils().getTime()
 res = gaussPivoteamento(M, B)
-fim  = getTime()
-print("Resultado do sistema por Gauss (pivoteado): ", res[0]);
+fim  = Utils().getTime()
+print("Resultado do sistema por Gauss (pivoteado): ", res[0])
 print("Passos ate a resolucao: ", res[1])
-imprimeDiferencaTempo(inicio, fim)
+Utils().imprimeDiferencaTempo(inicio, fim)
 
 
 print("--------------------")
-inicio = getTime()
+inicio = Utils().getTime()
 res = cholesky(M, B)
-fim  = getTime()
-print("Resultado do sistema por Cholesky: ", res[0]);
+fim  = Utils().getTime()
+print("Resultado do sistema por Cholesky: ", res[0])
 print("Passos ate a resolucao: ", res[1])
-imprimeDiferencaTempo(inicio, fim)
+Utils().imprimeDiferencaTempo(inicio, fim)
 
 
 print("--------------------")
 print("Metodo de Jacobi (iterativo)")
 chute_inicial = [1.0] * numero_de_particoes
 precisao = 0.01
-inicio = getTime()
+inicio = Utils().getTime()
 resJacobi = jacobi(M, B, chute_inicial, precisao, 100)
-fim  = getTime()
+fim  = Utils().getTime()
 print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
 print("Passos ate a resolucao: " + repr(resJacobi[1]))
-imprimeDiferencaTempo(inicio, fim)
+Utils().imprimeDiferencaTempo(inicio, fim)
 print("Resultado do sistema: ", resJacobi[0]);
 
 print("--------------------")
 print("Metodo de Gauss Seidel (iterativo)")
 chute_inicial = [0] * numero_de_particoes
 precisao = 0.01
-inicio = getTime()
+inicio = Utils().getTime()
 resGS = gaussSeidel(M, B, chute_inicial, precisao, 100)
-fim  = getTime()
+fim  = Utils().getTime()
 print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
 print("Passos ate a resolucao: " + repr(resGS[1]))
-imprimeDiferencaTempo(inicio, fim)
+Utils().imprimeDiferencaTempo(inicio, fim)
 print("Resultado do sistema: ", resGS[0])
 
