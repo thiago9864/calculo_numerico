@@ -87,7 +87,6 @@ class Utils():
         size = len(x1)
         dist = abs(x1[0] - x2[0])  
         
-        
         for i in range(size):
             temp = abs(x1[0] - x2[0])
             if(dist > temp):
@@ -97,7 +96,19 @@ class Utils():
             
     def calculaErro(self, x_prox, x_atual):
         return self.distanciaInfinito(x_prox, x_atual) / self.normaInfinito(x_prox)
-        
+
+    def erroResidual(self, M, X, B):
+        size = len(M[0])
+        erroRet = []
+        for i in range(size):
+            valor = 0
+            for j in range(size):
+                valor += M[i][j] * X[j]
+
+            erroRet.append(abs(valor - B[i]))
+
+        return [erroRet, max(erroRet)]
+
     ######## Metodos para verificacao de matrizes ########
 
     def det(self, M):

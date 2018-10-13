@@ -29,7 +29,7 @@ def gerarMatriz(ordem):
    
 ##### Gerador de grafico #####
 
-def gerarGrafico(tempo, solucao_aproximada, metodo):
+def gerarGrafico(tempo, solucao_aproximada, titulo, metodo):
     
     #print("len tempo: ", len(tempo))
     #print("len solucao_aproximada: ", len(solucao_aproximada))
@@ -48,7 +48,7 @@ def gerarGrafico(tempo, solucao_aproximada, metodo):
     
     plt.legend(handles=[ac_line])
     
-    plt.title(u"Metodo "+metodo)
+    plt.title(titulo)
     
     #plt.axis([0, 50, 0, 100])
     plt.show()   
@@ -81,8 +81,10 @@ print("Tamanho da matriz: " + repr(numero_de_elementos) + "x" + repr(numero_de_e
 print("Passos ate a resolucao: " + repr(resGauss[1]))
 Utils().imprimeDiferencaTempo(inicio, fim)
 #print("Resultado do sistema por Gauss: ", resGauss[0]);
-gerarGrafico(arrEixoX, resGauss[0], "Gauss")
-
+#gerarGrafico(arrEixoX, resGauss[0], "Metodo de Gauss", "Gauss")
+erro = Utils().erroResidual(M, resGauss[0], B)
+print("Erro maximo encontrado: " + repr(erro[1]))
+gerarGrafico(arrEixoX, erro[0], "Erro no Metodo de Gauss", "Gauss")
 
 print("")
 print("------")
@@ -96,8 +98,10 @@ print("Tamanho da matriz: " + repr(numero_de_elementos) + "x" + repr(numero_de_e
 print("Passos ate a resolucao: " + repr(resGaussP[1]))
 Utils().imprimeDiferencaTempo(inicio, fim)
 #print("Resultado do sistema por Gauss Pivoteado: ", resGaussP[0]);
-gerarGrafico(arrEixoX, resGaussP[0], "Gauss (com pivoteamento)")
-
+#gerarGrafico(arrEixoX, resGaussP[0], "Metodo de Gauss", "Gauss (com pivoteamento)")
+erro = Utils().erroResidual(M, resGaussP[0], B)
+print("Erro maximo encontrado: " + repr(erro[1]))
+gerarGrafico(arrEixoX, erro[0], "Erro no Metodo de Gauss (Pivoteado)", "Gauss")
 
 print("")
 print("------")
@@ -111,4 +115,7 @@ print("Tamanho da matriz: " + repr(numero_de_elementos) + "x" + repr(numero_de_e
 print("Passos ate a resolucao: " + repr(resLU[1]))
 Utils().imprimeDiferencaTempo(inicio, fim)
 #print("Resultado do sistema por LU: ", resLU[0]);
-gerarGrafico(arrEixoX, resLU[0], "LU")
+#gerarGrafico(arrEixoX, resLU[0], "Metodo LU", "LU")
+erro = Utils().erroResidual(M, resLU[0], B)
+print("Erro maximo encontrado: " + repr(erro[1]))
+gerarGrafico(arrEixoX, erro[0], "Erro no Metodo LU", "LU")

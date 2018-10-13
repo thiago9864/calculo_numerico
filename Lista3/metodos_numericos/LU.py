@@ -1,4 +1,4 @@
-from RetroSubstituicao import RetroSubstituicao
+from metodos_numericos.RetroSubstituicao import RetroSubstituicao
 from Utils import Utils
 
 class LU():

@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import division 
+#from __future__ import division 
 import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 import math as m
-import numpy as np
-from numpy import linalg  
+#import numpy as np
+#from numpy import linalg  
 
 #imports locais
 from Utils import Utils
-from metodos_numericos.RetroSubstituicao import RetroSubstituicao
+#from metodos_numericos.RetroSubstituicao import RetroSubstituicao
 from metodos_numericos.Gauss import Gauss
 from metodos_numericos.GaussSeidel import GaussSeidel
 from metodos_numericos.Cholesky import Cholesky
@@ -112,11 +112,10 @@ def gerarGrafico(tempo, solucao_aproximada, solucao_exata, metodo):
 
 ##### Execucao dos codigos #####
 
-numero_de_particoes = 20
+numero_de_particoes = 100
 erro_do_metodo = 0.01
 
-#previsao para O(n^3)
-prev_passos = int((2.0/3.0) * (numero_de_particoes**3))
+prev_passos = int((1.0/3.0) * (numero_de_particoes**3))
 
 res = gerarMatriz(numero_de_particoes, erro_do_metodo)
 M = res[0]
@@ -132,7 +131,7 @@ else:
 print("")
 print("------")
 print("")
-
+'''
 print("Metodo de Gauss (direto)")
 inicio = Utils().getTime()
 resGauss = Gauss().executar(M, B)
@@ -198,18 +197,18 @@ gerarGrafico(res[2], resCholesky[0], res[3], "Cholesky")
 print("")
 print("------")
 print("")
-
+'''
 print("Metodo de Jacobi (iterativo)")
 chute_inicial = [0.8] * (numero_de_particoes - 1)
 precisao = 0.01
 inicio = Utils().getTime()
-resJacobi = Jacobi().executar(M, B, chute_inicial, precisao, 1000)
+resJacobi = Jacobi().executar3(M, B, chute_inicial, precisao, 1000)
 fim  = Utils().getTime()
 print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
 print("Passos ate a resolucao: " + repr(resJacobi[1]))
 Utils().imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resJacobi[0], res[3], "Jacobi")
-
+'''
 print("")
 print("------")
 print("")
@@ -224,3 +223,4 @@ print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_p
 print("Passos ate a resolucao: " + repr(resGS[1]))
 Utils().imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resGS[0], res[3], "Gauss Seidel")
+'''
