@@ -112,7 +112,7 @@ def gerarGrafico(tempo, solucao_aproximada, solucao_exata, metodo):
 
 ##### Execucao dos codigos #####
 
-numero_de_particoes = 100
+numero_de_particoes = 1000
 erro_do_metodo = 0.01
 
 prev_passos = int((1.0/3.0) * (numero_de_particoes**3))
@@ -184,38 +184,40 @@ gerarGrafico(res[2], resCholesky[0], res[3], "LU")
 print("")
 print("------")
 print("")
-
+'''
 print("Metodo de Cholesky (direto)")
 inicio = Utils().getTime()
-resCholesky = Cholesky().executar(M, B)
+resCholesky = Cholesky().executar2(M, B)
 fim  = Utils().getTime()
 print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
 print("Passos ate a resolucao: " + repr(resCholesky[1]))
 Utils().imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resCholesky[0], res[3], "Cholesky")
-
+'''
 print("")
 print("------")
 print("")
-'''
+
 print("Metodo de Jacobi (iterativo)")
-chute_inicial = [0.8] * (numero_de_particoes - 1)
-precisao = 0.01
+chute_inicial = [1.0] * (numero_de_particoes - 1)
+precisao = 0.00001
+print("Erro esperado de: " + repr(precisao))
 inicio = Utils().getTime()
-resJacobi = Jacobi().executar3(M, B, chute_inicial, precisao, 1000)
+resJacobi = Jacobi().executar2(M, B, chute_inicial, precisao, 5000)
 fim  = Utils().getTime()
 print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
+print("Iteracoes ate a resolucao: " + repr(resJacobi[2]))
 print("Passos ate a resolucao: " + repr(resJacobi[1]))
 Utils().imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resJacobi[0], res[3], "Jacobi")
-'''
+
 print("")
 print("------")
 print("")
 
 print("Metodo de Gauss Seidel (iterativo)")
 chute_inicial = [0] * (numero_de_particoes - 1)
-precisao = 0.01
+precisao = 0.00001
 inicio = Utils().getTime()
 resGS = GaussSeidel().executar(M, B, chute_inicial, precisao, 1000)
 fim  = Utils().getTime()

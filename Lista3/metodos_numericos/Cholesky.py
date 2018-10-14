@@ -3,6 +3,7 @@
 from metodos_numericos.RetroSubstituicao import RetroSubstituicao
 from Utils import Utils
 import math as m
+import numpy as np
 
 class Cholesky():
     #esse metodo esta com problema, pesquisar solucao
@@ -57,3 +58,44 @@ class Cholesky():
         #Gtx=y
         retrosub2 = RetroSubstituicao().executar(Gt, retrosub1[0])
         return [retrosub2[0], retrosub2[1] + passos]
+    
+    
+    def executar2(self, M, B):
+        #cria uma copia
+        A = Utils().copiaMatriz(M)
+        B = np.array(B, np.float64)
+        
+        passos = 0
+        
+        ### Codigo copiado da Internet ###
+        ### Fonte: https://rosettacode.org/wiki/Cholesky_decomposition#Python3.X_version_using_extra_Python_idioms
+        ### Esse codigo retorna a matriz L
+        L = [[0.0] * len(A) for _ in range(len(A))]
+        for i in range(len(A)):
+            for j in range(i+1):
+                passos += 1
+                s = sum(L[i][k] * L[j][k] for k in range(j))
+                L[i][j] = m.sqrt(A[i][i] - s) if (i == j) else \
+                          (1.0 / L[j][j] * (A[i][j] - s))
+    
+        #Resolucao do sistema baseado no link
+        #https://math.stackexchange.com/questions/2422012/solving-a-linear-system-with-cholesky-factorization
+        
+        #transposta da matriz L
+        Lt = Utils().transposicao(L)
+        
+        #resolve o primeiro passo do metodo
+        retrosub1 = RetroSubstituicao().executar(L, B)
+        passos += retrosub1[1]
+        
+        #vetor resposta Y
+        Y = retrosub1[0]
+    
+        #resolve o segundo passo do metodo
+        retrosub2 = RetroSubstituicao().executar(Lt, Y)
+        passos += retrosub2[1]
+        
+        #vetor resposta X
+        X = retrosub2[0]
+        
+        return [X, passos]

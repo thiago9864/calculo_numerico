@@ -27,6 +27,9 @@ class GaussSeidel():
                         soma += M[i][j] * X[j] * -1.0
                 #cria vetor de solucoes para proxima iteracao com resultados da linha
                 X[i] = soma / div
+                
+            if(k % 100 == 0):
+                print("Gauss-Seidel fez " + str(k) + " iteracoes...")
             
             #se atingir o criterio de parada, interrompe e retorna os resultados
             erro = Utils().calculaErro(X,Xa)

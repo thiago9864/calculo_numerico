@@ -1,5 +1,8 @@
+# -*- coding: utf-8 -*-
+
 import sys
 from datetime import datetime
+import numpy as np
 
 class Utils():
     def getTime(self):
@@ -17,10 +20,13 @@ class Utils():
 
     def imprimeMatriz(self, matriz, vetor_solucao):
         ordem = len(matriz[0])
-        just_space = 6
+        if(ordem == 0):
+            print("Matriz Vazia")
+            return
+        just_space = 15
         for i in range(ordem):
             for j in range(ordem):
-                sys.stdout.write("{0:.2f}".format(matriz[i][j]).ljust(just_space))
+                sys.stdout.write("{0:.3f}".format(matriz[i][j]).ljust(just_space))
             sys.stdout.write("| " + repr(vetor_solucao[i]).ljust(just_space))
             sys.stdout.flush()
             print("")
@@ -28,14 +34,15 @@ class Utils():
 
     def inicializaMatriz(self, ordem):
         return [[0 for x in range(ordem)] for y in range(ordem)] 
-    
+        
     def copiaMatriz(self, matriz):
-        Mr = list(matriz)
+        Mr = np.array(matriz, np.float64)
+        
         ordem = len(matriz[0])
         for i in range(ordem):
-            Mr[i] = list(matriz[i])
+            Mr[i] = np.array(matriz[i], np.float64)
         return Mr
-
+        
     def transposicao(self, matriz):
         ordem = len(matriz[0])
         Mt = self.inicializaMatriz(ordem)    
@@ -43,6 +50,12 @@ class Utils():
             for j in range(ordem):
                 Mt[i][j] = matriz[j][i]   
         return Mt
+
+    def zeraMatriz(self, A):
+        n = len(A[0])
+        for i in range(n):
+            for j in range(n):
+                A[i][j] = 0
 
     def trocarLinhas(self, Ma, Ba, linha_a, linha_b):
     
@@ -60,18 +73,18 @@ class Utils():
                 
     ######## Calculo do erro dos metodos numericos ########
 
-    def normaInfinito(self, x):
+    def normaMaximo(self, x):
         size = len(x)
         maximo = abs(x[0])   
         
         for i in range(size):
             temp = abs(x[i])        
             if(temp > maximo):
-                    maximo = temp
+                maximo = temp
                 
         return maximo
         
-    def distanciaInfinito(self, x1, x2):
+    def distanciaMaximo(self, x1, x2):
         if(len(x1) != len(x2)):
             print("O tamanho dos vetores x1 e x2 precisa ser o mesmo")
             return 0
@@ -79,17 +92,30 @@ class Utils():
         size = len(x1)
         dist = abs(x1[0] - x2[0])  
         
-        
         for i in range(size):
-            temp = abs(x1[0] - x2[0])
-            if(dist > temp):
-                temp = dist
+            temp = abs(x1[i] - x2[i])
+            if(temp > dist):
+                dist = temp
                 
         return dist
             
     def calculaErro(self, x_prox, x_atual):
-        return self.distanciaInfinito(x_prox, x_atual) / self.normaInfinito(x_prox)
-        
+        #print(type(x_prox[0]))
+        #print(type(x_atual[0]))
+        return self.distanciaMaximo(x_prox, x_atual) / self.normaMaximo(x_prox)
+
+    def erroResidual(self, M, X, B):
+        size = len(M[0])
+        erroRet = []
+        for i in range(size):
+            valor = 0
+            for j in range(size):
+                valor += M[i][j] * X[j]
+
+            erroRet.append(abs(valor - B[i]))
+
+        return [erroRet, max(erroRet)]
+
     ######## Metodos para verificacao de matrizes ########
 
     def det(self, M):
@@ -133,9 +159,86 @@ class Utils():
                         A.append(line)
                         
                 #calcula o cofator
-                cft = (-1.0)**(n+1) * M[p-1][n-1] * det(A)
+                cft = (-1.0)**(n+1) * M[p-1][n-1] * self.det(A)
                 
                 #concatena com o valor anterior
                 vdet = vdet + cft
                     
             return vdet
+
+    def verificaDiagonalDominante(self, M):
+        ordem = len(M)
+        #percorre a matriz
+        for i in range(ordem):
+            soma = 0
+            diag = M[i][i]
+            for j in range(ordem):
+                if(i != j):
+                    soma += abs(M[i][j])
+            if(soma >= diag):
+                return False
+        return True
+
+    def verificaPositivaDefinida(self, M):
+        ordem = len(M)
+        
+        #define as k submatrizes
+        for k in range(1, ordem):
+            
+            #inicializa a  submatriz
+            A = self.inicializaMatriz(k)
+            
+            #monta a submatriz
+            for i in range(k):
+                for j in range(k):
+                    A[i][j] = M[i][j]
+                    
+            #verifica se o det(A) <= 0, se for retorna false
+            if(self.det(M) <= 0):
+                return False
+                
+        #se passar tudo, e positiva definida
+        return True
+
+
+    def obtemInfoMatriz(self, M):
+        det = self.det(M)
+        print("----")
+        if(det > 0):
+            print("Determinante da matriz é maior que zero, e igual a: " + repr(det))
+        else:
+            print("Determinante da matriz é menor que zero, e igual a: " + repr(det))
+
+        if(self.verificaDiagonalDominante(M)):
+            print("A matriz é diagonal dominante")
+        else:
+            print("A matriz não é diagonal dominante")
+
+        if(self.verificaPositivaDefinida(M)):
+            print("A matriz é positiva definida")
+        else:
+            print("A matriz não é positiva definida")
+
+    def checarCriterioDasLinhas(self, M):
+
+        ordem = len(M)
+
+        for i in range(ordem):
+            valores = [] 
+            div = M[i][i]
+
+            #se algum elemento da diagonal principal for zero
+            #a matriz nao satisfaz o criterio das linhas
+            if(div == 0):
+                return False
+
+            for j in range(ordem):
+                if(i != j):
+                    valores.append(M[i][j] / div)
+                
+            #um elemento dividido pelo valor da diagonal principal deu maior ou igual que 1
+            #a matriz nao satisfaz o criterio das linhas
+            if(max(valores) >= 1):
+                return False
+
+        return True

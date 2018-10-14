@@ -1,3 +1,5 @@
+import numpy as np
+
 class RetroSubstituicao():
 
     def executar(self, M, B):
@@ -9,7 +11,7 @@ class RetroSubstituicao():
         passos = 0
         
         #cria array de solucao
-        sol = [0] * ordem
+        sol = np.array([0] * ordem, np.float64)
         
         #checa se e superior
         isSuperior = (M[ordem-1][0] == 0)
@@ -32,15 +34,10 @@ class RetroSubstituicao():
                     temp += sol[j] * M[i][j] * -1
                     passos += 1
                     
-        
-            #interrompe se der divisao por zero
-            div =  M[i][i]
-            if(div == 0):
-                return
                 
             #calcula a solucao da linha, usando a soma e o valor do pivo
             sol[i] = temp / M[i][i]
             
 
             
-        return [sol, passos]
+        return [list(sol), passos]

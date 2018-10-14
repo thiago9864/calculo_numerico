@@ -6,6 +6,7 @@ Created on Thu Sep 27 14:17:33 2018
 """
 import numpy as np
 import math as m
+import cmath as c
 
 from Utils import Utils
 from Datasource import Datasource
@@ -119,7 +120,7 @@ def gaussPivoteamento(M, B):
         
         #se os indices das linhas a e b forem diferentes, faz a troca de linha
         if(linha_a != linha_b):
-            Utils.trocarLinhas(Ma, Ba, linha_a, linha_b)
+            Utils().trocarLinhas(Ma, Ba, linha_a, linha_b)
             #imprimeMatriz(M, B)
 
         #percorre os elementos abaixo do pivo para extrair o multiplicador
@@ -226,7 +227,7 @@ def gaussSeidel(M, B, chute_inicial, E, max_iteracoes):
     return [X, passos]
           
           
-
+'''
 def cholesky(A, B):
     
     #cria uma copia
@@ -279,11 +280,50 @@ def cholesky(A, B):
     #agora que tem uma matriz diagonal superior, usa retroSubstituicao
     retrosub2 = retroSubstituicao(Gt, retrosub1[0])
     return [retrosub2[0], retrosub2[1] + passos]
+'''            
             
-            
-            
-            
-            
+def cholesky(M, B):
+    #cria uma copia
+    A = Utils().copiaMatriz(M)
+    B = np.array(B, np.float64)
+    
+    n = len(M)
+    passos = 0
+    
+    L = Utils().inicializaMatriz(n)
+    
+    print("Matriz A")
+    Utils().imprimeMatriz(A, B)
+    
+    ### Codigo copiado da Internet ###
+    ### Fonte: https://rosettacode.org/wiki/Cholesky_decomposition#Python3.X_version_using_extra_Python_idioms
+    L = [[0.0] * len(A) for _ in range(len(A))]
+    for i in range(len(A)):
+        for j in range(i+1):
+            passos += 1
+            s = sum(L[i][k] * L[j][k] for k in range(j))
+            L[i][j] = m.sqrt(A[i][i] - s) if (i == j) else \
+                      (1.0 / L[j][j] * (A[i][j] - s))
+
+    Utils().imprimeMatriz(L, B)
+    
+    Lt = Utils().transposicao(L)
+    
+    Utils().imprimeMatriz(Lt, B)
+          
+    retrosub1 = retroSubstituicao(L, B)
+    passos += retrosub1[1]
+    
+    #vetor resposta Y
+    Y = retrosub1[0]
+
+    retrosub2 = retroSubstituicao(Lt, Y)
+    passos += retrosub1[1]
+    
+    #vetor resposta X
+    X = retrosub2[0]
+    
+    return [X, passos]
             
 #vdet = det(m22)
 #print("Determinante 2x2: " + str(vdet));
@@ -306,20 +346,20 @@ def cholesky(A, B):
 
 
 
-M = Datasource.m33C
-B = Datasource.b33C
+M = Datasource.m44C
+B = Datasource.b44C
 
 numero_de_particoes = len(M[0])
 
-Utils().imprimeMatriz(M, B)
 
+'''
 inicio = Utils().getTime()
 res = gauss(M, B)
 fim  = Utils().getTime()
 print("Resultado do sistema por Gauss: ", res[0])
 print("Passos ate a resolucao: ", res[1])
 Utils().imprimeDiferencaTempo(inicio, fim)
-
+'''
 
 print("--------------------")
 inicio = Utils().getTime()
@@ -338,7 +378,7 @@ print("Resultado do sistema por Cholesky: ", res[0])
 print("Passos ate a resolucao: ", res[1])
 Utils().imprimeDiferencaTempo(inicio, fim)
 
-
+'''
 print("--------------------")
 print("Metodo de Jacobi (iterativo)")
 chute_inicial = [1.0] * numero_de_particoes
@@ -363,3 +403,4 @@ print("Passos ate a resolucao: " + repr(resGS[1]))
 Utils().imprimeDiferencaTempo(inicio, fim)
 print("Resultado do sistema: ", resGS[0])
 
+''' 

@@ -68,18 +68,18 @@ class Utils():
                 
     ######## Calculo do erro dos metodos numericos ########
 
-    def normaInfinito(self, x):
+    def normaMaximo(self, x):
         size = len(x)
         maximo = abs(x[0])   
         
         for i in range(size):
             temp = abs(x[i])        
             if(temp > maximo):
-                    maximo = temp
+                maximo = temp
                 
         return maximo
         
-    def distanciaInfinito(self, x1, x2):
+    def distanciaMaximo(self, x1, x2):
         if(len(x1) != len(x2)):
             print("O tamanho dos vetores x1 e x2 precisa ser o mesmo")
             return 0
@@ -88,14 +88,16 @@ class Utils():
         dist = abs(x1[0] - x2[0])  
         
         for i in range(size):
-            temp = abs(x1[0] - x2[0])
-            if(dist > temp):
-                temp = dist
+            temp = abs(x1[i] - x2[i])
+            if(temp > dist):
+                dist = temp
                 
         return dist
             
     def calculaErro(self, x_prox, x_atual):
-        return self.distanciaInfinito(x_prox, x_atual) / self.normaInfinito(x_prox)
+        #print(type(x_prox[0]))
+        #print(type(x_atual[0]))
+        return self.distanciaMaximo(x_prox, x_atual) / self.normaMaximo(x_prox)
 
     def erroResidual(self, M, X, B):
         size = len(M[0])
