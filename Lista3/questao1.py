@@ -112,7 +112,7 @@ def gerarGrafico(tempo, solucao_aproximada, solucao_exata, metodo):
 
 ##### Execucao dos codigos #####
 
-numero_de_particoes = 100
+numero_de_particoes = 2000
 erro_do_metodo = 0.01
 
 prev_passos = int((1.0/3.0) * (numero_de_particoes**3))
@@ -131,7 +131,7 @@ else:
 print("")
 print("------")
 print("")
-'''
+
 print("Metodo de Gauss (direto)")
 inicio = Utils().getTime()
 resGauss = Gauss().executar(M, B)
@@ -197,7 +197,7 @@ gerarGrafico(res[2], resCholesky[0], res[3], "Cholesky")
 print("")
 print("------")
 print("")
-'''
+
 print("Metodo de Jacobi (iterativo)")
 chute_inicial = [0.8] * (numero_de_particoes - 1)
 precisao = 0.01
@@ -208,7 +208,7 @@ print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_p
 print("Passos ate a resolucao: " + repr(resJacobi[1]))
 Utils().imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resJacobi[0], res[3], "Jacobi")
-'''
+
 print("")
 print("------")
 print("")
@@ -223,4 +223,3 @@ print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_p
 print("Passos ate a resolucao: " + repr(resGS[1]))
 Utils().imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resGS[0], res[3], "Gauss Seidel")
-'''
