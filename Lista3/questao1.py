@@ -112,7 +112,7 @@ def gerarGrafico(tempo, solucao_aproximada, solucao_exata, metodo):
 
 ##### Execucao dos codigos #####
 
-numero_de_particoes = 1000
+numero_de_particoes = 100
 erro_do_metodo = 0.01
 
 prev_passos = int((1.0/3.0) * (numero_de_particoes**3))
@@ -184,7 +184,7 @@ gerarGrafico(res[2], resCholesky[0], res[3], "LU")
 print("")
 print("------")
 print("")
-'''
+
 print("Metodo de Cholesky (direto)")
 inicio = Utils().getTime()
 resCholesky = Cholesky().executar2(M, B)
@@ -193,7 +193,7 @@ print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_p
 print("Passos ate a resolucao: " + repr(resCholesky[1]))
 Utils().imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resCholesky[0], res[3], "Cholesky")
-'''
+
 print("")
 print("------")
 print("")

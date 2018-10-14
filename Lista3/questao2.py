@@ -55,7 +55,7 @@ def gerarGrafico(tempo, solucao_aproximada, titulo, metodo):
      
 #### Executa os metodos #####
 
-numero_de_elementos = 1000
+numero_de_elementos = 100
     
 mat = gerarMatriz(numero_de_elementos)
 
