@@ -55,7 +55,7 @@ def gerarGrafico(tempo, solucao_aproximada, titulo, metodo):
      
 #### Executa os metodos #####
 
-numero_de_elementos = 100
+numero_de_elementos = 1000
     
 mat = gerarMatriz(numero_de_elementos)
 
@@ -72,7 +72,7 @@ for i in range(numero_de_elementos):
 #Utils().imprimeMatriz(M, B)
 #Utils().obtemInfoMatriz(M)
 
-
+'''
 print("Metodo de Gauss (sem pivoteamento)")
 inicio = Utils().getTime()
 resGauss = Gauss().executar(M, B)
@@ -106,7 +106,7 @@ gerarGrafico(arrEixoX, erro[0], "Erro no Metodo de Gauss (Pivoteado)", "Gauss")
 print("")
 print("------")
 print("")
-
+'''
 print("Metodo LU")
 inicio = Utils().getTime()
 resLU = LU().executar(M, B)
