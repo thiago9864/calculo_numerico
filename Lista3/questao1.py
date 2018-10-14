@@ -112,7 +112,7 @@ def gerarGrafico(tempo, solucao_aproximada, solucao_exata, metodo):
 
 ##### Execucao dos codigos #####
 
-numero_de_particoes = 2000
+numero_de_particoes = 3
 erro_do_metodo = 0.01
 
 prev_passos = int((1.0/3.0) * (numero_de_particoes**3))

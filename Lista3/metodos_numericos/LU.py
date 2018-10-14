@@ -3,7 +3,7 @@ from Utils import Utils
 
 class LU():
     
-    def decomposicao(M):
+    def decomposicao(self,M):
         
         ordem = len(M[0])
         
