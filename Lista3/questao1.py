@@ -131,7 +131,7 @@ else:
 print("")
 print("------")
 print("")
-'''
+
 print("Metodo de Gauss (direto)")
 inicio = Utils().getTime()
 resGauss = Gauss().executar(M, B)
@@ -225,4 +225,3 @@ print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_p
 print("Passos ate a resolucao: " + repr(resGS[1]))
 Utils().imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resGS[0], res[3], "Gauss Seidel")
-'''
