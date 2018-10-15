@@ -2,6 +2,7 @@
 
 import sys
 from datetime import datetime
+import numpy as np
 
 class Utils():
     def getTime(self):
@@ -30,6 +31,10 @@ class Utils():
 
     def inicializaMatriz(self, ordem):
         return [[0 for x in range(ordem)] for y in range(ordem)] 
+    
+    def iniciaMatrizFloat128(self, ordem):
+        matriz = np.array([np.array([0] * ordem, np.float128)] * ordem, np.float128)
+        return matriz
         
     def copiaMatriz(self, matriz):
         Mr = list(matriz)

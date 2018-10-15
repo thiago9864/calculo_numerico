@@ -112,7 +112,7 @@ def gerarGrafico(tempo, solucao_aproximada, solucao_exata, metodo):
 
 ##### Execucao dos codigos #####
 
-numero_de_particoes = 100
+numero_de_particoes = 2000
 erro_do_metodo = 0.01
 
 prev_passos = int((1.0/3.0) * (numero_de_particoes**3))
@@ -200,7 +200,7 @@ print("")
 
 print("Metodo de Jacobi (iterativo)")
 chute_inicial = [1.0] * (numero_de_particoes - 1)
-precisao = 0.00001
+precisao = 0.0001
 print("Erro esperado de: " + repr(precisao))
 inicio = Utils().getTime()
 resJacobi = Jacobi().executar2(M, B, chute_inicial, precisao, 5000)
@@ -216,10 +216,10 @@ print("------")
 print("")
 
 print("Metodo de Gauss Seidel (iterativo)")
-chute_inicial = [0] * (numero_de_particoes - 1)
-precisao = 0.00001
+chute_inicial = [1.0] * (numero_de_particoes - 1)
+precisao = 0.0001
 inicio = Utils().getTime()
-resGS = GaussSeidel().executar(M, B, chute_inicial, precisao, 1000)
+resGS = GaussSeidel().executar(M, B, chute_inicial, precisao, 5000)
 fim  = Utils().getTime()
 print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
 print("Passos ate a resolucao: " + repr(resGS[1]))

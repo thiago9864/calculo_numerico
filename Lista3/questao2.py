@@ -72,7 +72,7 @@ for i in range(numero_de_elementos):
 #Utils().imprimeMatriz(M, B)
 #Utils().obtemInfoMatriz(M)
 
-'''
+
 print("Metodo de Gauss (sem pivoteamento)")
 inicio = Utils().getTime()
 resGauss = Gauss().executar(M, B)
@@ -85,7 +85,7 @@ Utils().imprimeDiferencaTempo(inicio, fim)
 erro = Utils().erroResidual(M, resGauss[0], B)
 print("Erro maximo encontrado: " + repr(erro[1]))
 gerarGrafico(arrEixoX, erro[0], "Erro no Metodo de Gauss", "Gauss")
-
+'''
 print("")
 print("------")
 print("")
@@ -106,7 +106,7 @@ gerarGrafico(arrEixoX, erro[0], "Erro no Metodo de Gauss (Pivoteado)", "Gauss")
 print("")
 print("------")
 print("")
-'''
+
 print("Metodo LU")
 inicio = Utils().getTime()
 resLU = LU().executar(M, B)
@@ -119,3 +119,4 @@ Utils().imprimeDiferencaTempo(inicio, fim)
 erro = Utils().erroResidual(M, resLU[0], B)
 print("Erro maximo encontrado: " + repr(erro[1]))
 gerarGrafico(arrEixoX, erro[0], "Erro no Metodo LU", "LU")
+'''

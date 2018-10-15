@@ -1,5 +1,5 @@
 #from metodos_numericos.RetroSubstituicao import RetroSubstituicao
-#from Utils import Utils
+from Utils import Utils
 
 class LU():
     
@@ -8,8 +8,13 @@ class LU():
         ordem = len(M[0])
         passos = 0
         
-        L = [[0.0 for i in range(ordem)]for j in range(ordem)]
-        U = [[0.0 for i in range(ordem)]for j in range(ordem)]
+        #L = [[0.0 for i in range(ordem)]for j in range(ordem)]
+        #U = [[0.0 for i in range(ordem)]for j in range(ordem)]
+        
+        L = Utils().iniciaMatrizFloat128(ordem)
+        U = Utils().iniciaMatrizFloat128(ordem)
+        
+        #print(type(M[0]))
         
         for j in range(ordem):
             passos+=1
