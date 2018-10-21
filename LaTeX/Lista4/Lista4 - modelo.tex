@@ -1,0 +1,85 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{epsfig}
+\usepackage{fancyhdr}
+\usepackage{indentfirst} %In­dent first para­graph af­ter sec­tion header
+\usepackage{titlesec}
+\usepackage{amsmath}
+\usepackage{amsthm}
+
+\pagestyle{empty}
+
+\headheight 40mm      %
+\oddsidemargin 2.0mm  %
+\evensidemargin 2.0mm %
+\topmargin -40mm      %
+\textheight 250mm     %
+\textwidth 160mm      %
+%
+\newcounter{execs}
+\setcounter{execs}{0}
+\newcommand{\exec}[0]{\addtocounter{execs}{1}\item[\textbf{\arabic{execs}.}]}
+
+\fancypagestyle{first}
+{
+\pagestyle{fancy}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PLEASE, EDIT THIS!
+\fancyhead[LO]{\small $4^a$ Lista \\ 
+                DCC008 - Cálculo Numérico  \\
+                \textbf{Entrega: 28 de Outubro de 2018} }
+
+\fancyhead[RO]{\small Universidade Federal de Juiz de Fora - UFJF \\ 
+                Departamento de Ciência da Computação \\
+               \textit{Nome: Aluno 1}\\
+               \textit{Nome: Aluno 2}}
+
+
+\begin{document}
+\thispagestyle{first}
+\noindent \textbf{Obs1.:}  Escolha um ou mais métodos de interpolação dado em aula para resolver os problemas abaixo.
+
+\noindent \textbf{Obs2.:}  Discuta os resultados.
+
+\begin{itemize}
+
+\exec Considere a função
+$$
+f(x)=\dfrac{1}{1+25x^2}
+$$
+definida no intervalo $x\in [a,b]$ com $a=-1$ e $b=1$. 
+
+\begin{itemize}
+
+\item[a)] Seja $P_n(x)$ o polinômio que interpola $f(x)$ nos pontos
+$$
+x_k = a + \dfrac{b-a}{n}k, \quad k = 0,1,2,...,n
+$$
+igualmente espaçados no intervalo $[a,b]$. Nesse contexto,
+apresente gráficos comparando $P_n(x)$ com $f(x)$ para $n= 2,3,4,5,6,7,8,9,10$.
+
+\item [b)] Repita o item (a), porém utilizando os pontos
+$$
+x_k = \dfrac{a+b}{2} - \dfrac{b-a}{2}\cos\left(\dfrac{k}{n}\pi \right), \quad k = 0,1,2,...,n.
+$$
+igualmente espaçados no intervalo $[a,b]$.
+\item [c)] Repita o item (a), considerando  uma interpolação \textbf{linear por partes} com nós
+$$
+x_k = -1 + \dfrac{2}{n}k, \quad k = 0,1,2,...,n.
+$$
+igualmente espaçados no intervalo $[a,b]$.
+
+\item [d)] Calcule o erro de interpolação na norma do máximo $\|f(x)-P_n(x)\|_{\infty} $ e construa uma tabela comparando os resultados obtidos nos itens (a), (b) e (c) para $n = 2,5,10$. Comente os resultados.
+%$$
+%\|f(x)-P_n(x)\| = \sqrt{\int_a^b |f(x)-P_n(x)|^2}
+%$$
+%\textbf{obs.:} Para o caso da interpolação linear por partes, calcule o erro de cada intervalo, separadamente, e some os resultados.
+
+\end{itemize}
+
+\end{itemize}
+
+\end{document}
