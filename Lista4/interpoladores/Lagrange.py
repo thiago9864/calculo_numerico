@@ -6,7 +6,7 @@ Created on Sat Oct 20 21:05:05 2018
 @author: Thiago Almeida
 """
 
-class Lagrange(n,x,y,z):
+class Lagrange():
 
     def executar(self,n,x,y,z):
         
