@@ -13,6 +13,15 @@ class Utils():
         sys.stdout.flush()
         print(dif)
 
+    def imprimeMatriz(self, matriz):
+            ordem = len(matriz[0])
+            just_space = 8
+            for i in range(ordem):
+                for j in range(ordem):
+                    sys.stdout.write("{0:.4f}".format(matriz[i][j]).ljust(just_space))
+                sys.stdout.flush()
+                print("")
+            print("--------------------------")
                 
     ######## Calculo do erro dos metodos numericos ########
 

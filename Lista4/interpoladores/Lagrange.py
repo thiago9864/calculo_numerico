@@ -3,7 +3,7 @@
 """
 Created on Sat Oct 20 21:05:05 2018
 
-@author: Thiago Almeida
+@author: Renan Nunes
 """
 
 class Lagrange():

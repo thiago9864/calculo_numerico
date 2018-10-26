@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 #from metodos_numericos.RetroSubstituicao import RetroSubstituicao
 from Utils import Utils
 
