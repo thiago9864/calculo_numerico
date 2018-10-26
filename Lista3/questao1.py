@@ -112,7 +112,7 @@ def gerarGrafico(tempo, solucao_aproximada, solucao_exata, metodo):
 
 ##### Execucao dos codigos #####
 
-numero_de_particoes = 1000
+<<<<<<< Updated upstream
 erro_do_metodo = 0.01
 
 prev_passos = int((1.0/3.0) * (numero_de_particoes**3))
@@ -193,6 +193,7 @@ print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_p
 print("Passos ate a resolucao: " + repr(resCholesky[1]))
 Utils().imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resCholesky[0], res[3], "Cholesky")
+<<<<<<< Updated upstream
 
 print("")
 print("------")
@@ -205,12 +206,23 @@ print("Erro esperado de: " + repr(precisao))
 inicio = Utils().getTime()
 resJacobi = Jacobi().executar2(M, B, chute_inicial, precisao, 5000)
 fim  = Utils().getTime()
+=======
+'''
+
+print("Metodo de Jacobi (iterativo)")
+chute_inicial = [0.2] * (numero_de_particoes - 1)
+precisao = 0.01
+inicio = getTime()
+resJacobi = jacobi(M, B, chute_inicial, precisao, 1000)
+fim  = getTime()
+>>>>>>> Stashed changes
 print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
 print("Iteracoes ate a resolucao: " + repr(resJacobi[2]))
 print("Passos ate a resolucao: " + repr(resJacobi[1]))
 Utils().imprimeDiferencaTempo(inicio, fim)
 gerarGrafico(res[2], resJacobi[0], res[3], "Jacobi")
 
+<<<<<<< Updated upstream
 print("")
 print("------")
 print("")
@@ -224,4 +236,16 @@ fim  = Utils().getTime()
 print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
 print("Passos ate a resolucao: " + repr(resGS[1]))
 Utils().imprimeDiferencaTempo(inicio, fim)
+=======
+
+print("Metodo de Gauss Seidel (iterativo)")
+chute_inicial = [0.2] * (numero_de_particoes - 1)
+precisao = 0.01
+inicio = getTime()
+resGS = gaussSeidel(M, B, chute_inicial, precisao, 1000)
+fim  = getTime()
+print("Tamanho da matriz: " + repr(numero_de_particoes) + "x" + repr(numero_de_particoes))
+print("Passos ate a resolucao: " + repr(resGS[1]))
+imprimeDiferencaTempo(inicio, fim)
+>>>>>>> Stashed changes
 gerarGrafico(res[2], resGS[0], res[3], "Gauss Seidel")
