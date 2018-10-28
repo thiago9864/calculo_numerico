@@ -8,7 +8,8 @@ Created on Sat Oct 20 21:05:05 2018
 
 class Lagrange():
 
-    def executar(self,n,x,y,z):
+    #constroi o polinomio para interpolacao
+    def interpolacao(self,n,x,y,z):
         
         r = 0
         for i in range (1,n):
@@ -21,3 +22,9 @@ class Lagrange():
             r = r + y[i] * (c/d)
         
         return r
+    
+    #usa os dados da construcao do polinomio pra avaliar os pontos
+    def avaliarPonto(self, x):
+        
+        global pontos
+        global coeficientes
