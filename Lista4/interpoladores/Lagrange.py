@@ -23,8 +23,3 @@ class Lagrange():
         
         return r
     
-    #usa os dados da construcao do polinomio pra avaliar os pontos
-    def avaliarPonto(self, x):
-        
-        global pontos
-        global coeficientes

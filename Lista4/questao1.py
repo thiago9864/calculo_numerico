@@ -19,6 +19,7 @@ from interpoladores.Newton import Newton
 
 #funcao exata
 def F(x):
+    #return m.cos(x)
     return 1.0 / (1.0 + 25.0 * x**2)
 
 #gera pontos para letra A
@@ -107,10 +108,12 @@ def gerarGraficoErro(tempo, solucao_aproximada, solucao_exata, metodo, ordem):
     
     #plt.axis([0, 50, 0, 100])
     plt.show() 
+    
+
 
 #configura grafico
-num_particoes = 100
-ordem = 5
+num_particoes = 500
+ordem = 10
 a = -1.0
 b = 1.0
 
@@ -123,7 +126,11 @@ sol_aprox = np.zeros((num_particoes,), dtype=np.float128)
 #gera array com a solucao exata
 for k in range (0, num_particoes):
     sol_exata[k] = F(particoes[k])
-    
+
+#gera array com pontos em f(x)
+vy = np.zeros((ordem,), dtype=np.float128)
+for k in range (0, ordem):
+    vy[k] = F(pontos[k])    
 
 print("")
 print("------")
@@ -145,17 +152,16 @@ print("Erro (Norma do Maximo): " + repr(erroNorma))
 gerarGrafico(particoes, sol_aprox, sol_exata, "Newton", ordem)
 gerarGraficoErro(particoes, sol_aprox, sol_exata, "Newton", ordem)
 
-'''
+
 print("")
 print("------")
 print("")
 
 #inicio = Utils().getTime()
-Lagrange().interpolacao(pontos, F);
 
 #gera array com a solucao aproximada
 for k in range (0, num_particoes):
-    sol_aprox[k] = Lagrange().avaliarPonto(particoes[k])
+    sol_aprox[k] = Lagrange().interpolacao(ordem, pontos, vy, particoes[k]);
     
 #fim  = Utils().getTime()
 #Utils().imprimeDiferencaTempo(inicio, fim)
@@ -164,4 +170,3 @@ print("Erro (Norma do Maximo): " + repr(erroNorma))
 
 gerarGrafico(particoes, sol_aprox, sol_exata, "Lagrange", ordem)
 gerarGraficoErro(particoes, sol_aprox, sol_exata, "Lagrange", ordem)
-'''
