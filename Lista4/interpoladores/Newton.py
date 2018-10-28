@@ -62,9 +62,39 @@ class Newton():
         print(np.matrix(matriz))
         print(coeficientes)
     ''' 
-
+    
+    
+    '''
+    Solucao do slide, que se comportou da mesma maneira que eu tinha feito
+    '''
+    
+    def interpolacaoSlide(self, n, x, y):
+        
+        d = np.zeros((n,), dtype=np.float128)
+        
+        for i in range (0, n): 
+            d[i] = y[i]
+         
+        for k in range (1, n): 
+            for i in range (n, k): 
+                d[i] = (d[i] - d[i-1]) / (x[i] - x[i-k]);
+        
+        return d
+                
+    def avaliarPontoSlide(self, n, z, x, d):
+        r = d[n-1]
+        
+        for i in list(reversed(range (0, n-1))): 
+            r = r * (z - x[i]) + d[i]
+            
+        return r
+            
+    '''
+    Solucao que eu fiz com recursividade
+    '''
+    
     #constroi o polinomio para interpolacao
-    def interpolacao(self,x, f):
+    def interpolacao(self,x, y):
         
         global pontos
         global coeficientes
@@ -79,33 +109,40 @@ class Newton():
         coeficientes = np.zeros((n,), dtype=np.float128)
         
         #armazena primeiro coeficiente
-        coeficientes[0] = f(x[0])
+        coeficientes[0] = y[0]
         
         #comeca a recursao
-        self.diferencaRec(x, f, n, coeficientes)
+        self.diferencaRec(x, y, n, coeficientes)
         
         #coeficientes do polinomio armazenados
-        #print(coeficientes)
+        #print(list(coeficientes))
         
     #auxiliar da recursao    
-    def diferencaRec(self, x, f, n, c):
+    def diferencaRec(self, x, y, n, c):
           
         valor = 0.0
-        t = len(x)-1
-
-        if(len(x)==2):
-            valor = (f(x[1]) - f(x[0])) / (x[1] - x[0])
-        else:
-            valor = (self.diferencaRec(x[:t], f, n, c) - self.diferencaRec(x[1:t+1], f, n, c)) / (x[t] - x[0])
-           
-        #print(t)
-        if(t < n and c[t] == 0):
-            c[t] = valor
-            #print(repr("[" + repr(t) + "] = " + repr(valor)))
+        t = len(x)
         
+        #condicao de parada
+        if(len(x)==2):
+            valor = (y[1] - y[0]) / (x[1] - x[0])
+            
+        #condicao de recursividade
+        elif(len(x)>2):
+            tmp_x1 = x[0:t-1]
+            tmp_y1 = y[0:t-1]
+            tmp_x2 = x[1:t]
+            tmp_y2 = y[1:t]
+            xi = x[0]
+            xf = x[t-1]
+            
+            valor = (self.diferencaRec(tmp_x1, tmp_y1, n, c) - self.diferencaRec(tmp_x2, tmp_y2, n, c)) / (xf - xi)
+        
+        #armazena coeficiente
+        if(c[t-1] == 0):
+            c[t-1] = valor
         
         return valor
-    
     
     #usa os dados da construcao do polinomio pra avaliar os pontos
     def avaliarPonto(self, x):
@@ -114,19 +151,14 @@ class Newton():
         global coeficientes
         
         n = len(coeficientes)
-        valor = 0
-        
-        #print("n: " + str(n))
-        
+        valor = 0.0
+
         for k in range (0, n):
             valor_tmp = coeficientes[k]
-            #print("k: " + str(k))
-            
+
             for t in range (0, k):
-                #print("t: " + str(t))
                 valor_tmp *= (x - pontos[t]) 
-            
+
             valor += valor_tmp
-            #print("---")
-            
+
         return valor
