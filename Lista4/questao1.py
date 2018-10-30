@@ -14,6 +14,7 @@ import math as m
 #imports locais
 from Utils import Utils
 from interpoladores.Lagrange import Lagrange
+from interpoladores.Linear import Linear
 from interpoladores.Newton import Newton
 
 
@@ -24,27 +25,27 @@ def F(x):
 
 #gera pontos para letra A
 def gerarPontos_a(a, b, n):
-    xk = np.zeros((n,), dtype=np.float128)
+    xk = np.zeros((n+1,), dtype=np.float128)
     
-    for k in range (0,n):
+    for k in range (0,n+1):
         xk[k] = a + ((b-a)*k)/n        
     
     return xk
     
 #gera pontos para letra B
 def gerarPontos_b(a, b, n):
-    xk = np.zeros((n,), dtype=np.float128)
+    xk = np.zeros((n+1,), dtype=np.float128)
     
-    for k in range (0,n):
+    for k in range (0,n+1):
         xk[k] = ((a+b) / 2.0) - ((b-a) / 2.0) * m.cos(float(k)/n * m.pi)
     
     return xk
 
 #gera pontos para letra C
 def gerarPontos_c(a, b, n):
-    xk = np.zeros((n,), dtype=np.float128)
+    xk = np.zeros((n+1,), dtype=np.float128)
     
-    for k in range (0,n):
+    for k in range (0,n+1):
         xk[k] = -1.0 + (2.0 * k) / float(n)
     
     return xk
@@ -65,7 +66,7 @@ def gerarGrafico(tempo, solucao_aproximada, solucao_exata, metodo, ordem):
         )
     #plt.ylabel(u"Valor de f(x), P(x)") #esse 'u' antes da string é pra converter o texto pra unicode
     #plt.xlabel(u"Valor de x, " + str(len(tempo)) + u" partições")
-    plt.xlabel(str(len(tempo)) + u" partições, num_pontos: " + str(ordem))
+    plt.xlabel(str(len(tempo)) + u" partições, N = " + str(ordem))
     
     #legendas do grafico
     se_line = mlines.Line2D([], [], color='blue', marker='', markersize=0, label=u'Sol Exata')
@@ -97,7 +98,7 @@ def gerarGraficoErro(tempo, solucao_aproximada, solucao_exata, metodo, ordem):
         )
     #plt.ylabel(u"Erro f(x) - P(x)") #esse 'u' antes da string é pra converter o texto pra unicode
     #plt.xlabel(u"Valor de x, " + str(len(tempo)) + u" partições")
-    plt.xlabel(str(len(tempo)) + u" partições, num_pontos: " + str(ordem))
+    plt.xlabel(str(len(tempo)) + u" partições, N = " + str(ordem))
     
     #legendas do grafico
     se_line = mlines.Line2D([], [], color='blue', marker='', markersize=0, label=u'Erro')
@@ -112,25 +113,43 @@ def gerarGraficoErro(tempo, solucao_aproximada, solucao_exata, metodo, ordem):
 
 
 #configura grafico
-num_particoes = 500
-num_pontos = 4
+num_particoes = 100
+N = 8
 a = -1.0
 b = 1.0
 
-particoes = gerarPontos_a(a, b, num_particoes)
-pontos = gerarPontos_a(a, b, num_pontos)
 
+#gera os pontos pra interpolacao
+pontos = gerarPontos_a(a, b, N)
+
+
+#inicia os arrays do numpy com 128bits de precisao
+particoes = np.zeros((num_particoes,), dtype=np.float128)
 sol_exata = np.zeros((num_particoes,), dtype=np.float128)
 sol_aprox = np.zeros((num_particoes,), dtype=np.float128)
 
-#gera array com a solucao exata
-for k in range (0, num_particoes):
-    sol_exata[k] = F(particoes[k])
 
-#gera array com pontos em f(x)
-vy = np.zeros((num_pontos,), dtype=np.float128)
+
+#gera array com a solucao exata e particoes do grafico
+dp = (b-a) / num_particoes
+for k in range (0, num_particoes):
+    x = a + dp * k
+    particoes[k] = x
+    sol_exata[k] = F(x)
+    
+    
+
+#gera array com pontos pra interpolacao
+num_pontos = len(pontos)
+y = np.zeros((num_pontos,), dtype=np.float128)
 for k in range (0, num_pontos):
-    vy[k] = F(pontos[k])    
+    y[k] = F(pontos[k])  
+    
+'''
+print(particoes)
+print(pontos)
+print(y)
+'''
 
 '''
 print("")
@@ -139,12 +158,12 @@ print("")
 
 #inicio = Utils().getTime()
 #Newton().interpolacao(pontos, vy);
-coeficientes = Newton().interpolacaoSlide(ordem, pontos, vy);
+coeficientes = Newton().interpolacaoSlide(num_pontos, pontos, y);
 
 #gera array com a solucao aproximada
 for k in range (0, num_particoes):
     #sol_aprox[k] = Newton().avaliarPonto(particoes[k])
-    sol_aprox[k] = Newton().avaliarPontoSlide(ordem, particoes[k], pontos, coeficientes)
+    sol_aprox[k] = Newton().avaliarPontoSlide(num_pontos, particoes[k], pontos, coeficientes)
     
 #fim  = Utils().getTime()
 #Utils().imprimeDiferencaTempo(inicio, fim)
@@ -152,8 +171,8 @@ erroNorma = Utils().distanciaMaximo(sol_exata, sol_aprox)
 print("Erro (Norma do Maximo): " + repr(erroNorma))
 
 
-gerarGrafico(particoes, sol_aprox, sol_exata, "Newton", ordem)
-gerarGraficoErro(particoes, sol_aprox, sol_exata, "Newton", ordem)
+gerarGrafico(particoes, sol_aprox, sol_exata, "Newton", N)
+gerarGraficoErro(particoes, sol_aprox, sol_exata, "Newton", N)
 '''
 
 print("")
@@ -164,12 +183,32 @@ print("")
 
 #gera array com a solucao aproximada
 for k in range (0, num_particoes):
-    sol_aprox[k] = Lagrange().interpolacao(num_pontos, pontos, vy, particoes[k]);
+    sol_aprox[k] = Lagrange().interpolacao(num_pontos, pontos, y, particoes[k]);
     
 #fim  = Utils().getTime()
 #Utils().imprimeDiferencaTempo(inicio, fim)
 erroNorma = Utils().distanciaMaximo(sol_exata, sol_aprox)
 print("Erro (Norma do Maximo): " + repr(erroNorma))
 
-gerarGrafico(particoes, sol_aprox, sol_exata, "Lagrange", num_pontos)
-gerarGraficoErro(particoes, sol_aprox, sol_exata, "Lagrange", num_pontos)
+gerarGrafico(particoes, sol_aprox, sol_exata, "Lagrange", N)
+gerarGraficoErro(particoes, sol_aprox, sol_exata, "Lagrange", N)
+
+
+
+print("")
+print("------")
+print("")
+
+#inicio = Utils().getTime()
+
+#gera array com a solucao aproximada
+for k in range (0, num_particoes):
+    sol_aprox[k] = Linear().interpolacao(num_pontos, pontos, y, particoes[k]);
+    
+#fim  = Utils().getTime()
+#Utils().imprimeDiferencaTempo(inicio, fim)
+erroNorma = Utils().distanciaMaximo(sol_exata, sol_aprox)
+print("Erro (Norma do Maximo): " + repr(erroNorma))
+
+gerarGrafico(particoes, sol_aprox, sol_exata, "Linear", 1)
+gerarGraficoErro(particoes, sol_aprox, sol_exata, "Linear", 1)
