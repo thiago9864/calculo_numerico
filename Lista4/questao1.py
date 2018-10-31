@@ -114,7 +114,7 @@ def gerarGraficoErro(tempo, solucao_aproximada, solucao_exata, metodo, ordem):
 
 #configura grafico
 num_particoes = 100
-N = 8
+N = 6
 a = -1.0
 b = 1.0
 
@@ -210,5 +210,5 @@ for k in range (0, num_particoes):
 erroNorma = Utils().distanciaMaximo(sol_exata, sol_aprox)
 print("Erro (Norma do Maximo): " + repr(erroNorma))
 
-gerarGrafico(particoes, sol_aprox, sol_exata, "Linear", 1)
-gerarGraficoErro(particoes, sol_aprox, sol_exata, "Linear", 1)
+gerarGrafico(particoes, sol_aprox, sol_exata, "Linear", N)
+gerarGraficoErro(particoes, sol_aprox, sol_exata, "Linear", N)
