@@ -1,0 +1,67 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{epsfig}
+\usepackage{fancyhdr}
+\usepackage{indentfirst} %In­dent first para­graph af­ter sec­tion header
+\usepackage{titlesec}
+\usepackage{amsmath}
+\usepackage{amsthm}
+
+\pagestyle{empty}
+
+\headheight 40mm      %
+\oddsidemargin 2.0mm  %
+\evensidemargin 2.0mm %
+\topmargin -40mm      %
+\textheight 250mm     %
+\textwidth 160mm      %
+%
+\newcounter{execs}
+\setcounter{execs}{0}
+\newcommand{\exec}[0]{\addtocounter{execs}{1}\item[\textbf{\arabic{execs}.}]}
+
+\fancypagestyle{first}
+{
+\pagestyle{fancy}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PLEASE, EDIT THIS!
+\fancyhead[LO]{\small $5^a$ Lista \\ 
+                DCC008 - Cálculo Numérico  \\
+                \textbf{Entrega: 11 de Novembro de 2018} }
+
+\fancyhead[RO]{\small Universidade Federal de Juiz de Fora - UFJF \\ 
+                Departamento de Ciência da Computação \\
+               \textit{Nome: Aluno 1}\\
+               \textit{Nome: Aluno 2}}
+
+
+\begin{document}
+\thispagestyle{first}
+%    \noindent \textbf{Obs1.:}  Escolha um ou mais métodos de interpolação dado em aula para resolver os problemas abaixo.
+%    
+%    \noindent \textbf{Obs2.:}  Discuta os resultados.
+
+\begin{itemize}
+
+\exec O arquivo ``dados.txt'' contém os dados históricos referentes a cotação diária das ações da empresa Petrobras (PETR4) nos últimos 2 anos, que são negociadas na bolsa de valores de São Paulo (BOVESPA). 
+
+\begin{itemize}
+
+\item[a)] Apresente gráficos comparando os dados do arquivo ``dados.txt'' com as curvas ajustadas pelo método de mínimos quadrados para diferentes ordens polinomiais ($P_n(x)$, $n=1,3,5,10,15,20,50,100$).
+
+\item[b)] Definindo como $x$ a primeira coluna e $y$ a segunda coluna do arquivo ``dados.txt'', calcule, para todos as ordens polinomiais do item (a), o coeficiente de determinação $r$ que pode ser calculado como:
+$$
+r^2= 1 - \dfrac{\displaystyle \sum_{i=1}^{k} \left(y_i-P_n(x_i) \right)^2}{\displaystyle \sum_{i=1}^{k} y_i^2 - \dfrac{1}{k} \left(\sum_{i=1}^{k} y_i \right)^2 }
+$$
+onde $k$ denota a quantidade de dados do arquivo ``dados.txt''. Monte uma tabela apresentando os resultados do coeficiente de determinação $r$ em porcentagem ($r*100$).
+
+\item[c)] A partir dos resultados da letra (b), utilize a curva que melhor se adapte aos dados fornecidos para projetar os preços da ação para os próximos 100 dias e apresente um gráfico com este resultado. 
+
+\end{itemize}
+
+\end{itemize}
+
+\end{document}
