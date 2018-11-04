@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Nov  3 21:06:23 2018
+
+@author: Thiago Almeida
+"""
+
+import numpy as np
+from metodos_numericos.LU import LU
+
+class MinimosQuadrados():
+
+    #constroi o polinomio para interpolacao
+    def executar(self, x, y, n):
+        
+        n_col = len(x)
+        n_linhas = n+1
+        tam2 = n+1
+        
+        #ja preenche a primeira linha com 1
+        M1 = np.ones((n_linhas,n_col), dtype=np.float128)
+
+        for k in range (1,n_linhas):
+            for j in range (0,n_col):
+                M1[k][j] = x[j]**k
+            
+        
+        A = np.zeros((tam2,tam2), dtype=np.float128)
+        B = np.zeros((tam2,), dtype=np.float128)
+        
+        #cria matriz
+        for i in range (0,tam2):
+            for j in range (0,tam2):
+                a = np.array(M1[i], dtype=np.float128, copy=True)
+                b = np.array(M1[j], dtype=np.float128, copy=True)
+                
+                A[i][j] = np.dot(a, b)
+                
+        #cria vetor fonte
+        for i in range (0,tam2):
+            b = np.array(M1[i], dtype=np.float128, copy=True)
+            B[i] = np.dot(y, b)
+            
+        #calcula coeficientes
+        X = LU().executar(A, B)[0]
+
+        return X
+        
+    
+    
+    def interpolaCoeficientes(self, c, n, xk):
+        soma = 0        
+        for i in range (0,n+1):
+            soma += c[i] * (xk ** i)
+        return soma
