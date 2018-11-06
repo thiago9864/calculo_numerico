@@ -54,3 +54,17 @@ class MinimosQuadrados():
         for i in range (0,n+1):
             soma += c[i] * (xk ** i)
         return soma
+        
+    def calculaResiduo(self, y, x, n, c):
+        
+        tam = len(y)
+        
+        soma1 = 0
+        soma2 = 0
+        soma3 = 0
+        for k in range (0, tam):
+            soma1 += (y[k] - self.interpolaCoeficientes(c, n, x[k]))**2
+            soma2 += y[k]**2
+            soma3 += y[k]
+            
+        return np.sqrt(1 - (soma1 / (soma2 - (1/tam)*soma3**2)))            
