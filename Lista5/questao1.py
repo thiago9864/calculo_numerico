@@ -121,7 +121,7 @@ def gerarGraficoPrevisao(x, y, x_aprox, y_aprox, x_prev, y_prev, ordem):
     
 ###########   
     
-N = 1
+N = 80
 num_pontos = 100
 
 ###########
@@ -159,9 +159,9 @@ r = MinimosQuadrados().calculaResiduo(y, x, N, coeficientes)
 gerarGrafico(x, y, particoes, z, N)
 
 
-print("particoes", particoes)
-print("z", z)
-print("valor de r", r);
+#print("particoes", particoes)
+#print("z", z)
+print("N = "+repr(N)+", r = " + repr(r));
 
 '''
 print("")
@@ -176,14 +176,14 @@ res = np.zeros((num_pontos,), dtype=np.float128)
 
 for ni in range (1, num_pontos):
     
-    coeficientes = MinimosQuadrados().executar(x, y, ni)
+    c2 = MinimosQuadrados().executar(x, y, ni)
     
     #calcula pontos interpolados
     for k in range (0, num_pontos+1):
-        z[k] = MinimosQuadrados().interpolaCoeficientes(coeficientes, ni, particoes[k])
+        z[k] = MinimosQuadrados().interpolaCoeficientes(c2, ni, particoes[k])
         
     #calcula o r
-    r = MinimosQuadrados().calculaResiduo(y, x, ni, coeficientes)
+    r = MinimosQuadrados().calculaResiduo(y, x, ni, c2)
     res[ni] = r
     
 print("res (valores de r para cada ordem)", res)
@@ -226,9 +226,10 @@ for k in range (0, num_pontos_futuros):
     #print(k)
     xk = particoesF[k]
     zf[k] = MinimosQuadrados().interpolaCoeficientes(coeficientes, melhor_indice+1, xk)
- 
-print("particoesF", particoesF)
-print("zf", zf)
+    
+#print("coeficientes", coeficientes)
+#print("particoesF", particoesF)
+#print("zf", zf)
 
 gerarGraficoPrevisao(x, y, particoes, z, particoesF, zf, melhor_indice+1)
 #gerarGraficoPrevisao(x, y, particoes, z, [501, 502, 513, 544, 565], [26, 20, 15, 12, 14], N)

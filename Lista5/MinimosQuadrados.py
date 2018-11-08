@@ -8,6 +8,7 @@ Created on Sat Nov  3 21:06:23 2018
 
 import numpy as np
 from metodos_numericos.LU import LU
+from metodos_numericos.Gauss import Gauss
 
 class MinimosQuadrados():
 
@@ -43,13 +44,14 @@ class MinimosQuadrados():
             B[i] = np.dot(y, b)
             
         #calcula coeficientes
-        X = LU().executar(A, B)[0]
-
+        #X = LU().executar(A, B)[0]
+        X = Gauss().executarComPivoteamento(A, B)[0]
         return X
         
     
     
     def interpolaCoeficientes(self, c, n, xk):
+        
         soma = 0        
         for i in range (0,n+1):
             soma += c[i] * (xk ** i)
