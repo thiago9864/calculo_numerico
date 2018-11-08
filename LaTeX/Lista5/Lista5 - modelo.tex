@@ -34,7 +34,7 @@
 
 \fancyhead[RO]{\small Universidade Federal de Juiz de Fora - UFJF \\ 
                 Departamento de Ciência da Computação \\
-               \textit{Nome: Aluno 1}\\
+               \textit{Nome: Thiago de Almeida}\\
                \textit{Nome: Aluno 2}}
 
 
@@ -63,5 +63,29 @@ onde $k$ denota a quantidade de dados do arquivo ``dados.txt''. Monte uma tabela
 \end{itemize}
 
 \end{itemize}
+
+Analisando os dados de cotação diária da empresa PETR4 nos ultimos 2 anos através do método dos minimos quadrados. Obtem-se os seguintes resultados:
+
+\newpage
+\begin{figure}[!htb]
+\includegraphics [width=6cm,height=6cm]{G1.png}
+\includegraphics [width=6cm,height=6cm]{G3.png}
+\includegraphics [width=6cm,height=6cm]{G5.png}
+\includegraphics [width=6cm,height=6cm]{G10.png}
+\includegraphics [width=6cm,height=6cm]{G15.png}
+\includegraphics [width=6cm,height=6cm]{G20.png}
+\includegraphics [width=6cm,height=6cm]{G50.png}
+\includegraphics [width=6cm,height=6cm]{G100.png}
+\end{figure}
+
+\newpage
+
+Observando os valores, o método funciona bem para as ordens polinomiais até a ordem $n <= 56$, após esse resultado o valor aproximado não consegue ser capitado pela máquina usando a precisão de float64.
+
+\begin{figure}[!htb]
+\includegraphics [width=8cm,height=8cm]{G56.png}
+\includegraphics [width=8cm,height=8cm]{G57.png}
+\end{figure}
+
 
 \end{document}
