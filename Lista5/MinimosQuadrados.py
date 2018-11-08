@@ -19,27 +19,27 @@ class MinimosQuadrados():
         tam2 = n+1
         
         #ja preenche a primeira linha com 1
-        M1 = np.ones((n_linhas,n_col), dtype=np.float128)
+        M1 = np.ones((n_linhas,n_col), dtype=np.float64)
 
         for k in range (1,n_linhas):
             for j in range (0,n_col):
                 M1[k][j] = x[j]**k
             
         
-        A = np.zeros((tam2,tam2), dtype=np.float128)
-        B = np.zeros((tam2,), dtype=np.float128)
+        A = np.zeros((tam2,tam2), dtype=np.complex128)
+        B = np.zeros((tam2,), dtype=np.complex128)
         
         #cria matriz
         for i in range (0,tam2):
             for j in range (0,tam2):
-                a = np.array(M1[i], dtype=np.float128, copy=True)
-                b = np.array(M1[j], dtype=np.float128, copy=True)
+                a = np.array(M1[i], dtype=np.float64, copy=True)
+                b = np.array(M1[j], dtype=np.float64, copy=True)
                 
                 A[i][j] = np.dot(a, b)
                 
         #cria vetor fonte
         for i in range (0,tam2):
-            b = np.array(M1[i], dtype=np.float128, copy=True)
+            b = np.array(M1[i], dtype=np.float64, copy=True)
             B[i] = np.dot(y, b)
             
         #calcula coeficientes

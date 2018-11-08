@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 from matplotlib.pyplot import figure
 import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
 
 from MinimosQuadrados import MinimosQuadrados
 
@@ -39,6 +40,7 @@ else:
     #cai nesse se for mac
     linhas = string.split('\n')
     
+
 
 for linha in linhas:
     #quebra a linha em uma lista, separando pela tabulacao
@@ -84,7 +86,7 @@ def gerarGrafico(x, y, x_aprox, y_aprox, ordem):
     
 ###########   
     
-N = 1
+N = 100
 num_pontos = 100
 
 ###########
@@ -118,6 +120,8 @@ for k in range (0, num_pontos+1):
     
 gerarGrafico(x, y, particoes, z, N)
 
+
 r = MinimosQuadrados().calculaResiduo(y, x, N, coeficientes)
 
 print("valor de r", r);
+print("Valor de r em porcetagem:",r * 100)
