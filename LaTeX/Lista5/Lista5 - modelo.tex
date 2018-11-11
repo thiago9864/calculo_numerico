@@ -35,7 +35,7 @@
 \fancyhead[RO]{\small Universidade Federal de Juiz de Fora - UFJF \\ 
                 Departamento de Ciência da Computação \\
                \textit{Nome: Thiago de Almeida}\\
-               \textit{Nome: Aluno 2}}
+               \textit{Nome: Renan Nunes}}
 
 
 \begin{document}
@@ -64,29 +64,37 @@ onde $k$ denota a quantidade de dados do arquivo ``dados.txt''. Monte uma tabela
 
 \end{itemize}
 
-Analisando os dados de cotação diária da empresa PETR4 nos ultimos 2 anos através do método dos minimos quadrados. Obtem-se os seguintes resultados:
-
 \newpage
+
+O arquivo de dados sobre a cotação diária das ações da empresa Petrobrás (PETR4) nos últimos 2 anos foi analisado e ajustado pelo método dos mínimos quadrados.
+
+\item - Analise utilizando-se do método de Gauss.
 \begin{figure}[!htb]
-\includegraphics [width=6cm,height=6cm]{G1.png}
-\includegraphics [width=6cm,height=6cm]{G3.png}
-\includegraphics [width=6cm,height=6cm]{G5.png}
-\includegraphics [width=6cm,height=6cm]{G10.png}
-\includegraphics [width=6cm,height=6cm]{G15.png}
-\includegraphics [width=6cm,height=6cm]{G20.png}
-\includegraphics [width=6cm,height=6cm]{G50.png}
-\includegraphics [width=6cm,height=6cm]{G100.png}
+\includegraphics [width=5cm,height=5cm]{Gauss/G1.png}
+\includegraphics [width=5cm,height=5cm]{Gauss/G3.png}
+\includegraphics [width=5cm,height=5cm]{Gauss/G5.png}
+\includegraphics [width=5cm,height=5cm]{Gauss/G10.png}
+\includegraphics [width=5cm,height=5cm]{Gauss/G15.png}
+\includegraphics [width=5cm,height=5cm]{Gauss/G20.png}
+\includegraphics [width=5cm,height=5cm]{Gauss/G50.png}
+\includegraphics [width=5cm,height=5cm]{Gauss/G100.png}
 \end{figure}
 
 \newpage
 
-Observando os valores, o método funciona bem para as ordens polinomiais até a ordem $n <= 56$, após esse resultado o valor aproximado não consegue ser capitado pela máquina usando a precisão de float64.
-
+\item - Analise utilizando-se do método LU.
 \begin{figure}[!htb]
-\includegraphics [width=8cm,height=8cm]{G56.png}
-\includegraphics [width=8cm,height=8cm]{G57.png}
+\includegraphics [width=5cm,height=5cm]{LU/G1.png}
+\includegraphics [width=5cm,height=5cm]{LU/G3.png}
+\includegraphics [width=5cm,height=5cm]{LU/G5.png}
+\includegraphics [width=5cm,height=5cm]{LU/G10.png}
+\includegraphics [width=5cm,height=5cm]{LU/G15.png}
+\includegraphics [width=5cm,height=5cm]{LU/G20.png}
+\includegraphics [width=5cm,height=5cm]{LU/G50.png}
+\includegraphics [width=5cm,height=5cm]{LU/G100.png}
 \end{figure}
 
+\newpage
 
 \text Definindo as colunas x e y para o método polinomial do item (a), o coeficiente r que pode ser calculado e expresso em porcetagem é:
 \begin{table}[h]
@@ -94,25 +102,84 @@ Observando os valores, o método funciona bem para as ordens polinomiais até a 
   \begin{tabular}{l|l|lll}
     $Ordem$ $n$ & $Coeficiente$ $r$ & $Coeficiente$ $r$ $em$ $porcetagem$ $(\%)$\\
     \hline
-    1 & 0.7109284708160442+0j & 71.092\\
+    1 &  0.71092847081604467315 & 71.092\\
     
-    3 & 0.7910095119409309+0j & 79.100\\
+    3 & 0.7910095119409314065 & 79.100\\
     
-    5 & 0.8750227594557071+0j & 87.502 \\
+    5 & 0.8750227594557078267  & 87.502 \\
     
-    10 & 0.9132363940671044+0j & 91.323\\
+    10 & 0.9132363941170467756 & 91.323\\
     
-    15 & 0.9353002361833165+0j  & 93.530\\
+    15 &  \sqrt{-110898660834074.66367}    & Não Possui uma raiz real\\
     
-    20 & 0.9401289596912272+0j & 94.012\\
+    20 & 0.9436191040476386921 & 94.361\\
     
-    50 & 0.9541317215035551+0j & 95.413\\
+    50 & 0.8960730081149934023 & 89.607\\
     
-    100 & nan+nanj & nan\\
+    100 & 0.8433231181608608121 & 84.332 \\
     \hline
   \end{tabular}
-  \caption{coeficiente r em porcetagem}
+  \caption{coeficiente r em porcetagem para o método de Gauss}
 \end{table}
 
-\text Todos os testes acima foram realizados 
+\begin{table}[h]
+\centering
+  \begin{tabular}{l|l|lll}
+    $Ordem$ $n$ & $Coeficiente$ $r$ & $Coeficiente$ $r$ $em$ $porcetagem$ $(\%)$\\
+    \hline
+    1 &  0.71092847081604467743 & 71.092\\
+    
+    3 & 0.7910095119409314058 & 79.100\\
+    
+    5 & 0.87502275945570782376  & 87.502 \\
+    
+    10 & 0.91323639411704699335 & 91.323\\
+    
+    15 & 0.94150258009193910986    & 94.150\\
+    
+    20 & 0.94373292342024341523 & 94.373\\
+    
+    50 & 0.9656205483094383549 & 96.562\\
+    
+    100 & 0.88523656133428724256 & 88.523 \\
+    \hline
+  \end{tabular}
+  \caption{coeficiente r em porcetagem para o método LU}
+\end{table}
+
+\text Todos os testes acima foram realizados em computador Mac mini (Late 2014).
+Com as seguintes configurações;
+\item Processador: 1,4 GHz Intel Core i5
+\item Memoria: 8 GB 1600 MHz DDR3
+\item Sistema Operacional: OSX 10.14.1
+
+\newpage 
+Analisando a partir dos resultados obtidos nos itens anteriores, as tentativas de previsão para os próximos 100 dias resultam em:
+
+\item Pelo Método de Gauss:
+\begin{figure}[!htb]
+\includegraphics [width=5cm,height=5cm]{Previsao (usando Gauss)/P1.png}
+\includegraphics [width=5cm,height=5cm]{Previsao (usando Gauss)/P3.png}
+\includegraphics [width=5cm,height=5cm]{Previsao (usando Gauss)/P5.png}
+\includegraphics [width=5cm,height=5cm]{Previsao (usando Gauss)/P10.png}
+\includegraphics [width=5cm,height=5cm]{Previsao (usando Gauss)/P15.png}
+\includegraphics [width=5cm,height=5cm]{Previsao (usando Gauss)/P20.png}
+\includegraphics [width=5cm,height=5cm]{Previsao (usando Gauss)/P50.png}
+\includegraphics [width=5cm,height=5cm]{Previsao (usando Gauss)/P100.png}
+\end{figure}
+
+\item Pelo Método LU:
+\begin{figure}[!htb]
+\includegraphics [width=5cm,height=5cm]{Previsao (usando LU)/P1.png}
+\includegraphics [width=5cm,height=5cm]{Previsao (usando LU)/P3.png}
+\includegraphics [width=5cm,height=5cm]{Previsao (usando LU)/P5.png}
+\includegraphics [width=5cm,height=5cm]{Previsao (usando LU)/P10.png}
+\includegraphics [width=5cm,height=5cm]{Previsao (usando LU)/P15.png}
+\includegraphics [width=5cm,height=5cm]{Previsao (usando LU)/P20.png}
+\includegraphics [width=5cm,height=5cm]{Previsao (usando LU)/P50.png}
+\includegraphics [width=5cm,height=5cm]{Previsao (usando LU)/P100.png}
+\end{figure}
+
+\text Como os gráficos demonstram, as tentativas de previsão por ambos os métodos, Gauss e LU, não funcionam bem, conseguindo uma projeção apenas para $N = 1$. Essa falha na previsão se origina do fato do método dos mínimos quadrados só funcionar bem para dados que possuam dependência linear.
+
 \end{document}
