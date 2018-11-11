@@ -80,6 +80,8 @@ O arquivo de dados sobre a cotação diária das ações da empresa Petrobrás (
 \includegraphics [width=5cm,height=5cm]{Gauss/G100.png}
 \end{figure}
 
+\text No Método de Gauss, com $N = 15$, pode-se notar um grande erro do método. Formando um gráfico com um imenso erro.  O motivo desse erro é;
+
 \newpage
 
 \item - Analise utilizando-se do método LU.
@@ -158,27 +160,29 @@ Analisando a partir dos resultados obtidos nos itens anteriores, as tentativas d
 
 \item Pelo Método de Gauss:
 \begin{figure}[!htb]
-\includegraphics [width=5cm,height=5cm]{Previsao (usando Gauss)/P1.png}
-\includegraphics [width=5cm,height=5cm]{Previsao (usando Gauss)/P3.png}
-\includegraphics [width=5cm,height=5cm]{Previsao (usando Gauss)/P5.png}
-\includegraphics [width=5cm,height=5cm]{Previsao (usando Gauss)/P10.png}
-\includegraphics [width=5cm,height=5cm]{Previsao (usando Gauss)/P15.png}
-\includegraphics [width=5cm,height=5cm]{Previsao (usando Gauss)/P20.png}
-\includegraphics [width=5cm,height=5cm]{Previsao (usando Gauss)/P50.png}
-\includegraphics [width=5cm,height=5cm]{Previsao (usando Gauss)/P100.png}
+\includegraphics [width=5cm,height=5cm]{PrevisaoG/P1.png}
+\includegraphics [width=5cm,height=5cm]{PrevisaoG/P3.png}
+\includegraphics [width=5cm,height=5cm]{PrevisaoG/P5.png}
+\includegraphics [width=5cm,height=5cm]{PrevisaoG/P10.png}
+\includegraphics [width=5cm,height=5cm]{PrevisaoG/P15.png}
+\includegraphics [width=5cm,height=5cm]{PrevisaoG/P20.png}
+\includegraphics [width=5cm,height=5cm]{PrevisaoG/P50.png}
+\includegraphics [width=5cm,height=5cm]{PrevisaoG/P100.png}
 \end{figure}
 
 \item Pelo Método LU:
 \begin{figure}[!htb]
-\includegraphics [width=5cm,height=5cm]{Previsao (usando LU)/P1.png}
-\includegraphics [width=5cm,height=5cm]{Previsao (usando LU)/P3.png}
-\includegraphics [width=5cm,height=5cm]{Previsao (usando LU)/P5.png}
-\includegraphics [width=5cm,height=5cm]{Previsao (usando LU)/P10.png}
-\includegraphics [width=5cm,height=5cm]{Previsao (usando LU)/P15.png}
-\includegraphics [width=5cm,height=5cm]{Previsao (usando LU)/P20.png}
-\includegraphics [width=5cm,height=5cm]{Previsao (usando LU)/P50.png}
-\includegraphics [width=5cm,height=5cm]{Previsao (usando LU)/P100.png}
+\includegraphics [width=5cm,height=5cm]{PrevisaoLU/P1.png}
+\includegraphics [width=5cm,height=5cm]{PrevisaoLU/P3.png}
+\includegraphics [width=5cm,height=5cm]{PrevisaoLU/P5.png}
+\includegraphics [width=5cm,height=5cm]{PrevisaoLU/P10.png}
+\includegraphics [width=5cm,height=5cm]{PrevisaoLU/P15.png}
+\includegraphics [width=5cm,height=5cm]{PrevisaoLU/P20.png}
+\includegraphics [width=5cm,height=5cm]{PrevisaoLU/P50.png}
+\includegraphics [width=5cm,height=5cm]{PrevisaoLU/P100.png}
 \end{figure}
+
+\newpage
 
 \text Como os gráficos demonstram, as tentativas de previsão por ambos os métodos, Gauss e LU, não funcionam bem, conseguindo uma projeção apenas para $N = 1$. Essa falha na previsão se origina do fato do método dos mínimos quadrados só funcionar bem para dados que possuam dependência linear.
 
