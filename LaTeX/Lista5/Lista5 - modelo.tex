@@ -80,7 +80,7 @@ O arquivo de dados sobre a cotação diária das ações da empresa Petrobrás (
 \includegraphics [width=5cm,height=5cm]{Gauss/G100.png}
 \end{figure}
 
-\text No Método de Gauss, com $N = 15$, pode-se notar um grande erro do método. Formando um gráfico com um imenso erro.  O motivo desse erro é;
+\text No Método de Gauss, com $N = 15$, pode-se notar um grande erro do método. Formando um gráfico com um imenso erro.  O motivo desse erro é: A ocorrência de erro na variavel, com uma ordem alta, gerando erros computacionais e ao fato de na matriz do sistema, requirementos basicos como o critério das linhas ou o determinante não são totalmente cumpridos.
 
 \newpage
 
@@ -184,6 +184,6 @@ Analisando a partir dos resultados obtidos nos itens anteriores, as tentativas d
 
 \newpage
 
-\text Como os gráficos demonstram, as tentativas de previsão por ambos os métodos, Gauss e LU, não funcionam bem, conseguindo uma projeção apenas para $N = 1$. Essa falha na previsão se origina do fato do método dos mínimos quadrados só funcionar bem para dados que possuam dependência linear.
+\text Como os gráficos demonstram, as tentativas de previsão por ambos os métodos, Gauss e LU, não funcionam bem, conseguindo uma projeção apenas para $N = 1$. Essa falha na previsão se origina de uma falha do Método dos Mínimos Quadrados, que faz que ele não funcione bem para casos em que há ocorrência de erro na "variável dependente" ou em relação entre dados e parâmetros não lineares. 
 
 \end{document}
