@@ -2,6 +2,7 @@
 
 #from metodos_numericos.RetroSubstituicao import RetroSubstituicao
 from Utils import Utils
+import numpy as np
 
 class LU():
     
@@ -56,6 +57,9 @@ class LU():
         x = [0.0 for i in range(ordem)]
         (L, U, passos) = self.decomposicao(M)
         
+        print("L", L)
+        print("U", U)
+        
         #Passo 1 para a resolução L * y = b
         
         y[0] = B[0]/L[0][0]
@@ -65,6 +69,8 @@ class LU():
                 passos+=1
                 soma += L[i][j] * y[j]
             y[i] = (B[i] - soma)/L[i][i]
+            
+        print("Y", y)
         
         #Passo 2 para a resolucao U * x = y
         x[ordem-1] = y[ordem-1]/U[ordem-1][ordem-1]
@@ -74,6 +80,7 @@ class LU():
                 passos+=1
                 soma = soma - U[i][j] * x[j]
             x[i] = soma/U[i][i]
-        return [x, passos]
-    
-
+            
+        print("resultado lu:",x)
+        
+        return [x, passos]    

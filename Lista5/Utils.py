@@ -121,6 +121,8 @@ class Utils():
     def det(self, M):
         if(len(M)==0):
             return 0
+        
+        #print("M", M)
             
         ordem = len(M[0])
         
@@ -149,20 +151,25 @@ class Utils():
             for n in range(1, ordem+1):            
                 #separa a matriz auxiliar
                 A = []
+                #A = np.empty((0,), dtype=np.float128)
                 for i in range(1, ordem+1):
-                    line = []
+                    line = np.empty((0,), dtype=np.float128)
                     for j in range(1, ordem+1):
                         
                         if(i != p and j != n):
-                            line.append(M[i-1][j-1])
+                            #line.append(M[i-1][j-1])
+                            line = np.append(line, M[i-1][j-1])
                     if(len(line) > 0):
                         A.append(line)
+                        #A = np.append(A, line)
                         
                 #calcula o cofator
                 cft = (-1.0)**(n+1) * M[p-1][n-1] * self.det(A)
                 
                 #concatena com o valor anterior
                 vdet = vdet + cft
+                
+                #print("len(A)", len(A))
                     
             return vdet
 
@@ -194,21 +201,35 @@ class Utils():
                     A[i][j] = M[i][j]
                     
             #verifica se o det(A) <= 0, se for retorna false
-            if(self.det(M) <= 0):
+            if(self.determinant(M) <= 0):
                 return False
                 
         #se passar tudo, e positiva definida
         return True
-
+    
+    def determinant(self, A):
+        n=np.shape(A)[0]
+        if(n==2):
+            det=A[0,0]*A[1,1]-A[0,1]*A[1,0]
+        else:    
+            det=0
+            for i in range(n):
+                # Expansion by first line
+                newMatrix=A[1:,:]
+                newMatrix=np.delete(newMatrix,i,axis=1)
+                det=det+(-1**i+2)*A[0,i]*(self.determinant(newMatrix))
+        return det
 
     def obtemInfoMatriz(self, M):
-        det = self.det(M)
+        
+        det = self.determinant(M)
         print("----")
+        
         if(det > 0):
             print("Determinante da matriz é maior que zero, e igual a: " + repr(det))
         else:
-            print("Determinante da matriz é menor que zero, e igual a: " + repr(det))
-
+            print("Determinante da matriz é menor ou igual a zero, e igual a: " + repr(det))
+        
         if(self.verificaDiagonalDominante(M)):
             print("A matriz é diagonal dominante")
         else:
@@ -218,7 +239,14 @@ class Utils():
             print("A matriz é positiva definida")
         else:
             print("A matriz não é positiva definida")
-
+            
+        if(self.checarCriterioDasLinhas(M)):
+            print("A matriz atende o criterio das linhas")
+        else:
+            print("A matriz não atende o criterio das linhas")
+        
+        print("----")
+        
     def checarCriterioDasLinhas(self, M):
 
         ordem = len(M)

@@ -121,7 +121,7 @@ def gerarGraficoPrevisao(x, y, x_aprox, y_aprox, x_prev, y_prev, ordem):
     
 ###########   
     
-N = 80
+N = 2
 num_pontos = 100
 
 ###########
@@ -158,9 +158,9 @@ r = MinimosQuadrados().calculaResiduo(y, x, N, coeficientes)
    
 gerarGrafico(x, y, particoes, z, N)
 
-
-#print("particoes", particoes)
-#print("z", z)
+print("coeficientes", coeficientes)
+print("particoes", particoes)
+print("z", z)
 print("N = "+repr(N)+", r = " + repr(r));
 
 '''
@@ -240,6 +240,3 @@ gerarGraficoPrevisao(x, y, particoes, z, particoesF, zf, melhor_indice+1)
 #dados futuros (a partir de 01/11/2018)
 xf = np.array([501, 502, 503, 504, 505, 506, 507], dtype=np.float128)
 yf = np.array([27.62, 27.32, 27.32, 27.32, 27.32, 28.16, 27.19], dtype=np.float128)
-
-
-

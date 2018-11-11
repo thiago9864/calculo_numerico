@@ -9,6 +9,7 @@ Created on Sat Nov  3 21:06:23 2018
 import numpy as np
 from metodos_numericos.LU import LU
 from metodos_numericos.Gauss import Gauss
+from Utils import Utils
 
 class MinimosQuadrados():
 
@@ -26,6 +27,7 @@ class MinimosQuadrados():
             for j in range (0,n_col):
                 M1[k][j] = x[j]**k
             
+        #print("M1", M1)
         
         A = np.zeros((tam2,tam2), dtype=np.float128)
         B = np.zeros((tam2,), dtype=np.float128)
@@ -43,9 +45,15 @@ class MinimosQuadrados():
             b = np.array(M1[i], dtype=np.float128, copy=True)
             B[i] = np.dot(y, b)
             
+        print("A", A)
+        print("B", B)
+        
+        #Utils().obtemInfoMatriz(A)
+            
         #calcula coeficientes
         #X = LU().executar(A, B)[0]
         X = Gauss().executarComPivoteamento(A, B)[0]
+        #X = Gauss().executar(A, B)[0]
         return X
         
     

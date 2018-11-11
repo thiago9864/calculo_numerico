@@ -1,5 +1,6 @@
 from metodos_numericos.RetroSubstituicao import RetroSubstituicao
 from Utils import Utils
+import numpy as np
 
 class Gauss():
     def executar(self, M, B):
@@ -20,6 +21,11 @@ class Gauss():
             for i in range(t, ordem):  
                 mult = Ma[i][k] / Ma[k][k]
                 
+                if(mult == 0 or np.isnan(mult)):
+                    print("************** PIVO NULO!!!!!")
+                if(mult >= 1):
+                    print("MULTIPLICADOR MAIOR OU IGUAL A 1", mult)
+                
                 #usa o multiplicador pra zerar o elemento da linha
                 for j in range(t, ordem):  
                     Ma[i][j] = Ma[i][j] - mult * Ma[k][j]
@@ -37,8 +43,8 @@ class Gauss():
         ordem = len(M[0])
         passos = 0
 
-        Ma = Utils().copiaMatriz(M)
-        Ba = list(B)
+        Ma = np.array(M, dtype=np.float128, copy=True)#Utils().copiaMatriz(M)
+        Ba = np.array(B, dtype=np.float128, copy=True)#list(B)
         
         #loop do pivoteamento
         for a in range(0, ordem):
@@ -63,6 +69,11 @@ class Gauss():
             #percorre os elementos abaixo do pivo para extrair o multiplicador
             for i in range(a+1, ordem):  
                 mult = Ma[i][a] / Ma[a][a]
+                
+                if(mult == 0 or np.isnan(mult)):
+                    print("************** PIVO NULO!!!!!")
+                if(mult >= 1):
+                    print("MULTIPLICADOR MAIOR OU IGUAL A 1", mult)
                 
                 #usa o multiplicador pra zerar o elemento da linha
                 for j in range(a, ordem):  

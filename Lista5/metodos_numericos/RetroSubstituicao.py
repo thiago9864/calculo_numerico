@@ -11,7 +11,7 @@ class RetroSubstituicao():
         passos = 0
         
         #cria array de solucao
-        sol = np.array([0] * ordem, np.float64)
+        sol = np.array([0] * ordem, np.float128)
         
         #checa se e superior
         isSuperior = (M[ordem-1][0] == 0)
