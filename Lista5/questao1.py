@@ -121,7 +121,7 @@ def gerarGraficoPrevisao(x, y, x_aprox, y_aprox, x_prev, y_prev, ordem):
     
 ###########   
     
-N = 2
+N = 95
 num_pontos = 100
 
 ###########
