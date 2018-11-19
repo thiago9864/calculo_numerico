@@ -19,7 +19,7 @@ figure(num=None, figsize=(8, 6), dpi=72, facecolor='w', edgecolor='k')
 
 
 ###### Testes #######
-
+'''
 #funcao do slide
 def f(x):
     return np.exp(x) * np.cos(x)
@@ -34,3 +34,25 @@ print("NewtonCotes().PontoMedio", NewtonCotes().PontoMedio(a, b, f))
 print("NewtonCotes().Trapezio", NewtonCotes().Trapezio(a, b, f))
 print("NewtonCotes().Simpsom13", NewtonCotes().Simpsom13(a, b, f))
 print("NewtonCotes().Simpsom38", NewtonCotes().Simpsom38(a, b, f))
+'''
+
+###### Funcoes da lista #######
+
+
+def u(c1, c2, E, x):
+    t = x / np.sqrt(E)
+    return c1 * np.exp(-t) + c2 * np.exp(t) + 1.0
+    
+    
+    
+###### Definicies #######
+    
+# Funcao u(x)    
+E = 0.001
+t = 1.0 / np.sqrt(E)
+c1 = -1
+c2 = (np.exp(-t) - 1.0) / (np.exp(t) - np.exp(-t))
+
+#intervalo de integracao
+a = 0.0
+b = 1.0

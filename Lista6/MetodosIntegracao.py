@@ -50,11 +50,53 @@ class Repetidos():
     def Trapezio(self):
         return 0
         
-    def Simpsom13(self):
-        return 0
+    def Simpsom13(self, x, f):
+        tam = len(x)
         
-    def Simpsom38(self):
-        return 0            
+        a = x[0]
+        b = x[tam-1]
+        h = (b - a) / 2.0
+        
+        soma = 0
+        for i in range (0, len(x)):
+            
+            if(i==0 or i==tam-1):
+                #extremos, igualar a 1
+                ci = 1.0
+            elif(i % 2 == 0):
+                #se for par
+                ci = 2.0
+            else:
+                #se for impar
+                ci = 4.0
+                
+            soma += f(x[i]) * ci
+            
+        return soma * (h/3.0) 
+        
+    def Simpsom38(self, x, f):
+        tam = len(x)
+        
+        a = x[0]
+        b = x[tam-1]
+        h = (b - a) / 3.0
+        
+        soma = 0
+        for i in range (0, len(x)):
+            
+            if(i==0 or i==tam-1):
+                #extremos, igualar a 1
+                ci = 1.0
+            elif(i % 4 == 0):
+                #de quatro em quatro termos e 2
+                ci = 2.0
+            else:
+                #nos demais termos e 3
+                ci = 3.0
+                
+            soma += f(x[i]) * ci
+            
+        return soma * ((3.0*h)/8.0)            
             
             
 class QuadraturaGauss():
