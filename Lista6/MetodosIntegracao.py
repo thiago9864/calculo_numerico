@@ -4,6 +4,7 @@ Created on Mon Nov 12 16:38:23 2018
 
 @author: thiagoalmeida
 """
+import numpy as np
 
 class NewtonCotes():
         
@@ -40,27 +41,67 @@ class NewtonCotes():
             
             
 class Repetidos():
+    
+    def montaVetorX(self, a, b, m):      
+        dm = (b-a)/(m-1)
+        x = np.zeros((m,), dtype=np.float128)
+        for i in range (0, m):
+            x[i] = dm * i
+        return x
         
-    def Retangulo(self):
-        return 0
+    def Retangulo(self, a, b, m, f):
+        x = self.montaVetorX(a, b, m)
+            
+        h = (b - a) / m
         
-    def PontoMedio(self):
-        return 0
+        soma = 0
+        for i in range (1, len(x)):
+            soma += h * f(x[i-1])
+            
+        return soma
         
-    def Trapezio(self):
-        return 0
+    def PontoMedio(self, a, b, m, f):
+        x = self.montaVetorX(a, b, m)
+            
+        h = (b - a) / m
         
-    def Simpsom13(self, x, f):
-        tam = len(x)
+        soma = 0
+        for i in range (1, len(x)):
+            soma += h * f((x[i-1] + x[i-1]) / 2.0)
+            
+        return soma
         
-        a = x[0]
-        b = x[tam-1]
-        h = (b - a) / 2.0
+    def Trapezio(self, a, b, m, f):
+
+        x = self.montaVetorX(a, b, m)
+            
+        h = (b - a) / m
         
         soma = 0
         for i in range (0, len(x)):
             
-            if(i==0 or i==tam-1):
+            if(i==0 or i==m-1):
+                #extremos, igualar a 1
+                ci = 1.0
+            else:
+                #exceto os extremos
+                ci = 2.0
+
+                
+            soma += f(x[i]) * ci
+            
+        return soma * (h/2.0) 
+        
+    def Simpsom13(self, a, b, m, f):
+        
+        x = self.montaVetorX(a, b, m)
+            
+        h = (b - a) / m
+        
+        soma = 0
+        for i in range (0, len(x)):
+            
+            if(i==0 or i==m-1):
                 #extremos, igualar a 1
                 ci = 1.0
             elif(i % 2 == 0):
@@ -74,20 +115,20 @@ class Repetidos():
             
         return soma * (h/3.0) 
         
-    def Simpsom38(self, x, f):
-        tam = len(x)
-        
-        a = x[0]
-        b = x[tam-1]
-        h = (b - a) / 3.0
+    def Simpsom38(self, a, b, m, f):
+
+        x = self.montaVetorX(a, b, m)
+            
+        #define h 
+        h = (b - a) / m
         
         soma = 0
         for i in range (0, len(x)):
             
-            if(i==0 or i==tam-1):
+            if(i==0 or i==m-1):
                 #extremos, igualar a 1
                 ci = 1.0
-            elif(i % 4 == 0):
+            elif(i % 3 == 0):
                 #de quatro em quatro termos e 2
                 ci = 2.0
             else:
