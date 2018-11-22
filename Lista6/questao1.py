@@ -20,7 +20,7 @@ from MetodosIntegracao import QuadraturaGauss
 
 
 ###### Testes #######
-
+'''
 #funcao do slide
 def f(x):
     return x**2 + 2.0*x + 2    
@@ -65,6 +65,7 @@ print("Repetidos().Simpsom13", repetido_simpsom13, abs(valor_exato - repetido_si
 print("Repetidos().Simpsom38", repetido_simpsom38, abs(valor_exato - repetido_simpsom38))
 print("--- Gauss ---")
 print("QuadraturaGauss().Gauss", repetido_gauss, abs(valor_exato - repetido_gauss))
+'''
 
 ###### Funcoes da lista #######
 
