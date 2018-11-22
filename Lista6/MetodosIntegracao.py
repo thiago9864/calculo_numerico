@@ -5,6 +5,7 @@ Created on Mon Nov 12 16:38:23 2018
 @author: thiagoalmeida
 """
 import numpy as np
+from TabelaGauss import TabelaGauss
 
 class NewtonCotes():
         
@@ -49,10 +50,13 @@ class Repetidos():
             x[i] = dm * i
         return x
         
+        
     def Retangulo(self, a, b, m, f):
         x = self.montaVetorX(a, b, m)
             
-        h = (b - a) / m
+        h = (b - a) / (m-1)
+        
+        print("h retangulo", h)
         
         soma = 0
         for i in range (1, len(x)):
@@ -63,11 +67,13 @@ class Repetidos():
     def PontoMedio(self, a, b, m, f):
         x = self.montaVetorX(a, b, m)
             
-        h = (b - a) / m
+        h = (b - a) / (m-1)
+        
+        print("h ponto medio", h)
         
         soma = 0
         for i in range (1, len(x)):
-            soma += h * f((x[i-1] + x[i-1]) / 2.0)
+            soma += h * f((x[i-1] + x[i]) / 2.0)
             
         return soma
         
@@ -75,7 +81,9 @@ class Repetidos():
 
         x = self.montaVetorX(a, b, m)
             
-        h = (b - a) / m
+        h = (b - a) / (m-1)
+        
+        print("h trapezio", h)
         
         soma = 0
         for i in range (0, len(x)):
@@ -95,8 +103,9 @@ class Repetidos():
     def Simpsom13(self, a, b, m, f):
         
         x = self.montaVetorX(a, b, m)
-            
-        h = (b - a) / m
+        
+        #define h
+        h = (b - a) / (m-1)
         
         soma = 0
         for i in range (0, len(x)):
@@ -111,16 +120,18 @@ class Repetidos():
                 #se for impar
                 ci = 4.0
                 
-            soma += f(x[i]) * ci
+            soma += f(x[i]) * ci          
             
         return soma * (h/3.0) 
         
     def Simpsom38(self, a, b, m, f):
 
         x = self.montaVetorX(a, b, m)
-            
+
+        #print(x, len(x))        
+        
         #define h 
-        h = (b - a) / m
+        h = (b - a) / (m-1)
         
         soma = 0
         for i in range (0, len(x)):
@@ -129,12 +140,13 @@ class Repetidos():
                 #extremos, igualar a 1
                 ci = 1.0
             elif(i % 3 == 0):
-                #de quatro em quatro termos e 2
+                #de tres em tres termos, 2
                 ci = 2.0
             else:
-                #nos demais termos e 3
+                #nos demais termos, 3
                 ci = 3.0
-                
+            
+            #print(ci)                
             soma += f(x[i]) * ci
             
         return soma * ((3.0*h)/8.0)            
@@ -142,5 +154,22 @@ class Repetidos():
             
 class QuadraturaGauss():
     
-    def teste(self):
-        return 0
+    def x(self, a, b, t):
+        return (((b-a)*t) / 2.0) + ((b+a)/2.0)
+        
+    def dx(self, a, b):
+        return(b-a)/2.0
+        
+    def Gauss(self, a, b, n, f):
+        #recupera pontos da tabela
+        tw = TabelaGauss().getValores(n)
+        
+        #calcula
+        soma = 0
+        for i in range (0, n):   
+            wi = np.float128(tw[i][1])
+            ti = np.float128(tw[i][0])
+
+            soma += wi * f(self.x(a, b, ti)) * self.dx(a, b)
+
+        return soma
