@@ -17,7 +17,7 @@ class Erro():
       '''
       
       for i in range(0,num_part-1):
-          # U = f(x) - fi(x)
+          # U = (f(x) - fi(x))**2
           erroL2 = erroL2 + NewtonCotes().Simpsom38(,+1,U) 
           '''
           Aqui entram xi e xi+1 para o intervalo de integração e a função a ser integrada
