@@ -5,7 +5,8 @@ Created on Mon Nov 12 16:38:23 2018
 @author: thiagoalmeida
 """
 import numpy as np
-from TabelaGauss import TabelaGauss
+#from TabelaGauss import TabelaGauss
+from TabelaGaussLegendre import TabelaGaussLegendre
 
 class NewtonCotes():
         
@@ -162,7 +163,7 @@ class QuadraturaGauss():
         
     def Gauss(self, a, b, n, f):
         #recupera pontos da tabela
-        tw = TabelaGauss().getValores(n)
+        tw = TabelaGaussLegendre().getValores(n)
         
         #calcula
         soma = 0

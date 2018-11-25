@@ -13,10 +13,11 @@ import numpy as np
 from MetodosIntegracao import NewtonCotes
 from MetodosIntegracao import Repetidos
 from MetodosIntegracao import QuadraturaGauss
+from MinimosQuadrados import MinimosQuadrados
 
 
 #define o tamanho dos graficos
-#figure(num=None, figsize=(8, 6), dpi=72, facecolor='w', edgecolor='k')
+figure(num=None, figsize=(8, 6), dpi=72, facecolor='w', edgecolor='k')
 
 
 ###### Testes #######
@@ -84,6 +85,96 @@ t = 1.0 / np.sqrt(E)
 c1 = -1.0
 c2 = (np.exp(-t) - 1.0) / (np.exp(t) - np.exp(-t))
 
+def f(x):
+    global c1, c2, E
+    return u(c1, c2, E, x)
+    #return x**4 - 5.0*x
+
+
 #intervalo de integracao
 a = 0.0
 b = 1.0
+
+#pontos do Gauss
+N = 10
+
+#pontos pra gerar o grafico
+num_pontos = 100
+
+
+###### GRAFICOS ######
+
+
+def gerarGrafico(x, y, x_aprox, y_aprox, ordem):
+    
+    print(len(x), len(y))
+    print(len(x_aprox), len(y_aprox))
+            
+    #plota grafico da função
+    plt.plot(
+        x, y, 'b-',
+        x_aprox, y_aprox, 'r-' 
+        )
+    plt.ylabel(u"f(x)") #esse 'u' antes da string é pra converter o texto pra unicode
+    plt.xlabel(u"x")
+    
+    #legendas do grafico
+    se_line = mlines.Line2D([], [], color='blue', marker='', markersize=0, label=u'Função Exata')
+    ac_line = mlines.Line2D([], [], color='red', marker='', markersize=0, label=u'Aproximação (N='+str(ordem)+')')
+    
+    plt.legend(handles=[se_line, ac_line], loc='lower center')
+    
+    '''Posicoes da legenda 
+        upper right
+        upper left
+        lower left
+        lower right
+        right
+        center left
+        center right
+        lower center
+        upper center
+        center
+    '''
+    
+    plt.title(u"Função exata e interpolação", )
+    
+    plt.show()
+    
+    
+
+###### LETRA A ######
+
+
+#cria vetores pra interpolacao
+y = np.zeros((num_pontos,), dtype=np.float128)
+z = np.zeros((num_pontos,), dtype=np.float128)
+pontos = np.zeros((num_pontos,), dtype=np.float128)
+particoes = np.zeros((num_pontos,), dtype=np.float128)
+
+
+#gera array com a solucao exata e particoes do grafico
+dp = (b-a) / (num_pontos-1)
+soma = a
+for k in range (0, num_pontos):
+    particoes[k] = soma
+    soma += dp
+    
+#calcula solucao exata
+for k in range (0, num_pontos):
+    y[k] = f(particoes[k])
+
+#calcula minimos quadrados
+coeficientes = MinimosQuadrados().executar(a, b, N, f)
+
+#calcula pontos interpolados
+for k in range (0, num_pontos):
+    z[k] = MinimosQuadrados().interpolaCoeficientes(coeficientes, N, particoes[k])
+
+   
+gerarGrafico(particoes, y, particoes, z, N)
+
+#print("coeficientes", coeficientes)
+#print("particoes", particoes)
+#print("y", y)
+#print("z", z)
