@@ -10,7 +10,7 @@ import numpy as np
 from metodos_numericos.LU import LU
 from metodos_numericos.Gauss import Gauss
 #from Utils import Utils
-from TabelaGauss import TabelaGauss
+#from TabelaGauss import TabelaGauss
 from TabelaGaussLegendre import TabelaGaussLegendre
 
 class MinimosQuadrados():

@@ -17,8 +17,8 @@ class LU():
         L = Utils().iniciaMatrizFloat128(ordem)
         U = Utils().iniciaMatrizFloat128(ordem)
         
-        print(type(L[0][0]))
-        print(type(U[0][0]))
+        #print(type(L[0][0]))
+        #print(type(U[0][0]))
         
         for j in range(ordem):
             passos+=1

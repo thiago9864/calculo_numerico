@@ -96,7 +96,7 @@ a = 0.0
 b = 1.0
 
 #pontos do Gauss
-N = 10
+N = 5
 
 #pontos pra gerar o grafico
 num_pontos = 100
@@ -107,8 +107,8 @@ num_pontos = 100
 
 def gerarGrafico(x, y, x_aprox, y_aprox, ordem):
     
-    print(len(x), len(y))
-    print(len(x_aprox), len(y_aprox))
+    #print(len(x), len(y))
+    #print(len(x_aprox), len(y_aprox))
             
     #plota grafico da função
     plt.plot(
@@ -139,11 +139,15 @@ def gerarGrafico(x, y, x_aprox, y_aprox, ordem):
     
     plt.title(u"Função exata e interpolação", )
     
+    #muda os limites dos eixos
+    #por: x_inicial, x_final, y_inicial, y_final
+    plt.axis([0, 1, 0, 1.05])
+    
     plt.show()
     
     
 
-###### LETRA A ######
+print("\n###### LETRA A ######\n")
 
 
 #cria vetores pra interpolacao
@@ -178,3 +182,54 @@ gerarGrafico(particoes, y, particoes, z, N)
 #print("particoes", particoes)
 #print("y", y)
 #print("z", z)
+
+
+print("\n###### LETRA B ######\n")
+
+# n nessa letra fica fixado em 1
+N = 1
+
+
+#gera os 25 intervalos
+num_subintervalos = 25
+subintervalos = [];
+dp_s = (b-a) / num_subintervalos
+
+ini = 0.0
+fim = 0
+pi = 0
+pf = 0
+for k in range (0, num_subintervalos):
+    #fim dos indices de pontos
+    fim = ini + dp_s
+    #fim da divisao de intervalos
+    pf = pi + 4
+    #monta vetor de indices do vetor de particoes
+    part = np.arange(pi, pf, 1)
+    #monta entrada de intervalo na lista de intervalos
+    subintervalos.append([ini, fim, list(part)])
+    #atualiza pro proximo loop
+    ini = fim
+    pi = pf
+
+
+#print(len(subintervalos), subintervalos)
+
+#calcula os pontos pra cada um dos subintervalos
+for k in range (0, num_subintervalos):
+    _a = subintervalos[k][0]
+    _b = subintervalos[k][1]
+    rg = subintervalos[k][2]
+    
+    #calcula minimos quadrados
+    coeficientes = MinimosQuadrados().executar(_a, _b, N, f)
+    
+    #calcula pontos interpolados
+    for k in rg:
+        z[k] = MinimosQuadrados().interpolaCoeficientes(coeficientes, N, particoes[k])
+
+
+gerarGrafico(particoes, y, particoes, z, N)
+
+
+print("\n###### LETRA C ######\n")
