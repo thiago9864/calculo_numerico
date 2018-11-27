@@ -33,7 +33,7 @@ class Utils():
         return [[0 for x in range(ordem)] for y in range(ordem)] 
     
     def iniciaMatrizFloat128(self, ordem):
-        matriz = np.array([np.array([0] * ordem, np.float128)] * ordem, np.float128)
+        matriz = np.array([np.array([0] * ordem, np.float64)] * ordem, np.float64)
         return matriz
         
     def copiaMatriz(self, matriz):
@@ -153,7 +153,7 @@ class Utils():
                 A = []
                 #A = np.empty((0,), dtype=np.float128)
                 for i in range(1, ordem+1):
-                    line = np.empty((0,), dtype=np.float128)
+                    line = np.empty((0,), dtype=np.float64)
                     for j in range(1, ordem+1):
                         
                         if(i != p and j != n):
