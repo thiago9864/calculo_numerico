@@ -213,7 +213,7 @@ for k in range (0, num_subintervalos):
     pi = pf
 
 
-#print(len(subintervalos), subintervalos)
+print(len(subintervalos), subintervalos)
 erro_curva_b = 0
 
 #calcula os pontos pra cada um dos subintervalos
