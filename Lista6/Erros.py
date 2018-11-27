@@ -1,25 +1,38 @@
+# -*- coding: utf-8 -*-
+
 """
-@author: Renan
+@author: Renan, Thiago
 """
 
 #Calculo do Erro
 
 import numpy as np
 from MetodosIntegracao import NewtonCotes
+from MinimosQuadrados import MinimosQuadrados
 
 class Erro():
    
-    def erroDaNorma(self,K,a,b,f,fi):
-      #K = Numero de Partições
+   
+    def erroDaNorma(self,K,a,b,f,coeficientes, n, particoes): #1
+      #K = Numero de Particoes
       #a = intervalo inicial
       #b = intervalo final
-      #f é a função normal e fi é a função ajustada por minimos quadrados
+      #f = funcao normal
+      #coeficientes, n, particoes = necessario pra funcao fi
+    
       erroL2 = 0    
-        
+      
+      #funcao pra jogar na integral
+      def U(x):
+          fi = MinimosQuadrados().interpolaCoeficientes(coeficientes, n, x)
+          return (f(x)-fi)**2;
       
       for i in range(0,K-1):
-          U = (f[i]-fi[i])**2
-          erroL2 = erroL2 + NewtonCotes().Simpsom38(a,b,K+1,U)
+          #intervalo de integracao
+          xi = particoes[i]
+          xf = particoes[i+1]
+          
+          erroL2 = erroL2 + NewtonCotes().Simpsom38(xi,xf,U)#integracao numerica
           
       erroL2 = np.sqrt(erroL2) #Calcula a Raiz
       

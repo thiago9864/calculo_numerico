@@ -14,6 +14,7 @@ from MetodosIntegracao import NewtonCotes
 from MetodosIntegracao import Repetidos
 from MetodosIntegracao import QuadraturaGauss
 from MinimosQuadrados import MinimosQuadrados
+from Erros import Erro
 
 
 #define o tamanho dos graficos
@@ -145,7 +146,6 @@ def gerarGrafico(x, y, x_aprox, y_aprox, ordem):
     
     plt.show()
     
-    
 
 print("\n###### LETRA A ######\n")
 
@@ -169,11 +169,11 @@ for k in range (0, num_pontos):
     y[k] = f(particoes[k])
 
 #calcula minimos quadrados
-coeficientes = MinimosQuadrados().executar(a, b, N, f)
+coeficientes_a = MinimosQuadrados().executar(a, b, N, f)
 
 #calcula pontos interpolados
 for k in range (0, num_pontos):
-    z[k] = MinimosQuadrados().interpolaCoeficientes(coeficientes, N, particoes[k])
+    z[k] = MinimosQuadrados().interpolaCoeficientes(coeficientes_a, N, particoes[k])
 
    
 gerarGrafico(particoes, y, particoes, z, N)
@@ -187,7 +187,7 @@ gerarGrafico(particoes, y, particoes, z, N)
 print("\n###### LETRA B ######\n")
 
 # n nessa letra fica fixado em 1
-N = 1
+Nb = 1
 
 
 #gera os 25 intervalos
@@ -214,6 +214,7 @@ for k in range (0, num_subintervalos):
 
 
 #print(len(subintervalos), subintervalos)
+erro_curva_b = 0
 
 #calcula os pontos pra cada um dos subintervalos
 for k in range (0, num_subintervalos):
@@ -222,14 +223,28 @@ for k in range (0, num_subintervalos):
     rg = subintervalos[k][2]
     
     #calcula minimos quadrados
-    coeficientes = MinimosQuadrados().executar(_a, _b, N, f)
+    coeficientes_b = MinimosQuadrados().executar(_a, _b, Nb, f)
     
+
     #calcula pontos interpolados
     for k in rg:
-        z[k] = MinimosQuadrados().interpolaCoeficientes(coeficientes, N, particoes[k])
+        z[k] = MinimosQuadrados().interpolaCoeficientes(coeficientes_b, Nb, particoes[k])
+        
+    #indices pra cortar a lista de  particoes e mandar as 4 necessarias    
+    p = rg[0]
+    q = rg[3]+1
+    
+    #calcula erro de cada subdivisao
+    erro_curva_b += Erro().erroDaNorma(4,_a,_b,f, coeficientes_b, Nb, particoes[p:q])
 
-
-gerarGrafico(particoes, y, particoes, z, N)
+gerarGrafico(particoes, y, particoes, z, Nb)
 
 
 print("\n###### LETRA C ######\n")
+
+
+erro_curva_a = Erro().erroDaNorma(num_pontos,a,b,f, coeficientes_a, N, particoes)
+print ("Erro da letra A, com N=" + str(N) + ": " + repr(erro_curva_a))
+
+
+print ("Erro da letra B, com N=" + str(Nb) + ": " + repr(erro_curva_b))
