@@ -19,8 +19,8 @@ class MinimosQuadrados():
     def executar(self, a, b, n, f):
         
         tam = n+1
-        A = np.zeros((tam,tam), dtype=np.float128)
-        B = np.zeros((tam,), dtype=np.float128)
+        A = np.zeros((tam,tam), dtype=np.float64)
+        B = np.zeros((tam,), dtype=np.float64)
         
         
         #cria matriz
@@ -73,8 +73,8 @@ class MinimosQuadrados():
         #calcula
         soma = 0
         for k in range (0, n):   
-            wi = np.float128(tw[1][k])
-            ti = np.float128(tw[0][k])
+            wi = np.float64(tw[1][k])
+            ti = np.float64(tw[0][k])
 
             soma += wi * self.produtoFi(self.x(a, b, ti), i, j) * self.dx(a, b)
 
@@ -87,8 +87,8 @@ class MinimosQuadrados():
         #calcula
         soma = 0
         for k in range (0, n):   
-            wi = np.float128(tw[1][k])
-            ti = np.float128(tw[0][k])
+            wi = np.float64(tw[1][k])
+            ti = np.float64(tw[0][k])
 
             soma += wi * self.produtoVetor(self.x(a, b, ti), f, i) * self.dx(a, b)
 

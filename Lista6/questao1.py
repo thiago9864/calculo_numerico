@@ -151,10 +151,10 @@ print("\n###### LETRA A ######\n")
 
 
 #cria vetores pra interpolacao
-y = np.zeros((num_pontos,), dtype=np.float128)
-z = np.zeros((num_pontos,), dtype=np.float128)
-pontos = np.zeros((num_pontos,), dtype=np.float128)
-particoes = np.zeros((num_pontos,), dtype=np.float128)
+y = np.zeros((num_pontos,), dtype=np.float64)
+z = np.zeros((num_pontos,), dtype=np.float64)
+pontos = np.zeros((num_pontos,), dtype=np.float64)
+particoes = np.zeros((num_pontos,), dtype=np.float64)
 
 
 #gera array com a solucao exata e particoes do grafico
