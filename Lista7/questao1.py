@@ -24,9 +24,27 @@ from ElementosFinitos import ElementosFinitos
 
 #funcao do slide
 
-x = [-1.0, 0, 1.0]
-xk = -1.0
-(L, dL) = ElementosFinitos().funcaoBase(3, x, xk)
+a = 0
+b = 1
+N = 4
+ordem_matriz = 2
 
-print(L)
-print(dL)
+x = np.zeros((N,), dtype=np.float128)
+
+h = (b-a)/N
+d = 0.0
+
+for i in range(N):
+    d += h
+    x[i] = d
+
+print("h:", h)
+print("x:", x)
+
+#faz a matriz pequena
+K = np.zeros((ordem_matriz,ordem_matriz), dtype=np.float128)
+for i in range(ordem_matriz):
+    for j in range(ordem_matriz):
+        K[i][j] = ElementosFinitos().K(0, 0, h, N, x) * (1.0 / h)
+
+print("K:", K)
