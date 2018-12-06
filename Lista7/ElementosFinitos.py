@@ -214,7 +214,8 @@ class ElementosFinitos:
         for i in range(self.pontos_polinomio):
                 F[i] = self.F(i)
         return F
-        
+     
+    
     '''
     metodo que preenche uma matriz maior com uma menor a partir de um par de coordenadas
     M: matriz maior
@@ -223,10 +224,11 @@ class ElementosFinitos:
     '''
     def preencheMatrizEmMatriz(self, M, A, i, j):
         ordem_da_menor = len(A[0])
+        s = ordem_da_menor - 1
         for im in range(ordem_da_menor):
             for jm in range(ordem_da_menor):
-                if(im == 0 and jm == 0):
-                    #se for o elemento (0, 0) soma com o valor que ja esta la
+                if(im < s and jm < s):
+                    #se o elemento estiver na area de sobreposicao, soma com o valor que ja esta la
                     M[im+i][jm+j] += A[im][jm]
                 else:
                     #se for qualquer outro, ja substitui direto
@@ -239,9 +241,10 @@ class ElementosFinitos:
     '''        
     def preencheVetorEmVetor(self, v, a, i):
         ordem_vetor_menor = len(a)
+        s = ordem_vetor_menor - 1
         for im in range(ordem_vetor_menor):
-            if(im == 0):
-                #se for o elemento (0) soma com o valor que ja esta la
+            if(im < s):
+                #se o elemento estiver na area de sobreposicao, soma com o valor que ja esta la
                 v[im+i] += a[im]
             else:
                 #se for qualquer outro, ja substitui direto
@@ -255,17 +258,19 @@ class ElementosFinitos:
         K = self.matrizLocal()
         
         #preenche matriz de rigidez com as matrizes locais
-        for m in range(self.elementos):
+        num_sobreposicoes = self.pontos_elementos - self.grau_polinomio
+        #print("num_sobreposicoes:", num_sobreposicoes)
+        for m in range(num_sobreposicoes):
             self.preencheMatrizEmMatriz(Kr, K, m, m)
         
-        #impoe condicoes de contorno
         
         #zera contorno da matriz
         for i in range(self.pontos_elementos):
             for j in range(self.pontos_elementos):
                 if(i == 0 or i == (self.pontos_elementos-1) or j == 0 or j == (self.pontos_elementos-1)):
                     Kr[i][j] = 0
-                    
+        
+        #impoe condicoes de contorno          
         Kr[0][0] = 1.0
         Kr[self.pontos_elementos-1][self.pontos_elementos-1] = 1.0
 
@@ -280,7 +285,8 @@ class ElementosFinitos:
         F = self.vetorLocal()
         
         #preenche vetor forca com os vetores locais
-        for i in range(self.elementos):
+        num_sobreposicoes = self.pontos_elementos - self.grau_polinomio
+        for i in range(num_sobreposicoes):
             self.preencheVetorEmVetor(Fr, F, i)
         
         #impoe condicoes de contorno

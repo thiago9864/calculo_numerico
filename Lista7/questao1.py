@@ -48,7 +48,7 @@ def f(x):
 ###### Parametros #######
 
 #intervalo
-a = 0.0
+a = 0
 b = 1.0
 
 #contorno
@@ -88,7 +88,9 @@ print(U)
 
 ###### Cria dados da funcao exata #######
 
+
 particoes_exata = 100
+
 
 x = np.zeros((particoes_exata,), dtype=np.float128)
 y = np.zeros((particoes_exata,), dtype=np.float128)
@@ -107,6 +109,7 @@ print("x")
 print(x)
 print("y")
 print(y)
+
 
 ###### GRAFICOS ######
 
@@ -132,7 +135,7 @@ def gerarGrafico(x, y, x_aprox, y_aprox, elementos, ordem):
     se_line = mlines.Line2D([], [], color='blue', marker='', markersize=0, label=u'Função Exata')
     ac_line = mlines.Line2D([], [], color='red', marker='', markersize=0, label=u'Aproximação ('+str(elementos)+' elem, pol ordem '+str(ordem)+')')
     
-    plt.legend(handles=[se_line, ac_line], loc='lower center')
+    #plt.legend(handles=[se_line, ac_line], loc='lower center')
     
     '''Posicoes da legenda 
         upper right

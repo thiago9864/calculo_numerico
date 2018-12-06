@@ -21,10 +21,8 @@ class LU():
         #print(type(U[0][0]))
         
         for j in range(ordem):
-            passos+=1
             U[0][j] = M[0][j]
         for i in range(ordem):
-            passos+=1
             L[i][0] = M[i][0]/U[0][0]
         
         for i in range(ordem):
@@ -51,7 +49,6 @@ class LU():
             return 0
         
         ordem = len(M[0])
-        passos = 0
         
         y = [0.0 for i in range(ordem)]
         x = [0.0 for i in range(ordem)]
@@ -66,7 +63,6 @@ class LU():
         for i in range(1, ordem):
             soma = 0.0
             for j in range(i):
-                passos+=1
                 soma += L[i][j] * y[j]
             y[i] = (B[i] - soma)/L[i][i]
             
@@ -77,10 +73,9 @@ class LU():
         for i in range(ordem-1, -1, -1):
             soma = y[i]
             for j in range(i+1, ordem):
-                passos+=1
                 soma = soma - U[i][j] * x[j]
             x[i] = soma/U[i][i]
             
         #print("resultado lu:",x)
         
-        return [x, passos]    
+        return x   
