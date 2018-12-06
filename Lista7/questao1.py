@@ -24,27 +24,37 @@ from ElementosFinitos import ElementosFinitos
 
 #funcao do slide
 
-a = 0
-b = 1
-N = 4
-ordem_matriz = 2
+a = 0.0
+b = 1.0
+elementos = 4
+grau_polinomio = 1
 
-x = np.zeros((N,), dtype=np.float128)
 
-h = (b-a)/N
-d = 0.0
+pontos_elementos = elementos + 1
+pontos_polinomio = grau_polinomio + 1
 
-for i in range(N):
-    d += h
+x = np.zeros((pontos_elementos,), dtype=np.float128)
+
+h = (b-a)/elementos
+d = a
+
+for i in range(pontos_elementos):
     x[i] = d
+    d += h
 
 print("h:", h)
 print("x:", x)
 
 #faz a matriz pequena
-K = np.zeros((ordem_matriz,ordem_matriz), dtype=np.float128)
-for i in range(ordem_matriz):
-    for j in range(ordem_matriz):
-        K[i][j] = ElementosFinitos().K(0, 0, h, N, x) * (1.0 / h)
+K = np.zeros((pontos_polinomio,pontos_polinomio), dtype=np.float128)
+for i in range(pontos_polinomio):
+    for j in range(pontos_polinomio):
+        K[i][j] = ElementosFinitos().K(i, j, h, pontos_polinomio)
+        
+#faz o termo fonte pequeno
+F = np.zeros((pontos_polinomio,), dtype=np.float128)
+for i in range(pontos_polinomio):
+        F[i] = ElementosFinitos().F(i, h, pontos_polinomio)
 
 print("K:", K)
+print("F:", F)
