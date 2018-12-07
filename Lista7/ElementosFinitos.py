@@ -20,7 +20,7 @@ class ElementosFinitos:
     elementos: numero de elementos a avaliar
     grau_polinomio: grau do polinomio interpolador (pode ir de 1 a 63)
     '''
-    def __init__(self, a, b, y1, y2, elementos, grau_polinomio):
+    def __init__(self, a, b, y1, y2, elementos, grau_polinomio, dataType):
         
         #parametros recebidos
         self.a = a
@@ -29,6 +29,7 @@ class ElementosFinitos:
         self.y2 = y2
         self.elementos = elementos
         self.grau_polinomio = grau_polinomio
+        self.dataType = dataType
 
         
         #parametros calculados
@@ -36,7 +37,7 @@ class ElementosFinitos:
         self.pontos_polinomio = grau_polinomio + 1
         
         #inicia vetor dos pontos do intervalo de elementos
-        self.x = np.zeros((self.pontos_elementos,), dtype=np.float128)
+        self.x = np.zeros((self.pontos_elementos,), dtype=self.dataType)
         
         #calcula largura do elemento
         self.h = (b-a)/elementos
@@ -109,7 +110,7 @@ class ElementosFinitos:
         tw = TabelaGaussLegendre().getValores(self.pontos_polinomio)
         
         #vetor local dos pontos de integracao
-        xp = np.zeros((self.pontos_polinomio,), dtype=np.float128)
+        xp = np.zeros((self.pontos_polinomio,), dtype=self.dataType)
         
         q = 2.0 / self.grau_polinomio
         d = -1.0
@@ -123,8 +124,8 @@ class ElementosFinitos:
         #calcula a integral por Gauss
         soma = 0
         for k in range (0, self.pontos_polinomio):   
-            ti = np.float128(tw[0][k])
-            wi = np.float128(tw[1][k])
+            ti = self.dataType(tw[0][k])
+            wi = self.dataType(tw[1][k])
             
             
             xk = ti
@@ -162,7 +163,7 @@ class ElementosFinitos:
         tw = TabelaGaussLegendre().getValores(self.pontos_polinomio)
         
         #gera pontos
-        xp = np.zeros((self.pontos_polinomio,), dtype=np.float128)
+        xp = np.zeros((self.pontos_polinomio,), dtype=self.dataType)
         
         q = 2.0 / self.grau_polinomio
         d = -1.0
@@ -175,8 +176,8 @@ class ElementosFinitos:
         #calcula a integral por Gauss
         soma = 0.0
         for k in range (0, self.pontos_polinomio):   
-            ti = np.float128(tw[0][k])
-            wi = np.float128(tw[1][k])
+            ti = self.dataType(tw[0][k])
+            wi = self.dataType(tw[1][k])
             
             xk = ti
             
@@ -200,7 +201,7 @@ class ElementosFinitos:
     gera matriz local
     '''
     def matrizLocal(self):
-        K = np.zeros((self.pontos_polinomio, self.pontos_polinomio), dtype=np.float128)
+        K = np.zeros((self.pontos_polinomio, self.pontos_polinomio), dtype=self.dataType)
         for i in range(self.pontos_polinomio):
             for j in range(self.pontos_polinomio):
                 K[i][j] = self.K(i, j)
@@ -210,7 +211,7 @@ class ElementosFinitos:
     gera vetor local
     '''
     def vetorLocal(self):
-        F = np.zeros((self.pontos_polinomio,), dtype=np.float128)
+        F = np.zeros((self.pontos_polinomio,), dtype=self.dataType)
         for i in range(self.pontos_polinomio):
                 F[i] = self.F(i)
         return F
@@ -254,7 +255,7 @@ class ElementosFinitos:
     gera matriz final
     '''       
     def matrizRigidez(self):
-        Kr = np.zeros((self.pontos_elementos, self.pontos_elementos), dtype=np.float128)
+        Kr = np.zeros((self.pontos_elementos, self.pontos_elementos), dtype=self.dataType)
         K = self.matrizLocal()
         
         #preenche matriz de rigidez com as matrizes locais
@@ -281,7 +282,7 @@ class ElementosFinitos:
     gera vetor final
     '''
     def vetorForca(self):
-        Fr = np.zeros((self.pontos_elementos,), dtype=np.float128)
+        Fr = np.zeros((self.pontos_elementos,), dtype=self.dataType)
         F = self.vetorLocal()
         
         #preenche vetor forca com os vetores locais

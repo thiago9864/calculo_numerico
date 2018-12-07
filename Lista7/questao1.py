@@ -5,7 +5,7 @@ Created on Thu Nov 29 11:12:42 2018
 @author: thiagoalmeida
 """
 
-
+#import platform
 import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 from matplotlib.pyplot import figure
@@ -13,6 +13,20 @@ import numpy as np
 
 from Erros import Erro
 from ElementosFinitos import ElementosFinitos
+
+'''
+muda pra float128 se for windows
+'''
+dataType = np.float64
+#if(platform.system() != 'Windows'):
+#    dtype = np.float128
+    
+try:
+    dataType = np.float128
+    print("Sistema tem suporte a float128")
+except:
+    dataType = np.float64
+    print("Sistema não tem suporte a float128, usando float64")
 
 
 #define o tamanho dos graficos
@@ -62,7 +76,7 @@ grau_polinomio = 1
 
 ###### Inicia Elementos Finitos #######
 
-elementos_finitos = ElementosFinitos(a, b, y1, y2, elementos, grau_polinomio)
+elementos_finitos = ElementosFinitos(a, b, y1, y2, elementos, grau_polinomio, dataType)
 
 K = elementos_finitos.matrizLocal()
 F = elementos_finitos.vetorLocal()
@@ -92,8 +106,8 @@ print(U)
 particoes_exata = 100
 
 
-x = np.zeros((particoes_exata,), dtype=np.float128)
-y = np.zeros((particoes_exata,), dtype=np.float128)
+x = np.zeros((particoes_exata,), dtype=dataType)
+y = np.zeros((particoes_exata,), dtype=dataType)
 
 q = (b-a) / (particoes_exata-1)
 d = a
