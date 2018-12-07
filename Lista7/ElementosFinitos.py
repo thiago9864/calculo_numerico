@@ -8,6 +8,7 @@ Created on Thu Nov 29 11:22:02 2018
 import numpy as np
 from TabelaGaussLegendre import TabelaGaussLegendre
 from metodos_numericos.LU import LU
+from metodos_numericos.Gauss import Gauss
 from metodos_numericos.Thomas import Thomas
 
 
@@ -66,7 +67,12 @@ class ElementosFinitos:
             
         #armazena os indices do vetor x pra usar na derivada
         ind = []
-        #print("fi", i)
+        
+        #print("--- fi ---")
+        #print("i", i)  
+        #print("xv", xv)  
+        #print("xk", xk)  
+        
         #calcula o valor da funcao de base
         c = 1.0
         d = 1.0
@@ -122,11 +128,10 @@ class ElementosFinitos:
             
         
         #calcula a integral por Gauss
-        soma = 0
+        soma = 0.0
         for k in range (0, self.pontos_polinomio):   
             ti = self.dataType(tw[0][k])
             wi = self.dataType(tw[1][k])
-            
             
             xk = ti
             
@@ -308,7 +313,10 @@ class ElementosFinitos:
             u = Thomas().executar(Kr, Fr)
         else:
             print("Resolvendo com algoritmo LU")
-            u = LU().executar(Kr, Fr)
+            u = LU().executar(Kr, Fr, self.dataType)
+            
+            #print("Resolvendo com algoritmo Gauss com pivoteamento")
+            #u = Gauss().executarComPivoteamento(Kr, Fr, self.dataType)
         
         return u
                 

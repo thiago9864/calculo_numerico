@@ -32,8 +32,8 @@ class Utils():
     def inicializaMatriz(self, ordem):
         return [[0 for x in range(ordem)] for y in range(ordem)] 
     
-    def iniciaMatrizFloat128(self, ordem):
-        matriz = np.array([np.array([0] * ordem, np.float64)] * ordem, np.float64)
+    def iniciaMatrizComDataType(self, ordem, dataType):
+        matriz = np.array([np.array([0] * ordem, dataType)] * ordem, dataType)
         return matriz
         
     def copiaMatriz(self, matriz):

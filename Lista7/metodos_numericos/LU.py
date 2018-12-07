@@ -14,8 +14,8 @@ class LU():
         #L = [[0.0 for i in range(ordem)]for j in range(ordem)]
         #U = [[0.0 for i in range(ordem)]for j in range(ordem)]
         
-        L = Utils().iniciaMatrizFloat128(ordem)
-        U = Utils().iniciaMatrizFloat128(ordem)
+        L = Utils().iniciaMatrizComDataType(ordem, self.dataType)
+        U = Utils().iniciaMatrizComDataType(ordem, self.dataType)
         
         #print(type(L[0][0]))
         #print(type(U[0][0]))
@@ -44,14 +44,16 @@ class LU():
         return (L, U, passos)
 
     
-    def executar(self, M, B):
+    def executar(self, M, B, dataType):
         if(len(M)==0):
             return 0
         
+        self.dataType = dataType
+        
         ordem = len(M[0])
         
-        y = [0.0 for i in range(ordem)]
-        x = [0.0 for i in range(ordem)]
+        y = np.zeros((ordem,), dtype=self.dataType)
+        x = np.zeros((ordem,), dtype=self.dataType)
         (L, U, passos) = self.decomposicao(M)
         
         #print("L", L)

@@ -71,12 +71,13 @@ y2 = 0
 
 #configuracoes
 elementos = 4
-grau_polinomio = 1
+grau_polinomio = 2
 
 
 ###### Inicia Elementos Finitos #######
 
 elementos_finitos = ElementosFinitos(a, b, y1, y2, elementos, grau_polinomio, dataType)
+
 
 K = elementos_finitos.matrizLocal()
 F = elementos_finitos.vetorLocal()

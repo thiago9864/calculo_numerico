@@ -2,7 +2,7 @@ import numpy as np
 
 class RetroSubstituicao():
 
-    def executar(self, M, B):
+    def executar(self, M, B, dataType):
         if(len(M)==0):
             return 0
         
@@ -11,7 +11,7 @@ class RetroSubstituicao():
         passos = 0
         
         #cria array de solucao
-        sol = np.array([0] * ordem, np.float128)
+        sol = np.zeros((ordem,), dtype=dataType)
         
         #checa se e superior
         isSuperior = (M[ordem-1][0] == 0)
