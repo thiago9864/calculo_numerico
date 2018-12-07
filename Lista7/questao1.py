@@ -72,11 +72,12 @@ y2 = 0
 #configuracoes
 elementos = 4
 grau_polinomio = 2
+form_fraca = 1
 
 
 ###### Inicia Elementos Finitos #######
 
-elementos_finitos = ElementosFinitos(a, b, y1, y2, elementos, grau_polinomio, dataType)
+elementos_finitos = ElementosFinitos(a, b, y1, y2, elementos, grau_polinomio, form_fraca, dataType)
 
 
 K = elementos_finitos.matrizLocal()
@@ -100,6 +101,13 @@ U = elementos_finitos.calcular()
 print("\nU")
 print(U)
 
+len_num = len(U)
+xu = np.zeros((len_num,), dtype=dataType)
+hu = (b-a) / (len_num-1)
+d = a
+for k in range(len_num):
+    xu[k] = d
+    d += hu
 
 ###### Cria dados da funcao exata #######
 
@@ -173,4 +181,4 @@ def gerarGrafico(x, y, x_aprox, y_aprox, elementos, ordem):
     
     plt.show()
 
-gerarGrafico(x, y, elementos_finitos.x, U, elementos, grau_polinomio)
+gerarGrafico(x, y, xu, U, elementos, grau_polinomio)

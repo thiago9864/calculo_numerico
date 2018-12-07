@@ -21,7 +21,7 @@ class ElementosFinitos:
     elementos: numero de elementos a avaliar
     grau_polinomio: grau do polinomio interpolador (pode ir de 1 a 63)
     '''
-    def __init__(self, a, b, y1, y2, elementos, grau_polinomio, dataType):
+    def __init__(self, a, b, y1, y2, elementos, grau_polinomio, f, dataType):
         
         #parametros recebidos
         self.a = a
@@ -30,12 +30,14 @@ class ElementosFinitos:
         self.y2 = y2
         self.elementos = elementos
         self.grau_polinomio = grau_polinomio
+        self.f = f
         self.dataType = dataType
 
         
         #parametros calculados
         self.pontos_elementos = elementos + 1
         self.pontos_polinomio = grau_polinomio + 1
+        self.tamanho_problema = grau_polinomio * elementos + 1
         
         #inicia vetor dos pontos do intervalo de elementos
         self.x = np.zeros((self.pontos_elementos,), dtype=self.dataType)
@@ -68,10 +70,12 @@ class ElementosFinitos:
         #armazena os indices do vetor x pra usar na derivada
         ind = []
         
-        #print("--- fi ---")
-        #print("i", i)  
-        #print("xv", xv)  
-        #print("xk", xk)  
+        '''
+        print("--- fi ---")
+        print("i", i)  
+        print("xv", xv)  
+        print("xk", xk)  
+        '''
         
         #calcula o valor da funcao de base
         c = 1.0
@@ -95,9 +99,12 @@ class ElementosFinitos:
         
         dL = soma   
         
-        #print("L", L)  
-        #print("dL", dL)  
-
+        '''
+        print("d", d)
+        print("L", L)  
+        print("dL", dL)  
+        '''
+        
         return (L, dL)
     
    
@@ -118,13 +125,15 @@ class ElementosFinitos:
         #vetor local dos pontos de integracao
         xp = np.zeros((self.pontos_polinomio,), dtype=self.dataType)
         
-        q = 2.0 / self.grau_polinomio
-        d = -1.0
+        a = -1.0
+        b = 1.0
+        hp = (b-a) / self.grau_polinomio
+        d = a
         
         #gera pontos de integração
         for k in range(self.pontos_polinomio):
             xp[k] = d
-            d += q
+            d += hp
             
         
         #calcula a integral por Gauss
@@ -142,15 +151,16 @@ class ElementosFinitos:
             
             soma += wi * f * (self.h/2.0)
             
+            '''
             #debug
-            #print("xp", xp)
-            #print("ti", ti)
-            #print("wi", wi)
-            #print("df1", df1)
-            #print("df2", df2)
-            #print("h", self.h)
-            #print("-------")
-            
+            print("xp", xp)
+            print("ti", ti)
+            print("wi", wi)
+            print("df1", df1)
+            print("df2", df2)
+            print("h", self.h)
+            print("-------")
+            '''
         return soma
         
     
@@ -188,7 +198,7 @@ class ElementosFinitos:
             
             (f1, df1) = self.fi(i, xp, xk)
             
-            f = f1
+            f = f1 * self.f
             
             soma += wi * f * (self.h/2.0)
             
@@ -230,11 +240,10 @@ class ElementosFinitos:
     '''
     def preencheMatrizEmMatriz(self, M, A, i, j):
         ordem_da_menor = len(A[0])
-        s = ordem_da_menor - 1
         for im in range(ordem_da_menor):
             for jm in range(ordem_da_menor):
-                if(im < s and jm < s):
-                    #se o elemento estiver na area de sobreposicao, soma com o valor que ja esta la
+                if(im == 0 and jm == 0):
+                    #se for o indice (0, 0), soma com o valor que ja esta la
                     M[im+i][jm+j] += A[im][jm]
                 else:
                     #se for qualquer outro, ja substitui direto
@@ -247,9 +256,9 @@ class ElementosFinitos:
     '''        
     def preencheVetorEmVetor(self, v, a, i):
         ordem_vetor_menor = len(a)
-        s = ordem_vetor_menor - 1
+        print(i)
         for im in range(ordem_vetor_menor):
-            if(im < s):
+            if(im == 0):
                 #se o elemento estiver na area de sobreposicao, soma com o valor que ja esta la
                 v[im+i] += a[im]
             else:
@@ -260,25 +269,24 @@ class ElementosFinitos:
     gera matriz final
     '''       
     def matrizRigidez(self):
-        Kr = np.zeros((self.pontos_elementos, self.pontos_elementos), dtype=self.dataType)
+        Kr = np.zeros((self.tamanho_problema, self.tamanho_problema), dtype=self.dataType)
         K = self.matrizLocal()
         
         #preenche matriz de rigidez com as matrizes locais
-        num_sobreposicoes = self.pontos_elementos - self.grau_polinomio
-        #print("num_sobreposicoes:", num_sobreposicoes)
-        for m in range(num_sobreposicoes):
-            self.preencheMatrizEmMatriz(Kr, K, m, m)
+        for m in range(self.elementos):
+            p = m * self.grau_polinomio
+            self.preencheMatrizEmMatriz(Kr, K, p, p)
         
         
         #zera contorno da matriz
-        for i in range(self.pontos_elementos):
-            for j in range(self.pontos_elementos):
-                if(i == 0 or i == (self.pontos_elementos-1) or j == 0 or j == (self.pontos_elementos-1)):
+        for i in range(self.tamanho_problema):
+            for j in range(self.tamanho_problema):
+                if(i == 0 or i == (self.tamanho_problema-1) or j == 0 or j == (self.tamanho_problema-1)):
                     Kr[i][j] = 0
         
         #impoe condicoes de contorno          
         Kr[0][0] = 1.0
-        Kr[self.pontos_elementos-1][self.pontos_elementos-1] = 1.0
+        Kr[self.tamanho_problema-1][self.tamanho_problema-1] = 1.0
 
                 
         return Kr
@@ -287,17 +295,17 @@ class ElementosFinitos:
     gera vetor final
     '''
     def vetorForca(self):
-        Fr = np.zeros((self.pontos_elementos,), dtype=self.dataType)
+        Fr = np.zeros((self.tamanho_problema,), dtype=self.dataType)
         F = self.vetorLocal()
         
         #preenche vetor forca com os vetores locais
-        num_sobreposicoes = self.pontos_elementos - self.grau_polinomio
-        for i in range(num_sobreposicoes):
-            self.preencheVetorEmVetor(Fr, F, i)
+        for m in range(self.elementos):
+            p = m * self.grau_polinomio
+            self.preencheVetorEmVetor(Fr, F, p)
         
         #impoe condicoes de contorno
         Fr[0] = 0.0
-        Fr[self.pontos_elementos-1] = 0.0
+        Fr[self.tamanho_problema-1] = 0.0
         
         return Fr
                 
