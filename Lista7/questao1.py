@@ -70,14 +70,14 @@ y1 = 0
 y2 = 0
 
 #configuracoes
-elementos = 4
-grau_polinomio = 2
+elementos = 18
+grau_polinomio = 1
 form_fraca = 1
 
 
 ###### Inicia Elementos Finitos #######
 
-elementos_finitos = ElementosFinitos(a, b, y1, y2, elementos, grau_polinomio, form_fraca, dataType)
+elementos_finitos = ElementosFinitos(a, b, y1, y2, elementos, grau_polinomio, form_fraca, E, dataType)
 
 
 K = elementos_finitos.matrizLocal()
@@ -126,7 +126,7 @@ for k in range(particoes_exata):
     d += q
             
 for k in range(particoes_exata):
-    y[k] = f_slide(x[k])
+    y[k] = f(x[k])
   
 print("x")
 print(x)

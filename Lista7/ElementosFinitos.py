@@ -21,7 +21,7 @@ class ElementosFinitos:
     elementos: numero de elementos a avaliar
     grau_polinomio: grau do polinomio interpolador (pode ir de 1 a 63)
     '''
-    def __init__(self, a, b, y1, y2, elementos, grau_polinomio, f, dataType):
+    def __init__(self, a, b, y1, y2, elementos, grau_polinomio, f, E, dataType):
         
         #parametros recebidos
         self.a = a
@@ -31,6 +31,7 @@ class ElementosFinitos:
         self.elementos = elementos
         self.grau_polinomio = grau_polinomio
         self.f = f
+        self.E = E
         self.dataType = dataType
 
         
@@ -147,7 +148,7 @@ class ElementosFinitos:
             (f1, df1) = self.fi(i, xp, xk)
             (f2, df2) = self.fi(j, xp, xk)
 
-            f = df1 * (2.0/self.h) * df2 * (2.0/self.h)
+            f = df1 * (2.0/self.h) * df2 * (2.0/self.h) * self.E + (f1 * f2)
             
             soma += wi * f * (self.h/2.0)
             
