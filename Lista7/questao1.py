@@ -46,9 +46,9 @@ def u(c1, c2, E, x):
     
     
 ###### Definicoes #######
-    
-# Funcao u(x)    
-E = 0.001
+       
+E = 10**(-3)
+
 t = 1.0 / np.sqrt(E)
 c1 = -1.0
 c2 = (np.exp(-t) - 1.0) / (np.exp(t) - np.exp(-t))
@@ -58,6 +58,7 @@ def f(x):
     return u(c1, c2, E, x)
     #return x**4 - 5.0*x
 
+print("E:", E)
 
 ###### Parametros #######
 
@@ -70,14 +71,13 @@ y1 = 0
 y2 = 0
 
 #configuracoes
-elementos = 18
-grau_polinomio = 1
-form_fraca = 1
+elementos = 64
+grau_polinomio = 2
 
 
 ###### Inicia Elementos Finitos #######
 
-elementos_finitos = ElementosFinitos(a, b, y1, y2, elementos, grau_polinomio, form_fraca, E, dataType)
+elementos_finitos = ElementosFinitos(a, b, y1, y2, elementos, grau_polinomio, E, dataType)
 
 
 K = elementos_finitos.matrizLocal()
@@ -121,18 +121,22 @@ y = np.zeros((particoes_exata,), dtype=dataType)
 q = (b-a) / (particoes_exata-1)
 d = a
 
+#cria vetor x de particoes pra solucao exata
 for k in range(particoes_exata):
     x[k] = d
     d += q
-            
+
+#cria vetor y da funcao exata nos pontos x do vetor criado        
 for k in range(particoes_exata):
-    y[k] = f(x[k])
-  
+    y[k] = f(x[k])#lista
+    #y[k] = f_slide(x[k])#slide
+    
+'''  
 print("x")
 print(x)
 print("y")
 print(y)
-
+'''
 
 ###### GRAFICOS ######
 
@@ -158,7 +162,7 @@ def gerarGrafico(x, y, x_aprox, y_aprox, elementos, ordem):
     se_line = mlines.Line2D([], [], color='blue', marker='', markersize=0, label=u'Função Exata')
     ac_line = mlines.Line2D([], [], color='red', marker='', markersize=0, label=u'Aproximação ('+str(elementos)+' elem, pol ordem '+str(ordem)+')')
     
-    #plt.legend(handles=[se_line, ac_line], loc='lower center')
+    plt.legend(handles=[se_line, ac_line], loc='lower center')
     
     '''Posicoes da legenda 
         upper right

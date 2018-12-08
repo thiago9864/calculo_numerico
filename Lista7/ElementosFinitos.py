@@ -20,8 +20,10 @@ class ElementosFinitos:
     c1, c2: condicoes de contorno
     elementos: numero de elementos a avaliar
     grau_polinomio: grau do polinomio interpolador (pode ir de 1 a 63)
+    E: o epsilon
+    dataType: tipo de dado. vai ser np.float128 ou np.float64
     '''
-    def __init__(self, a, b, y1, y2, elementos, grau_polinomio, f, E, dataType):
+    def __init__(self, a, b, y1, y2, elementos, grau_polinomio, E, dataType):
         
         #parametros recebidos
         self.a = a
@@ -30,7 +32,6 @@ class ElementosFinitos:
         self.y2 = y2
         self.elementos = elementos
         self.grau_polinomio = grau_polinomio
-        self.f = f
         self.E = E
         self.dataType = dataType
 
@@ -148,6 +149,10 @@ class ElementosFinitos:
             (f1, df1) = self.fi(i, xp, xk)
             (f2, df2) = self.fi(j, xp, xk)
 
+            #slide
+            #f = df1 * (2.0/self.h) * df2 * (2.0/self.h)
+            
+            #lista
             f = df1 * (2.0/self.h) * df2 * (2.0/self.h) * self.E + (f1 * f2)
             
             soma += wi * f * (self.h/2.0)
@@ -199,7 +204,7 @@ class ElementosFinitos:
             
             (f1, df1) = self.fi(i, xp, xk)
             
-            f = f1 * self.f
+            f = f1 * 1.0 #esse 1 e a funcao f do slide
             
             soma += wi * f * (self.h/2.0)
             
@@ -257,7 +262,6 @@ class ElementosFinitos:
     '''        
     def preencheVetorEmVetor(self, v, a, i):
         ordem_vetor_menor = len(a)
-        print(i)
         for im in range(ordem_vetor_menor):
             if(im == 0):
                 #se o elemento estiver na area de sobreposicao, soma com o valor que ja esta la
