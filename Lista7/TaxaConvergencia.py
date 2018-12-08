@@ -99,22 +99,19 @@ for i in range(1, 4):#elementos
         
         erro = 0
         
-def erroDaNormaL2(self,num_elem,K,num_nel,f,w,det):
-    #K = numero de pontos de integração do Gauss
-    #w(l) = pesos de integração de Gauss
-    #num_nels = numeros de nos do elemento
-    #det(l) = h/2
-    for n in range(num_elem):
-        aux_err = 0
-         for l in range(K):
-             uh = 0
-             xx = 0
-             for i in range(num_nel):
-                 uh = uh + xx + shg(l,i,l) * u(i)
-                 xx = xx + shg(l,i,l) * xl(i)
-            aux_err = aux_err + ((f(xx)- uh)**2) * w(l) * det(l)
-        erro = erro + aux_err
-    erro = sqrt(erro)
+        #w(l) = pesos de integração de Gauss
+        #det(l) = h/2
+        for n in range(len_num):
+            aux_err = 0
+            for l in range(particoes_exata):
+                uh = 0
+                xx = 0
+                for k in range(elementos):
+                    uh = uh + xx + yu[k] * u(k)
+                    xx = xx + yu[k] * xl(k)
+                aux_err = aux_err + ((f(xx)- uh)**2) * w(l) * det(l)
+            erro = erro + aux_err
+        erro = sqrt(erro)
         
         ############################################
         
