@@ -11,7 +11,6 @@ import matplotlib.lines as mlines
 from matplotlib.pyplot import figure
 import numpy as np
 
-from Erros import Erro
 from ElementosFinitos import ElementosFinitos
 
 '''
@@ -133,7 +132,7 @@ for k in range(particoes_exata):
     #y[k] = f_slide(x[k])#slide
     
 #cria vetor y da funcao exata nos pontos x do vetor dos elementos finitos       
-for k in range(particoes_exata):
+for k in range(len_num):
     yu[k] = f(xu[k])#lista
     #yu[k] = f_slide(xu[k])#slide
     

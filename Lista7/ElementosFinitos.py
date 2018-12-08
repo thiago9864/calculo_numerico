@@ -37,9 +37,9 @@ class ElementosFinitos:
 
         
         #parametros calculados
-        self.pontos_elementos = elementos + 1
-        self.pontos_polinomio = grau_polinomio + 1
-        self.tamanho_problema = grau_polinomio * elementos + 1
+        self.pontos_elementos = int(elementos + 1)
+        self.pontos_polinomio = int(grau_polinomio + 1)
+        self.tamanho_problema = int(grau_polinomio * elementos + 1)
         
         #inicia vetor dos pontos do intervalo de elementos
         self.x = np.zeros((self.pontos_elementos,), dtype=self.dataType)
@@ -54,8 +54,8 @@ class ElementosFinitos:
             d += self.h
         
         #debug
-        print("h:", self.h)
-        print("x:", self.x)
+        #print("h:", self.h)
+        #print("x:", self.x)
     
     '''
     Funcao base
