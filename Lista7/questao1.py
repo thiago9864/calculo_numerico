@@ -117,6 +117,7 @@ particoes_exata = 100
 
 x = np.zeros((particoes_exata,), dtype=dataType)
 y = np.zeros((particoes_exata,), dtype=dataType)
+yu = np.zeros((len_num,), dtype=dataType)
 
 q = (b-a) / (particoes_exata-1)
 d = a
@@ -126,10 +127,15 @@ for k in range(particoes_exata):
     x[k] = d
     d += q
 
-#cria vetor y da funcao exata nos pontos x do vetor criado        
+#cria vetor y da funcao exata nos pontos x do vetor criado com 100 particoes        
 for k in range(particoes_exata):
     y[k] = f(x[k])#lista
     #y[k] = f_slide(x[k])#slide
+    
+#cria vetor y da funcao exata nos pontos x do vetor dos elementos finitos       
+for k in range(particoes_exata):
+    yu[k] = f(xu[k])#lista
+    #yu[k] = f_slide(xu[k])#slide
     
 '''  
 print("x")
