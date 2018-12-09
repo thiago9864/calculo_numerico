@@ -152,7 +152,7 @@ class ElementosFinitos:
             #slide
             #f = df1 * (2.0/self.h) * df2 * (2.0/self.h)
             
-            #lista
+            #trabalho
             f = df1 * (2.0/self.h) * df2 * (2.0/self.h) * self.E + (f1 * f2)
             
             soma += wi * f * (self.h/2.0)

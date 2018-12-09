@@ -94,13 +94,14 @@ para aproximações por elementos finitos de ordem $n=1,2,3,4,5$ e diferenças f
 \end{itemize}
 
 \newpage
-\begin{intemize}
+
 
 Para resolução da Lista 7 foram utilizados os métodos implementados em listas anteriores de forma a elaborar uma função resolução de elementos finitos.
 Todos os gráficos e métodos foram gerados com máxima precisão possível, float128.
 
-\item[a)] Comparação da solução exata com a solução aproximada, com polinomios $n=1$:
-\begin{intemize}
+\begin{itemize}
+\item [a)] Comparação da solução exata com a solução aproximada, com polinomios $n=1$:
+\begin{itemize}
 \item $\varepsilon = 10^{-3}$ com $4$ e $8$ elementos;
 
 \begin{figure}[!htb]
@@ -117,7 +118,7 @@ Todos os gráficos e métodos foram gerados com máxima precisão possível, flo
 \includegraphics [width=6cm,height=6cm]{LetraA/32el_n1_e10-4.png}
 \end{figure}
 
-\end{intemize}
+\end{itemize}
 
 \newpage
 \item[b)] Utilizando a discretização do item a, obtem-se a seguinte relação graficamente:
@@ -130,10 +131,13 @@ Todos os gráficos e métodos foram gerados com máxima precisão possível, flo
 \includegraphics [width=6cm,height=6cm]{LetraB/41el_n1_e10-4.png}
 \end{figure}
 
+Assim, conclui-se que o metodo se torna estável em $nel>=13$, para $\varepsilon = 10^{-3}$\\
+e $nel>=41$ para $\varepsilon = 10^{-4}$ evidenciado pela ausência do picos verticais nas extremidades superiores.
+
 \newpage
 
 \item[c)] Comparação da solução exata com a solução aproximada, com polinomios agora $n=2,3,4$ e $5$:
-\begin{intemize}
+\begin{itemize}
 \item Para n = 2.
 \item $\varepsilon = 10^{-3}$ com $4$ e $8$ elementos;
 
@@ -205,7 +209,7 @@ Todos os gráficos e métodos foram gerados com máxima precisão possível, flo
 \includegraphics [width=6cm,height=6cm]{LetraC/8el_n5_e10-4.png}
 \end{figure}
 
-\end{intemize}
+\end{itemize}
 \newpage
 \item[d)] Comparando os resultados do item a das listas 1 e 7.
 
@@ -223,7 +227,7 @@ Todos os gráficos e métodos foram gerados com máxima precisão possível, flo
 \includegraphics [width=5cm,height=5cm]{.png}
 \end{figure}
 
-\end{intemize}
+\end{itemize}
 
 Conclusão final:
 

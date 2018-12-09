@@ -70,8 +70,8 @@ y1 = 0
 y2 = 0
 
 #configuracoes
-elementos = 42
-grau_polinomio = 2
+elementos = 4
+grau_polinomio = 1
 
 
 ###### Inicia Elementos Finitos #######
