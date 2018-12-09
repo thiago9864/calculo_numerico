@@ -46,7 +46,7 @@ def u(c1, c2, E, x):
     
 ###### Definicoes #######
        
-E = 10**(-3)
+E = 10**(-4)
 
 t = 1.0 / np.sqrt(E)
 c1 = -1.0
@@ -70,7 +70,7 @@ y1 = 0
 y2 = 0
 
 #configuracoes
-elementos = 64
+elementos = 42
 grau_polinomio = 2
 
 
@@ -164,8 +164,8 @@ def gerarGrafico(x, y, x_aprox, y_aprox, elementos, ordem):
     
     
     #legendas do grafico    
-    se_line = mlines.Line2D([], [], color='blue', marker='', markersize=0, label=u'Função Exata')
-    ac_line = mlines.Line2D([], [], color='red', marker='', markersize=0, label=u'Aproximação ('+str(elementos)+' elem, pol ordem '+str(ordem)+')')
+    se_line = mlines.Line2D([], [], color='blue', marker='', markersize=0, label=u'Solução Exata')
+    ac_line = mlines.Line2D([], [], color='red', marker='', markersize=0, label=u'Aproximação ('+str(elementos)+' elementos, n = '+str(ordem)+')')
     
     plt.legend(handles=[se_line, ac_line], loc='lower center')
     
@@ -182,7 +182,7 @@ def gerarGrafico(x, y, x_aprox, y_aprox, elementos, ordem):
         center
     '''
     
-    plt.title(u"Função exata e interpolação", )
+    plt.title(u"Solução Exata e Aproximação", )
     
     #muda os limites dos eixos
     #por: x_inicial, x_final, y_inicial, y_final

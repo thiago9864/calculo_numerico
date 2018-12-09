@@ -40,6 +40,8 @@ def Thomas(a, b, c, d):
 def geraGraficoFuncao(epsilon, indice, plotar):
     
     nParticoes = 4**indice
+    
+    nParticoes = 53
 
     #Solicitar o valor de E
     #testes com E = 0.1, 0.01, 0.001, 0.0001
@@ -64,6 +66,7 @@ def geraGraficoFuncao(epsilon, indice, plotar):
     di = []
     d = []
     arr_solucao_aproximada = []  
+    arr_tempo_exata = []
     arr_tempo = []
     arr_solucao_exata = []
     arr_erro = []
@@ -79,10 +82,17 @@ def geraGraficoFuncao(epsilon, indice, plotar):
         d.append(h2)
         
     #calcula tempo e solucao exata
+    particoes_exata = 100
+    he = (b-a)/float(particoes_exata-1)
+    for i in range(particoes_exata):
+        dhe = he * i
+        arr_tempo_exata.append(dhe)
+        arr_solucao_exata.append(F(dhe, c1, c2, E))  
+        
+    #calcula tempo da solucao aproximada
     for i in range(nParticoes+1):
         dh = h * i
         arr_tempo.append(dh)
-        arr_solucao_exata.append(F(dh, c1, c2, E))  
         
     #resolve sistema para solucao aproximada
     arr_solucao_aproximada = Thomas(di, dp, ds, d)
@@ -100,9 +110,13 @@ def geraGraficoFuncao(epsilon, indice, plotar):
         print("plotar")
         #plota grafico da função
         plt.plot(
-            arr_tempo, arr_solucao_exata, 'b--',
+            arr_tempo_exata, arr_solucao_exata, 'b--' 
+            )
+        
+        plt.plot(
             arr_tempo, arr_solucao_aproximada, 'r-'    
             )
+        
         plt.ylabel(u"Valor de u(h)") #esse 'u' antes da string é pra converter o texto pra unicode
         plt.xlabel(u"Valor de h, " + str(nParticoes) + u" partições")
         
