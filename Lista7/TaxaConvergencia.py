@@ -101,16 +101,15 @@ for i in range(1, 4):#elementos
         
         #w(l) = pesos de integração de Gauss
         #det(l) = h/2
-        for n in range(len_num):
-            aux_err = 0
-            for l in range(particoes_exata):
-                uh = 0
-                xx = 0
-                for k in range(elementos):
-                    uh = uh + xx + yu[k] * u(k)
-                    xx = xx + yu[k] * xl(k)
-                aux_err = aux_err + ((f(xx)- uh)**2) * w(l) * det(l)
-            erro = erro + aux_err
+        aux_err = 0
+        for l in range(len_num):
+            uh = 0
+            xx = 0
+            for k in range(elementos):
+                uh = uh + xx + yu[k] * u(k)
+                xx = xx + yu[k]  * xl(k) #Aqui xl é o intervalo incrementado de um passo?
+            aux_err = aux_err + ((f(xx)- uh)**2) * U(l) * (hu/2.0) #wl é o valor da integração
+        erro = erro + aux_err
         erro = sqrt(erro)
         
         ############################################
