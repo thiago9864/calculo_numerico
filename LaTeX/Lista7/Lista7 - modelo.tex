@@ -262,6 +262,12 @@ Conclusão: Nota-se que o método de Diferenças Finitas se comportou ligeiramen
 
 \end{itemize}
 
-Conclusão final: Pode-se notar através da resolução do problema de difusão-reação que a aproximação polinomial por elementos finitos torna os resultados aproximados mais precisos em relação aos outros métodos utilizados durante o curso. Entretando sua solução depende da malha utilizada, podendo gerar erro de maquina.
+\paragraph{Conclusão final:}
+\indent
+Para a análise, usamos para análise de erro o método da Norma do Máximo.\\\\
+De acordo com os gráficos do item $a$ e $b$, verificamos que abaixo da condição de estabilidade o método apresenta picos próximos às condições de contorno, e assim que a quantidade de elementos supera esse limite, o método passa a se comportar com melhor precisão.\\\\
+Em comparação ao método de Diferenças Finitas, usando polinômios de ordem 1, esse se saiu ligeiramente melhor que o método de Elementos Finitos. Observando o gráfico da taxa de convergência, nota-se que o método de Diferenças Finitas tem erro aproximadamente igual ao erro do método de Elementos Finitos para polinômios de ordem 1. Se for usado um polinômio de ordem 2, a velocidade de queda do erro é bem mais acentuada que o método de Diferenças Finitas.\\\\
+Para os dados registrados para Elementos Finitos com ordens polinomiais 3, 4 e 5, os dados indicam uma queda tão rápida no erro que ele tende a zero para a Norma do Máximo.
+\noindent
 
 \end{document}
