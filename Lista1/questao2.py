@@ -5,6 +5,7 @@ import matplotlib.lines as mlines
 import numpy as np
 import math as m
 from array import array
+from Erros import Erro
 
 #Definicao da funcao
 def F(x, c1, c2, E): 
@@ -36,16 +37,25 @@ def Thomas(a, b, c, d):
     
     return x
     
+'''
+4 el, 10-3, erro: 0.01514269848800638
+8 el, 10-3, erro: 0.0377214731999471
+
+4 el, 10-4, erro: 0.0015949044317493666
+8 el, 10-4, erro: 0.00631564102081128
+'''
 
 def geraGraficoFuncao(epsilon, indice, plotar):
     
     nParticoes = 4**indice
     
-    nParticoes = 53
-
+    
     #Solicitar o valor de E
     #testes com E = 0.1, 0.01, 0.001, 0.0001
     E = epsilon
+    
+    nParticoes = 41
+    E = 10**(-4)
     
     #Coeficientes
     a = 0
@@ -102,9 +112,21 @@ def geraGraficoFuncao(epsilon, indice, plotar):
     arr_solucao_aproximada.append(0)
     
     #calcula erro
-    for i in range(nParticoes+1):
-        err = m.fabs(arr_solucao_exata[i] - arr_solucao_aproximada[i]);
-        arr_erro.append(err)
+    #for i in range(nParticoes+1):
+        #err = m.fabs(arr_solucao_exata[i] - arr_solucao_aproximada[i]);
+        #arr_erro.append(err)
+        
+    ######
+    particoes_erro = len(arr_solucao_aproximada)
+    he = (b-a)/float(particoes_erro-1)
+    arr_solucao_exata_erro = []
+    for i in range(particoes_erro):
+        dhe = he * i
+        arr_solucao_exata_erro.append(F(dhe, c1, c2, E))  
+        
+    erro_norma_maximo = Erro().calculaErro(arr_solucao_exata_erro, arr_solucao_aproximada)
+    print(arr_erro)
+    print("Erro Norma do Maximo: " + repr(erro_norma_maximo))
     
     if(plotar):
         print("plotar")
@@ -135,7 +157,7 @@ def geraGraficoFuncao(epsilon, indice, plotar):
     
 #executa o codigo
     
-geraGraficoFuncao(0.001, 2, 1)
+geraGraficoFuncao(0.001, 5, 1)
     
 '''
 lst_epsilon = [0.1, 0.01, 0.001, 0.0001]

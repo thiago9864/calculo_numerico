@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 from matplotlib.pyplot import figure
 import numpy as np
+from Erros import Erro
 
 from ElementosFinitos import ElementosFinitos
 
@@ -70,7 +71,7 @@ y1 = 0
 y2 = 0
 
 #configuracoes
-elementos = 4
+elementos = 41
 grau_polinomio = 1
 
 
@@ -142,6 +143,9 @@ print(x)
 print("y")
 print(y)
 '''
+
+erro_norma_maximo = Erro().calculaErro(yu, U)
+print("Erro Norma do Maximo: " + repr(erro_norma_maximo))
 
 ###### GRAFICOS ######
 

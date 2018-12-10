@@ -13,14 +13,13 @@ import numpy as np
 
 class Erro():
 
-    dataType = np.float64
     
     def normaMaximo(self, x):
         size = len(x)
-        maximo = np.fabs(x[0])   
+        maximo = np.abs(x[0])   
         
         for i in range(size):
-            temp = np.fabs(x[i])        
+            temp = np.abs(x[i])        
             if(temp > maximo):
                 maximo = temp
                 
@@ -32,10 +31,10 @@ class Erro():
             return 0
             
         size = len(x1)
-        dist = np.fabs(x1[0] - x2[0])  
+        dist = abs(x1[0] - x2[0])  
         
         for i in range(size):
-            temp = np.fabs(x1[i] - x2[i])
+            temp = abs(x1[i] - x2[i])
             if(temp > dist):
                 dist = temp
                 
@@ -45,7 +44,7 @@ class Erro():
         #print(type(x_prox[0]))
         #print(type(x_atual[0]))
         return self.distanciaMaximo(x_prox, x_atual) / self.normaMaximo(x_prox)
-    
+
     
     '''
     Funcao de calculo de erro do slide
@@ -56,13 +55,15 @@ class Erro():
     '''
     
     '''
+    def w(self, l):
+        return self.dataType(self.tw[1][l])
     
     def shg(self,i, j, k):
         return 0
     
-    def erroL2_slide(self, nel, nen, nint, h, exata, dataType):
+    def erroL2_slide(self, nel, nen, nint, h, exata):
         erul2 = 0
-        tw = TabelaGaussLegendre().getValores(nint)
+        self.tw = TabelaGaussLegendre().getValores(nint)
         
         for n in range(1, nel):
             eru = 0
@@ -73,7 +74,7 @@ class Erro():
                     uh = uh + self.shg(1, i, l) * u(i)
                     xx = xx + self.shg(1, i, l) * xl(i)
                     
-                eru = eru + ((exata(xx) - uh)**2) * dataType(tw[1][l]) * h/2.0
+                eru = eru + ((exata(xx) - uh)**2) * self.w(l) * h/2.0
                 
             erul2 = erul2 + eru
             

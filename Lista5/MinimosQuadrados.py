@@ -51,8 +51,8 @@ class MinimosQuadrados():
         #Utils().obtemInfoMatriz(A)
             
         #calcula coeficientes
-        #X = LU().executar(A, B)[0]
-        X = Gauss().executarComPivoteamento(A, B)[0]
+        X = LU().executar(A, B)[0]
+        #X = Gauss().executarComPivoteamento(A, B)[0]
         #X = Gauss().executar(A, B)[0]
         return X
         

@@ -62,7 +62,7 @@ def f(x):
 x = np.zeros((5,), dtype=dataType)
 n = np.zeros((5,5), dtype=dataType)
 
-for i in range(1, 4):#elementos
+for i in range(1, 5):#elementos
     for j in range(1, 6):#grau do polinomio
                
         elementos = int(4.0**i)
@@ -75,6 +75,7 @@ for i in range(1, 4):#elementos
         
         len_num = len(U)
         
+        #calcula funcao exata
         xu = np.zeros((len_num,), dtype=dataType)
         yu = np.zeros((len_num,), dtype=dataType)
         
@@ -97,20 +98,7 @@ for i in range(1, 4):#elementos
 
         ########### Calcular o erro aqui ###########
         
-        erro = 0
-        
-        #w(l) = pesos de integração de Gauss
-        #det(l) = h/2
-        aux_err = 0
-        for l in range(len_num):
-            uh = 0
-            xx = 0
-            for k in range(elementos):
-                uh = uh + xx + yu[k] * u(k)
-                xx = xx + yu[k]  * xl(k) #Aqui xl é o intervalo incrementado de um passo?
-            aux_err = aux_err + ((f(xx)- uh)**2) * U(l) * (hu/2.0) #wl é o valor da integração
-        erro = erro + aux_err
-        erro = sqrt(erro)
+        erro = Erro().calculaErro(yu, U)        
         
         ############################################
         
@@ -126,26 +114,30 @@ n3 = [7, 6, 5, 4, 3]
 n4 = [6, 5, 4, 3, 2]
 n5 = [5, 4, 3, 2, 1]
 '''
-print(x)
-print(n)
 
 ####### tira log dos dados ########
 
-#faz -log(h)
 for i in range(5):
     x[i] = -np.log(x[i])
 
-#faz log(erro) 
+print(x)
+print(n)
+
+
+#Matriz de dados prontos
+'''   
+x = [0.25,     0.0625,   0.015625, 0,       0,      ]
+n = [[-1.43493175e+00, -2.77528630e+00, -5.56543749e+00, -8.35931975e+00,   0.00000000e+00]
+     [-2.45211323e+00, -5.64960746e+00, -1.09238778e+01, -1.60678043e+01,   0.00000000e+00]
+     [-2.37346130e+00, -1.10547675e+00, -1.36817671e-01,  1.40952962e-01,   0.00000000e+00]
+     [-1.94081421e+00, -6.60388993e-01, -7.53548626e-02,  8.30020979e-02,   0.00000000e+00]
+     [-1.68315286e+00, -4.64059450e-01, -1.56213424e-02,  1.09499787e-01,   0.00000000e+00]]
 '''
+erro_dif_finitas = [0.01514269848800638, 0.03590183209403578, 0.003660693293331358, 0.0002335478042604083, 1.4615914875454955e-05]
+
 for i in range(5):
-    n1[i] = np.log(n1[i])
-    n2[i] = np.log(n2[i])
-    n3[i] = np.log(n3[i])
-    n4[i] = np.log(n4[i])
-    n5[i] = np.log(n5[i])
-'''
-
-
+    erro_dif_finitas[i] = np.log(erro_dif_finitas[i])
+    
 ####### Criacao do grafico ########
 
 
@@ -165,6 +157,10 @@ plt.plot(
 plt.plot(
     x, n[4], 'k-'
     )
+plt.plot(
+    x, erro_dif_finitas, 'c-'
+    )
+
 
 '''Cores dos graficos
 b: blue
@@ -182,8 +178,9 @@ leg_n2 = mlines.Line2D([], [], color='green', marker='', markersize=0, label=u'N
 leg_n3 = mlines.Line2D([], [], color='blue', marker='', markersize=0, label=u'N=3')
 leg_n4 = mlines.Line2D([], [], color='magenta', marker='', markersize=0, label=u'N=4')
 leg_n5 = mlines.Line2D([], [], color='black', marker='', markersize=0, label=u'N=5')
+leg_nd = mlines.Line2D([], [], color='cyan', marker='', markersize=0, label=u'Dif. Finitas')
 
-plt.legend(handles=[leg_n1, leg_n2, leg_n3, leg_n4, leg_n5], loc='upper right')
+plt.legend(handles=[leg_n1, leg_n2, leg_n3, leg_n4, leg_n5, leg_nd], loc='lower left')
     
 '''Posicoes da legenda 
     upper right
